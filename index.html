@@ -377,8 +377,7 @@
 
       
         
-          
-            <p>##适用于:<br>Oracle WebLogic Server - 版本 8.1 和更高版本<br>本文档所含信息适用于所有平台</p>
+          <p>##适用于:<br>Oracle WebLogic Server - 版本 8.1 和更高版本<br>本文档所含信息适用于所有平台</p>
 <p>##目标<br>本文的主要目标是说明将 Oracle WebLogic Server 安装所用的 JDK 升级到更新版本的步骤。<br>必须注意，支持将 Java SE（或分为 JDK/JRE）更新到最新版本的前提是，这样做仍然能得到认证。因此，用户应检查目标 JDK版本是否已经过相应 Weblogic Server 版本的认证，然后自行实施以下说明中的事项。<br>免责声明<br>Oracle WebLogic Server 可以作为独立产品使用，也可以作为许多其它多层产品的核心，例如对于 Oracle Fusion Middleware 11g 安装。本文不会考虑新 JDK 能否得到特定 Fusion Middleware 版本认证这一点，因此，用户应自己负责查看产品认证表，以确认您的安装类型是否支持所需的 JDK 版本。</p>
 <p>1) 对于 Oracle Fusion Middleware 11g，查看以下两个文档中的认证信息：</p>
 <p>Document 1492980.1 - How to Maintain the Java SE Installed or Used with FMW 11g Products<br>Document 431578.1 - How to Find Certification Details for Oracle Application Server 10g and Oracle Fusion Middleware.<br>2) 对于个别的 Oracle Weblogic Server 配置，涉及 10.3.0 之前版本的，查看以下位置的认证信息：<br><a href="http://download.oracle.com/docs/cd/E13196_01/platform/suppconfigs/config_wls.html" target="_blank" rel="noopener">http://download.oracle.com/docs/cd/E13196_01/platform/suppconfigs/config_wls.html</a><br>3) 对于 Weblogic Server 12.1.2 ，请参阅 Document 1616397.1 - After JDK Upgrade How To Change JDK References For WebLogic Server 12c<br>如果安装的是 Oracle Fusion Middleware 11g，请参阅以下文档：<br>Document 1492980.1 - How to Maintain the Java SE Installed or Used with FMW 11g Products</p>
@@ -386,56 +385,13 @@
 <p>1) 如果您的目标不是升级，而是从 Java SUN JDK 转换到 Oracle JRockit JDK，请参阅： <document 1058804.1=""> - How To Change Type of JDK (Sun / JRockit) for FMW 11g Domain.</document></p>
 <p>2) 如果您的目标是将 32 位 JDK 版本替换为新的 64 位 JDK 版本，本文不适用。请参阅： <document 1312755.1=""> - How Re-Create, Copy, or Re-Use Existing WLS Domains from 32 bit to 64 bit Architecture</document></p>
 <p>本文中的步骤通常适用于从安装过程中默认使用的 JDK 转换到更高的版本，甚至也可以同样地用来降低版本。</p>
-<p>##解决方案<br>备选方案<br>有两种不同方法可用来实现所需的目标。以下将分别简要介绍：<br>A) 安装新的 JDK 主目录，使用符号链接对现有的和新的 JDK 目录进行“重命名”。<br>按照这种方法，将不改变在安装过程中最初使用的 JDK 位置，因此只有很小的缺点，也即会保留带有版本的名称，例如 “$INSTALL_HOME/jdk_<version>“。<br>在任何情况下，这种方法都要比方法 B) 更为简单且不易出错。</version></p>
-<p>B) 安装新的 JDK 主目录，替换所有引用 JAVA_HOME 环境变量的脚本中的该变量。</p>
-<p>如果要进行部分升级（只影响特定域，或不影响节点管理器），这是首选的方法，但其难点在于如何知道哪些文件将会引用 JDK 位置。</p>
-<p>要更改的初始文件列表将如下：</p>
-<ul>
-<li>$INSTALL_HOME/wlserver_10.3/common/bin/commEnv.sh</li>
-<li>$INSTALL_HOME/user_projects/domains/<mydomain>/bin/setDomainEnv.sh</mydomain></li>
-<li>$INSTALL_HOME/wlserver_10.3/common/nodemanager/nodemanager.properties</li>
-<li>$INSTALL_HOME/utils/bsu/bsu.sh</li>
-<li>$INSTALL_HOME/utils/quickstart/quickstart.sh</li>
-<li>$INSTALL_HOME/utils/uninstall/uninstall.sh<br>还有更为详尽的方法来确定这些文件，即运行以下命令：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -type f -name &quot;*.sh&quot; -exec grep -il JAVA_HOME &#123;&#125; \;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>##逐步操作</p>
-<p>###方法A)<br>1) 假设源和目标位置如下：<br>sourceJDK: /oracle/wls1033/jdk160_18<br>targetJDK: /oracle/wls1033/jdk1.6.0_24<br>2) 停止使用当前 FMW_HOME 的所有进程。这指的是</p>
-<ul>
-<li>所有域中的全部 AdminServer 和 Managed_servers，</li>
-<li>在该 FMW_HOME 中运行的所有 nodemanager 进程，以及</li>
-<li>有可能在特定时刻运行 Bea SmartUpgrade 的进程。</li>
-</ul>
-<p>3) 重命名目录：</p>
-<p>a) 转至源 JDK 的父目录：<br>% cd $INSTALL_HOME/<br>b) 您可以通过执行命令 “ls -ld jdk<version>“ 来确定其位置是否为符号链接：<br>% ls -ld jdk160_18</version></p>
-<p>如果所列出内容中jdk160_18 的属性为lrwxrwxrwx (注意第一个字母为 ‘l’)，那它是一个链接。<br>如果所列出内容中jdk160_18 的属性为drwxrwxrwx (注意第一个字母为’d’) 那它是一个目录。<br>c) 将现有 JDK 位置转移到“备份名称”，例如：<br>% mv jdk160_18 jdk160_18.orig<br>这会将 jdk160_18 重命名为 jdk160_18.orig，无论其原来是目录还是链接。</p>
-<p>d) 创建类似如下的符号链接：<br>% ln -s /oracle/wls1033/jdk1.6.0_24 jdk160_18<br>e) 通过运行以下命令，验证此步骤是否成功完成：<br>% $INSTALL_HOME/jdk160_18/bin/java -fullversion<br>如果没有返回已安装的 JSDK 的预期版本字符串，请检查<br>符号链接是否有效，或者向 UNIX 系统管理员寻求其它帮助。<br>4)只有在您使用的是 WLS 10.3.6 且目标 JDK 使用的是已认证的 JAVA 7 版本（版本 1.7.0_x）的情况下，才需要手动复制某些 jar 文件，如下所示：<br>将以下文件从 $INSTALL_HOME/modules 复制到 targetJDK/jre/lib/endorsed 目录<br>javax.annotation_1.0.0.0_1-0.jar<br>javax.xml.bind_2.1.1.jar<br>javax.xml.ws_2.1.1.jar<br>5) 像通常一样重新启动相应进程，它们将使用新的 JDK 版本。</p>
-<p>###方法 B)<br>1) 找到涉及的 JDK 版本。<br>a) sourceJDK：假设使用的 JDK 为 $INSTALL_HOME/jdk<version></version></p>
-<p>对于使用 WLS 平台安装程序（针对 32 位 Windows、Linux 和 Solaris）执行的安装，使用的 JDK 将是 $INSTALL_HOME/jdk<version>。<br>对于使用 WLS 通用安装程序（针对 64 位及所有其它平台）执行的安装，JDK 可能位于文件系统中的任何其它位置。</version></p>
-<p>b) targetJDK： 假设新 JDK 位于 /opt/newjdk<br>对于以上示例，将使用以下命令：<br>sourceJDK: /oracle/wls1033/jdk160_18<br>targetJDK: /oracle/wls1033/jdk1.6.0_24<br>2) 停止使用当前 FMW_HOME 的所有进程。这指的是</p>
-<ul>
-<li>所有域中的全部 AdminServer 和 managed_servers，</li>
-<li>在该 FMW_HOME 中运行的所有 nodemanager 进程，以及</li>
-<li>有可能在特定时刻运行 Bea SmartUpgrade 的进程。</li>
-</ul>
-<p>3) 编辑 $INSTALL_HOME/wlserver_10.3/common/bin/commEnv.sh，更改 JAVA_HOME 位置。例如，从：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># Reset JAVA_HOME, JAVA_VENDOR and PRODUCTION_MODE unless JAVA_HOME</span><br><span class="line"># and JAVA_VENDOR are pre-defined.</span><br><span class="line">if [ -z &quot;$&#123;JAVA_HOME&#125;&quot; -o -z &quot;$&#123;JAVA_VENDOR&#125;&quot; ]; then</span><br><span class="line"># Set up JAVA HOME</span><br><span class="line">JAVA_HOME=&quot;/oracle/wls1033/jdk160_18&quot;</span><br><span class="line"># Set up JAVA VENDOR, possible values are</span><br><span class="line">#Oracle, HP, IBM, Sun ...</span><br><span class="line">JAVA_VENDOR=Sun</span><br><span class="line"># PRODUCTION_MODE, default to the development mode</span><br><span class="line">PRODUCTION_MODE=&quot;&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure></p>
-<p>更改为：:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># Reset JAVA_HOME, JAVA_VENDOR and PRODUCTION_MODE unless JAVA_HOME</span><br><span class="line"># and JAVA_VENDOR are pre-defined.</span><br><span class="line">if [ -z &quot;$&#123;JAVA_HOME&#125;&quot; -o -z &quot;$&#123;JAVA_VENDOR&#125;&quot; ]; then</span><br><span class="line"># Set up JAVA HOME</span><br><span class="line">JAVA_HOME=&quot;/oracle/wls1033/jdk1.6.0_24&quot;</span><br><span class="line"># Set up JAVA VENDOR, possible values are</span><br><span class="line">#Oracle, HP, IBM, Sun ...</span><br><span class="line">JAVA_VENDOR=Sun</span><br><span class="line"># PRODUCTION_MODE, default to the development mode</span><br><span class="line">PRODUCTION_MODE=&quot;&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure></p>
-<p>4) 对于每个域，更改其 “setDomainEnv.sh” 脚本以适应新的 JAVA_HOME。</p>
-<p>对于默认位置和默认脚本，setDomainEnv.sh 将放在以下位置：<br>$INSTALL_HOME/user_projects/domains/<domainname>/bin/setDomainEnv.sh<br>仔细检查在何处、以何种方式更改了 JAVA_HOME 环境变量，因为这可能在不同版本之间发生变化。</domainname></p>
-<p>例如在 WLS 10.3.3 中，这些信息如下所示：<br>BEA_JAVA_HOME=”/oracle/wls1033/jrockit_160_17_R28.0.0-679”<br>export BEA_JAVA_HOME</p>
-<p>SUN_JAVA_HOME=”/oracle/wls1033/jdk160_18”<br>export SUN_JAVA_HOME</p>
-<p>if [ “${JAVA_VENDOR}” = “Oracle” ] ; then<br>JAVA_HOME=”${BEA_JAVA_HOME}”<br>export JAVA_HOME<br>else<br>if [ “${JAVA_VENDOR}” = “Sun” ] ; then<br>JAVA_HOME=”${SUN_JAVA_HOME}”<br>export JAVA_HOME<br>else<br>JAVA_VENDOR=”Sun”<br>export JAVA_VENDOR<br>JAVA_HOME=”/oracle/wls1033/jdk160_18”<br>export JAVA_HOME<br>fi<br>fi<br>因此，必须对 SUN_JAVA_HOME 进行更改，以指定新的位置：<br>SUN_JAVA_HOME=”/oracle/wls1033/jdk1.6.0_24”<br>export SUN_JAVA_HOME<br>5) 对默认的以及任何其它现有的 nodemanager 进程，更改在 nodemanager.properties 中指定的 JDK 位置：</p>
-<p>a) 为 $INSTALL_HOME/wlserver_10.3/common/nodemanager/nodemanager.properties 创建备份</p>
-<p>从：<br>PropertiesVersion=10.3<br>javaHome=/oracle/wls1033/jdk160_18<br>AuthenticationEnabled=true<br>NodeManagerHome=/oracle/wls1033/wlserver_10.3/common/nodemanager<br>JavaHome=/oracle/wls1033/jdk160_18/jre<br>LogLevel=INFO<br>更改为：<br>PropertiesVersion=10.3<br>javaHome=/oracle/wls1033/jdk1.6.0_24<br>AuthenticationEnabled=true<br>NodeManagerHome=/oracle/wls1033/wlserver_10.3/common/nodemanager<br>JavaHome=/oracle/wls1033/jdk1.6.0_24/jre<br>LogLevel=INFO<br>6) 对于在相同 FMW_HOME 中使用的所有次要工具（如 BSU、uninstall.sh 等），均替换为新的 JDK 位置<br>对于 Bea SmartUpgrade 工具 $INSTALL_HOME/utils/bsu/bsu.sh</p>
-<p>更新以下行：</p>
-<p>from<br>JAVA_HOME=”/opt/JDK1.6.14”<br>to<br>JAVA_HOME=”/oracle/wls1033/jdk1.6.0_24”<br>类似地，更改其余三个文件的 JAVA_HOME 值</p>
-<ul>
-<li>$INSTALL_HOME/utils/quickstart/quickstart.sh</li>
-<li>$INSTALL_HOME/utils/uninstall/uninstall.sh<br>7) 只有在您使用的是 WLS 10.3.6 且目标 JDK 使用的是已认证的 JAVA 7 版本（版本 1.7.0_x）的情况下，才需要手动复制某些 jar 文件，如下所示：<br>将以下文件从 $INSTALL_HOME/modules 复制到 targetJDK/jre/lib/endorsed 目录<br>javax.annotation_1.0.0.0_1-0.jar<br>javax.xml.bind_2.1.1.jar<br>javax.xml.ws_2.1.1.jar<br>8) 重新启动所有需要的进程。<br>##参考<br>NOTE:1058804.1 - How To Change The JDK Type (Sun / JRockit) or JDK Version for a Given FMW 11g Domain<br>NOTE:1492980.1 - How to Maintain the Java SE Installed or Used with FMW 11g Products</li>
-</ul>
-<p>NOTE:1312755.1 - How Re-Create, Copy, or Re-Use Existing WLS Domains from 32-bit to 64-bit Architecture</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/04/如何将-Oracle-WebLogic-Server-使用的-JDK-升级到不同的版本-文档-ID-1600832-1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="rocklei123 米宝窝">
 <meta property="og:description" content="##适用于:Oracle WebLogic Server - 版本 8.1 和更高版本本文档所含信息适用于所有平台 ##目标本文的主要目标是说明将 Oracle WebLogic Server 安装所用的 JDK 升级到更新版本的步骤。必须注意，支持将 Java SE（或分为 JDK/JRE）更新到最新版本的前提是，这样做仍然能得到认证。因此，用户应检查目标 JDK版本是否已经过相应 Weblog">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-04T07:27:25.165Z">
+<meta property="og:updated_time" content="2018-08-24T04:58:39.360Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何将 Oracle WebLogic Server 使用的 JDK 升级到不同的版本 (文档 ID 1600832.1)">
 <meta name="twitter:description" content="##适用于:Oracle WebLogic Server - 版本 8.1 和更高版本本文档所含信息适用于所有平台 ##目标本文的主要目标是说明将 Oracle WebLogic Server 安装所用的 JDK 升级到更新版本的步骤。必须注意，支持将 Java SE（或分为 JDK/JRE）更新到最新版本的前提是，这样做仍然能得到认证。因此，用户应检查目标 JDK版本是否已经过相应 Weblog">
@@ -382,6 +382,7 @@
 <p>1) 如果您的目标不是升级，而是从 Java SUN JDK 转换到 Oracle JRockit JDK，请参阅： <document 1058804.1=""> - How To Change Type of JDK (Sun / JRockit) for FMW 11g Domain.</document></p>
 <p>2) 如果您的目标是将 32 位 JDK 版本替换为新的 64 位 JDK 版本，本文不适用。请参阅： <document 1312755.1=""> - How Re-Create, Copy, or Re-Use Existing WLS Domains from 32 bit to 64 bit Architecture</document></p>
 <p>本文中的步骤通常适用于从安装过程中默认使用的 JDK 转换到更高的版本，甚至也可以同样地用来降低版本。</p>
+<a id="more"></a>
 <p>##解决方案<br>备选方案<br>有两种不同方法可用来实现所需的目标。以下将分别简要介绍：<br>A) 安装新的 JDK 主目录，使用符号链接对现有的和新的 JDK 目录进行“重命名”。<br>按照这种方法，将不改变在安装过程中最初使用的 JDK 位置，因此只有很小的缺点，也即会保留带有版本的名称，例如 “$INSTALL_HOME/jdk_<version>“。<br>在任何情况下，这种方法都要比方法 B) 更为简单且不易出错。</version></p>
 <p>B) 安装新的 JDK 主目录，替换所有引用 JAVA_HOME 环境变量的脚本中的该变量。</p>
 <p>如果要进行部分升级（只影响特定域，或不影响节点管理器），这是首选的方法，但其难点在于如何知道哪些文件将会引用 JDK 位置。</p>
