@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="npm," />
+  <meta name="keywords" content="Hibernate,缓存,内存溢出,WebLogic," />
 
 
 
@@ -81,18 +81,22 @@
 
 
 
-<meta name="description" content="可以试试切换下你的NPM源。看是否能得到解决。国内的NPM有CNPM和淘宝的NPM源比较稳定。npm源切换和工具可参照站内贴 【nrm工具的使用】或者是直接用命令切换: 1npm config set registry https://registry.npm.taobao.org">
-<meta name="keywords" content="npm">
+<meta name="description" content="1.客户环境 Weblogic版本：9.2 Linux ：suse 12 JDK版本： Sun JDK 1.5  2.故障现象在 201X 年 X 月 X 日早上 10 点多时，某保险公司核心系统多个Weblogic 的应用服务器都极度缓慢，正常的业务都无法开展。">
+<meta name="keywords" content="Hibernate,缓存,内存溢出,WebLogic">
 <meta property="og:type" content="article">
-<meta property="og:title" content="windows平台npm install hexo-cli -g 卡住问题的解决办法">
-<meta property="og:url" content="http://yoursite.com/2018/03/29/windows平台npm-install-hexo-cli-g-卡住问题的解决办法/index.html">
+<meta property="og:title" content="某保险公司核心系统中间件Hibernate 一级缓存导致内存溢出的故障诊断">
+<meta property="og:url" content="http://yoursite.com/2018/09/02/某保险公司核心系统中间件Hibernate-一级缓存导致内存溢出的故障诊断/index.html">
 <meta property="og:site_name" content="rocklei123 米宝窝">
-<meta property="og:description" content="可以试试切换下你的NPM源。看是否能得到解决。国内的NPM有CNPM和淘宝的NPM源比较稳定。npm源切换和工具可参照站内贴 【nrm工具的使用】或者是直接用命令切换: 1npm config set registry https://registry.npm.taobao.org">
+<meta property="og:description" content="1.客户环境 Weblogic版本：9.2 Linux ：suse 12 JDK版本： Sun JDK 1.5  2.故障现象在 201X 年 X 月 X 日早上 10 点多时，某保险公司核心系统多个Weblogic 的应用服务器都极度缓慢，正常的业务都无法开展。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-02T07:50:52.926Z">
+<meta property="og:image" content="http://yoursite.com/2018/09/02/某保险公司核心系统中间件Hibernate-一级缓存导致内存溢出的故障诊断/markdown-img-paste-2018090222312212.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/02/某保险公司核心系统中间件Hibernate-一级缓存导致内存溢出的故障诊断/markdown-img-paste-20180902223516304.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/02/某保险公司核心系统中间件Hibernate-一级缓存导致内存溢出的故障诊断/markdown-img-paste-20180902223734874.png">
+<meta property="og:updated_time" content="2018-09-02T15:15:36.810Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="windows平台npm install hexo-cli -g 卡住问题的解决办法">
-<meta name="twitter:description" content="可以试试切换下你的NPM源。看是否能得到解决。国内的NPM有CNPM和淘宝的NPM源比较稳定。npm源切换和工具可参照站内贴 【nrm工具的使用】或者是直接用命令切换: 1npm config set registry https://registry.npm.taobao.org">
+<meta name="twitter:title" content="某保险公司核心系统中间件Hibernate 一级缓存导致内存溢出的故障诊断">
+<meta name="twitter:description" content="1.客户环境 Weblogic版本：9.2 Linux ：suse 12 JDK版本： Sun JDK 1.5  2.故障现象在 201X 年 X 月 X 日早上 10 点多时，某保险公司核心系统多个Weblogic 的应用服务器都极度缓慢，正常的业务都无法开展。">
+<meta name="twitter:image" content="http://yoursite.com/2018/09/02/某保险公司核心系统中间件Hibernate-一级缓存导致内存溢出的故障诊断/markdown-img-paste-2018090222312212.png">
 
 
 
@@ -122,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/03/29/windows平台npm-install-hexo-cli-g-卡住问题的解决办法/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/09/02/某保险公司核心系统中间件Hibernate-一级缓存导致内存溢出的故障诊断/"/>
 
 
 
 
 
-  <title>windows平台npm install hexo-cli -g 卡住问题的解决办法 | rocklei123 米宝窝</title>
+  <title>某保险公司核心系统中间件Hibernate 一级缓存导致内存溢出的故障诊断 | rocklei123 米宝窝</title>
   
 
 
@@ -285,7 +289,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/29/windows平台npm-install-hexo-cli-g-卡住问题的解决办法/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/02/某保险公司核心系统中间件Hibernate-一级缓存导致内存溢出的故障诊断/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rocklei123">
@@ -302,7 +306,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">windows平台npm install hexo-cli -g 卡住问题的解决办法</h1>
+          <h1 class="post-title" itemprop="name headline">某保险公司核心系统中间件Hibernate 一级缓存导致内存溢出的故障诊断</h1>
         
 
         <div class="post-meta">
@@ -314,8 +318,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-29T16:35:59+08:00">
-                2018-03-29
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-02T22:15:45+08:00">
+                2018-09-02
               </time>
             
 
@@ -337,8 +341,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/其他技术/" itemprop="url" rel="index">
-                    <span itemprop="name">其他技术</span>
+                  <a href="/categories/Hibernate/" itemprop="url" rel="index">
+                    <span itemprop="name">Hibernate</span>
                   </a>
                 </span>
 
@@ -356,8 +360,8 @@
                 <i class="fa fa-comment-o"></i>
               </span>
               
-                <a href="/2018/03/29/windows平台npm-install-hexo-cli-g-卡住问题的解决办法/#SOHUCS" itemprop="discussionUrl">
-                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2018/03/29/windows平台npm-install-hexo-cli-g-卡住问题的解决办法/" itemprop="commentsCount"></span>
+                <a href="/2018/09/02/某保险公司核心系统中间件Hibernate-一级缓存导致内存溢出的故障诊断/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2018/09/02/某保险公司核心系统中间件Hibernate-一级缓存导致内存溢出的故障诊断/" itemprop="commentsCount"></span>
                 </a>
               
             
@@ -390,7 +394,34 @@
       
 
       
-        <p>可以试试切换下你的NPM源。看是否能得到解决。<br>国内的NPM有CNPM和淘宝的NPM源比较稳定。<br>npm源切换和工具可参照站内贴 <a href="https://segmentfault.com/a/1190000000473869" target="_blank" rel="noopener">【nrm工具的使用】</a><br>或者是直接用命令切换:<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure></p>
+        <h2 id="1-客户环境"><a href="#1-客户环境" class="headerlink" title="1.客户环境"></a>1.客户环境</h2><ul>
+<li>Weblogic版本：9.2</li>
+<li>Linux ：suse 12</li>
+<li>JDK版本： Sun JDK 1.5</li>
+</ul>
+<h2 id="2-故障现象"><a href="#2-故障现象" class="headerlink" title="2.故障现象"></a>2.故障现象</h2><p>在 201X 年 X 月 X 日早上 10 点多时，某保险公司核心系统多个<br>Weblogic 的应用服务器都极度缓慢，正常的业务都无法开展。</p>
+<a id="more"></a>
+<h2 id="3-详细分析"><a href="#3-详细分析" class="headerlink" title="3.详细分析"></a>3.详细分析</h2><h3 id="应用缓慢原因"><a href="#应用缓慢原因" class="headerlink" title="应用缓慢原因"></a>应用缓慢原因</h3><p>检查 Weblogic 的相关日志文件，发现有内存溢出的情况发生，如下：<br>java.lang.OutOfMemoryError: Java heap space</p>
+<p>并产生了相关的内存溢出 HeapDump 文件：java_pid25528.hprof 随后对该文件进行下一步分析，可知：</p>
+<p><img src="/2018/09/02/某保险公司核心系统中间件Hibernate-一级缓存导致内存溢出的故障诊断/markdown-img-paste-2018090222312212.png" alt="hibernate_cache_outOfmemory1"></p>
+<p>其中占据内存较多的两组对象都是产生了 Stuck 的 Weblogic 线程，分别占用的内存是 84.85%和 10.40%，这两部分加起来是 95.25%，</p>
+<p>说明已经占用了整个 Weblogic Server 的绝大部分内存。</p>
+<h3 id="进一步分析内存溢出对象"><a href="#进一步分析内存溢出对象" class="headerlink" title="进一步分析内存溢出对象"></a>进一步分析内存溢出对象</h3><p>进一步分析，发现大量的对象都被缓存在<br>（org.hibernate.engine.StatefulPersistenceContext）中.<br><img src="/2018/09/02/某保险公司核心系统中间件Hibernate-一级缓存导致内存溢出的故障诊断/markdown-img-paste-20180902223516304.png" alt="hibernate_cache_outofMemory_statefulPeristence"></p>
+<p>在这个缓存中的    对    象    是</p>
+<p><img src="/2018/09/02/某保险公司核心系统中间件Hibernate-一级缓存导致内存溢出的故障诊断/markdown-img-paste-20180902223734874.png" alt="hibernate_cache_outofMemory_entityName"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">com.**.scms.inf.model.ScmsCcommission</span><br><span class="line">com.**.scms.inf.model.ScmsCcomissionId</span><br></pre></td></tr></table></figure></p>
+<p>由于这些缓存的数据无法释放，系统在业务量较大时，内存迅速 在 2 分钟内从 1G 增长到 4G，并且不断地进行 Full GC，导致系统极其缓慢。</p>
+<h3 id="StatefulPersistenceContext"><a href="#StatefulPersistenceContext" class="headerlink" title="StatefulPersistenceContext"></a>StatefulPersistenceContext</h3><p>Hibernate的一级缓存就是指Session缓存。通过查看Session接口的实现类——SessionImpl.java的源码可发现有如下两个类：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">161</span>   	<span class="keyword">private</span> <span class="keyword">transient</span> ActionQueue actionQueue;</span><br><span class="line"><span class="number">162</span>   	<span class="keyword">private</span> <span class="keyword">transient</span> StatefulPersistenceContext persistenceContext;</span><br></pre></td></tr></table></figure></p>
+<p>actionQueue它是一个行动队列，它主要记录crud操作的相关信息。<br>persistenceContext它是持久化上下文，它其实才是真正的缓存。</p>
+<p>从如下的代码中，也可以看出，session在执行相关清理工作时，也会执行persistenceContext.clear();<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public void clear() &#123;</span><br><span class="line">  281   		errorIfClosed();</span><br><span class="line">  282   		checkTransactionSynchStatus();</span><br><span class="line">  283   		persistenceContext.clear();</span><br><span class="line">  284   		actionQueue.clear();</span><br><span class="line">  285   	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  466   	/**</span><br><span class="line">  467   	 * clear all the internal collections, just</span><br><span class="line">  468   	 * to help the garbage collector, does not</span><br><span class="line">  469   	 * clear anything that is needed during the</span><br><span class="line">  470   	 * afterTransactionCompletion() phase</span><br><span class="line">  471   	 */</span><br><span class="line">  472   	private void cleanup() &#123;</span><br><span class="line">  473   		persistenceContext.clear();</span><br><span class="line">  474   	&#125;</span><br></pre></td></tr></table></figure></p>
+<p><a href="http://www.docjar.com/html/api/org/hibernate/engine/StatefulPersistenceContext.java.html &quot;StatefulPersistenceContext源码" target="_blank" rel="noopener">StatefulPersistenceContext源码</a></p>
+<p>org.hibernate.engine.StatefulPersistenceContext<br>结合以上代码和该类的实现类可以确定是一个缓存上下文引用，而且从session.cleanup()方法session.cleanup()实际调用的就是persistenceContext.clear()，注意这句话<strong>clear all the internal collections, just to help the garbage collector;
+</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">58   import org.hibernate.util.IdentityMap;</span></span><br><span class="line"><span class="comment">59   import org.hibernate.util.MarkerObject;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   62    * A &lt;tt&gt;PersistenceContext&lt;/tt&gt; represents the state of persistent "stuff" which</span></span><br><span class="line"><span class="comment">   63    * Hibernate is tracking.  This includes persistent entities, collections,</span></span><br><span class="line"><span class="comment">   64    * as well as proxies generated.</span></span><br><span class="line"><span class="comment">   65    * &lt;/p&gt;</span></span><br><span class="line"><span class="comment">   66    * There is meant to be a one-to-one correspondence between a SessionImpl and</span></span><br><span class="line"><span class="comment">   67    * a PersistentContext.  The SessionImpl uses the PersistentContext to track</span></span><br><span class="line"><span class="comment">   68    * the current state of its context.  Event-listeners then use the</span></span><br><span class="line"><span class="comment">   69    * PersistentContext to drive their processing.</span></span><br><span class="line"><span class="comment">   70    *</span></span><br><span class="line"><span class="comment">   71    * <span class="doctag">@author</span> Steve Ebersole</span></span><br><span class="line"><span class="comment">   72    */</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="4-建议"><a href="#4-建议" class="headerlink" title="4.建议"></a>4.建议</h2><p><strong>由于 Hibernate 的一级缓存是其内部使用的，无法关闭或停用</strong>（随着Session 销毁）。从<br>Hibernate 的手册或文档中可知，Hibernate 的一级缓存的清除可通过以下方式：<br>1）对于单个对象的清除：</p>
+<p>Session session=sessionFactory.getCurrentSession(); session.evict(entity);</p>
+<p>2）对于实体集合的清除：</p>
+<p>Session session=sessionFactory.getCurrentSession(); session.clear();<br>建议在程序中加入对 Hibernate 一级缓存的清除工作，以便可以其<br>内存数据可以及时释放。</p>
+<p>关于Hibernate缓存问题可参考：<br><a href="https://rocklei123.github.io/2018/09/02/Hibernate缓存策略/" title="Hibernate缓存策略" target="_blank" rel="noopener">Hibernate缓存策略</a></p>
+<h2 id="5-可能场景"><a href="#5-可能场景" class="headerlink" title="5.可能场景"></a>5.可能场景</h2><p>如果应用会定时启动几个quartz任务来处理复杂且影响页面、响应时间的业务，这部分业务的业务数据是从数据库查的，只有业务数据全都被处理完后这个quartz才会结束。<br>当这几个 quartz任务的业务数据较多的时候，就会有很多对象被填入一级缓存这样一来持久化上下文中保存的对象越来越多。最终导致OOM.</p>
 
       
     </div>
@@ -447,7 +478,13 @@
       
         <div class="post-tags">
           
-            <a href="/tags/npm/" rel="tag"># npm</a>
+            <a href="/tags/Hibernate/" rel="tag"># Hibernate</a>
+          
+            <a href="/tags/缓存/" rel="tag"># 缓存</a>
+          
+            <a href="/tags/内存溢出/" rel="tag"># 内存溢出</a>
+          
+            <a href="/tags/WebLogic/" rel="tag"># WebLogic</a>
           
         </div>
       
@@ -460,8 +497,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/03/28/hello-world-1/" rel="next" title="第一篇博客">
-                <i class="fa fa-chevron-left"></i> 第一篇博客
+              <a href="/2018/09/02/Hibernate缓存策略/" rel="next" title="Hibernate缓存策略">
+                <i class="fa fa-chevron-left"></i> Hibernate缓存策略
               </a>
             
           </div>
@@ -469,10 +506,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/04/如何将-Oracle-WebLogic-Server-使用的-JDK-升级到不同的版本-文档-ID-1600832-1/" rel="prev" title="如何将 Oracle WebLogic Server 使用的 JDK 升级到不同的版本 (文档 ID 1600832.1)">
-                如何将 Oracle WebLogic Server 使用的 JDK 升级到不同的版本 (文档 ID 1600832.1) <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -529,8 +562,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -623,6 +665,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-客户环境"><span class="nav-number">1.</span> <span class="nav-text">1.客户环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-故障现象"><span class="nav-number">2.</span> <span class="nav-text">2.故障现象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-详细分析"><span class="nav-number">3.</span> <span class="nav-text">3.详细分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#应用缓慢原因"><span class="nav-number">3.1.</span> <span class="nav-text">应用缓慢原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进一步分析内存溢出对象"><span class="nav-number">3.2.</span> <span class="nav-text">进一步分析内存溢出对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StatefulPersistenceContext"><span class="nav-number">3.3.</span> <span class="nav-text">StatefulPersistenceContext</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-建议"><span class="nav-number">4.</span> <span class="nav-text">4.建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-可能场景"><span class="nav-number">5.</span> <span class="nav-text">5.可能场景</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
