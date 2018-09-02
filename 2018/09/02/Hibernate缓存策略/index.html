@@ -96,7 +96,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/09/02/Hibernate缓存策略/markdown-img-paste-20180902172334211.png">
 <meta property="og:image" content="http://yoursite.com/2018/09/02/Hibernate缓存策略/markdown-img-paste-20180902172551857.png">
 <meta property="og:image" content="http://yoursite.com/2018/09/02/Hibernate缓存策略/markdown-img-paste-20180902172656770.png">
-<meta property="og:updated_time" content="2018-09-02T09:27:51.251Z">
+<meta property="og:updated_time" content="2018-09-02T09:31:11.159Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hibernate缓存策略">
 <meta name="twitter:description" content="一、什么是Hibernate一级缓存1、 一级缓存范围（1）Hibernate 一级缓存又称之为”Session 缓存”、“会话级缓存”（2）通过Session从数据库查询时会吧实体在内存中存储起来，下一次查询同一实体时不再从数据区获取，而是从内存中获取，这就是缓存。（3）一级缓存的生命周期和session相同;Session 销毁它也会销毁（4）一级缓存中的数据可适用范围在当前会话之内 测试用例">
@@ -400,6 +400,7 @@
       
         <h2 id="一、什么是Hibernate一级缓存"><a href="#一、什么是Hibernate一级缓存" class="headerlink" title="一、什么是Hibernate一级缓存"></a>一、什么是Hibernate一级缓存</h2><h3 id="1、-一级缓存范围"><a href="#1、-一级缓存范围" class="headerlink" title="1、 一级缓存范围"></a>1、 一级缓存范围</h3><p>（1）Hibernate 一级缓存又称之为”Session 缓存”、“会话级缓存”<br>（2）通过Session从数据库查询时会吧实体在内存中存储起来，下一次查询同一实体时不再从数据区获取，而是从内存中获取，这就是缓存。<br>（3）一级缓存的生命周期和session相同;Session 销毁它也会销毁<br>（4）一级缓存中的数据可适用范围在当前会话之内</p>
 <p>测试用例（1）：<br><img src="/2018/09/02/Hibernate缓存策略/markdown-img-paste-20180902171836974.png" alt="test1"></p>
+<a id="more"></a>
 <h3 id="2、-清理一级缓存"><a href="#2、-清理一级缓存" class="headerlink" title="2、 清理一级缓存"></a>2、 清理一级缓存</h3><p>一级缓存无法取消，用两个方法管理。<br>（1）session.evict(obj) ：会把指定的缓冲对象进行清除。<br>（2）  session.clear() ：把缓冲区内的全部对象清除，但不包括操作中的对象。</p>
 <p>测试用例1session.evict(obj)  清理当前对象后，再次查询需要查询数据库：<br>![hibernate_<a href="markdown-img-paste-2018090217192062.png">evict_test</a></p>
 <p>测试用例2 session.clear 后（需要从数据库中查询）：<br><img src="/2018/09/02/Hibernate缓存策略/markdown-img-paste-2018090217195599.png" alt="hibernate_clear_test"></p>
