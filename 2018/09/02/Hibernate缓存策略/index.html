@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Hibernate,缓存," />
 
 
 
@@ -81,17 +81,26 @@
 
 
 
-<meta name="description" content="rocklei123的点滴技术生活">
-<meta name="keywords" content="Weblogic APM Middleware JAVA">
-<meta property="og:type" content="website">
-<meta property="og:title" content="rocklei123 米宝窝">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="一、什么是Hibernate一级缓存1、 一级缓存范围（1）Hibernate 一级缓存又称之为”Session 缓存”、“会话级缓存”（2）通过Session从数据库查询时会吧实体在内存中存储起来，下一次查询同一实体时不再从数据区获取，而是从内存中获取，这就是缓存。（3）一级缓存的生命周期和session相同;Session 销毁它也会销毁（4）一级缓存中的数据可适用范围在当前会话之内 测试用例">
+<meta name="keywords" content="Hibernate,缓存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hibernate缓存策略">
+<meta property="og:url" content="http://yoursite.com/2018/09/02/Hibernate缓存策略/index.html">
 <meta property="og:site_name" content="rocklei123 米宝窝">
-<meta property="og:description" content="rocklei123的点滴技术生活">
+<meta property="og:description" content="一、什么是Hibernate一级缓存1、 一级缓存范围（1）Hibernate 一级缓存又称之为”Session 缓存”、“会话级缓存”（2）通过Session从数据库查询时会吧实体在内存中存储起来，下一次查询同一实体时不再从数据区获取，而是从内存中获取，这就是缓存。（3）一级缓存的生命周期和session相同;Session 销毁它也会销毁（4）一级缓存中的数据可适用范围在当前会话之内 测试用例">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/09/02/Hibernate缓存策略/markdown-img-paste-20180902171836974.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/02/Hibernate缓存策略/markdown-img-paste-2018090217195599.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/02/Hibernate缓存策略/markdown-img-paste-20180902172130128.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/02/Hibernate缓存策略/markdown-img-paste-20180902172229735.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/02/Hibernate缓存策略/markdown-img-paste-20180902172334211.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/02/Hibernate缓存策略/markdown-img-paste-20180902172551857.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/02/Hibernate缓存策略/markdown-img-paste-20180902172656770.png">
+<meta property="og:updated_time" content="2018-09-02T09:27:51.251Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="rocklei123 米宝窝">
-<meta name="twitter:description" content="rocklei123的点滴技术生活">
+<meta name="twitter:title" content="Hibernate缓存策略">
+<meta name="twitter:description" content="一、什么是Hibernate一级缓存1、 一级缓存范围（1）Hibernate 一级缓存又称之为”Session 缓存”、“会话级缓存”（2）通过Session从数据库查询时会吧实体在内存中存储起来，下一次查询同一实体时不再从数据区获取，而是从内存中获取，这就是缓存。（3）一级缓存的生命周期和session相同;Session 销毁它也会销毁（4）一级缓存中的数据可适用范围在当前会话之内 测试用例">
+<meta name="twitter:image" content="http://yoursite.com/2018/09/02/Hibernate缓存策略/markdown-img-paste-20180902171836974.png">
 
 
 
@@ -121,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/09/02/Hibernate缓存策略/"/>
 
 
 
 
 
-  <title>rocklei123 米宝窝</title>
+  <title>Hibernate缓存策略 | rocklei123 米宝窝</title>
   
 
 
@@ -146,8 +155,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -270,9 +278,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -302,9 +310,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/02/Hibernate缓存策略/" itemprop="url">Hibernate缓存策略</a></h1>
+          <h1 class="post-title" itemprop="name headline">Hibernate缓存策略</h1>
         
 
         <div class="post-meta">
@@ -359,7 +365,7 @@
               </span>
               
                 <a href="/2018/09/02/Hibernate缓存策略/#SOHUCS" itemprop="discussionUrl">
-                  <span id="url::http://yoursite.com/2018/09/02/Hibernate缓存策略/" class="cy_cmt_count" data-xid="2018/09/02/Hibernate缓存策略/" itemprop="commentsCount" ></span>
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2018/09/02/Hibernate缓存策略/" itemprop="commentsCount"></span>
                 </a>
               
             
@@ -368,6 +374,11 @@
           
           
 
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
           
 
           
@@ -387,9 +398,7 @@
       
 
       
-        
-          
-            <h2 id="一、什么是Hibernate一级缓存"><a href="#一、什么是Hibernate一级缓存" class="headerlink" title="一、什么是Hibernate一级缓存"></a>一、什么是Hibernate一级缓存</h2><h3 id="1、-一级缓存范围"><a href="#1、-一级缓存范围" class="headerlink" title="1、 一级缓存范围"></a>1、 一级缓存范围</h3><p>（1）Hibernate 一级缓存又称之为”Session 缓存”、“会话级缓存”<br>（2）通过Session从数据库查询时会吧实体在内存中存储起来，下一次查询同一实体时不再从数据区获取，而是从内存中获取，这就是缓存。<br>（3）一级缓存的生命周期和session相同;Session 销毁它也会销毁<br>（4）一级缓存中的数据可适用范围在当前会话之内</p>
+        <h2 id="一、什么是Hibernate一级缓存"><a href="#一、什么是Hibernate一级缓存" class="headerlink" title="一、什么是Hibernate一级缓存"></a>一、什么是Hibernate一级缓存</h2><h3 id="1、-一级缓存范围"><a href="#1、-一级缓存范围" class="headerlink" title="1、 一级缓存范围"></a>1、 一级缓存范围</h3><p>（1）Hibernate 一级缓存又称之为”Session 缓存”、“会话级缓存”<br>（2）通过Session从数据库查询时会吧实体在内存中存储起来，下一次查询同一实体时不再从数据区获取，而是从内存中获取，这就是缓存。<br>（3）一级缓存的生命周期和session相同;Session 销毁它也会销毁<br>（4）一级缓存中的数据可适用范围在当前会话之内</p>
 <p>测试用例（1）：<br><img src="/2018/09/02/Hibernate缓存策略/markdown-img-paste-20180902171836974.png" alt="test1"></p>
 <h3 id="2、-清理一级缓存"><a href="#2、-清理一级缓存" class="headerlink" title="2、 清理一级缓存"></a>2、 清理一级缓存</h3><p>一级缓存无法取消，用两个方法管理。<br>（1）session.evict(obj) ：会把指定的缓冲对象进行清除。<br>（2）  session.clear() ：把缓冲区内的全部对象清除，但不包括操作中的对象。</p>
 <p>测试用例1session.evict(obj)  清理当前对象后，再次查询需要查询数据库：<br>![hibernate_<a href="markdown-img-paste-2018090217192062.png">evict_test</a></p>
@@ -415,8 +424,6 @@
 <h3 id="4、-二级缓存使用场景"><a href="#4、-二级缓存使用场景" class="headerlink" title="4、 二级缓存使用场景"></a>4、 二级缓存使用场景</h3><p><img src="/2018/09/02/Hibernate缓存策略/markdown-img-paste-20180902172551857.png" alt="hibernate_cache2_use"></p>
 <h2 id="三、Hibernate一级、二级缓存的对比"><a href="#三、Hibernate一级、二级缓存的对比" class="headerlink" title="三、Hibernate一级、二级缓存的对比"></a>三、Hibernate一级、二级缓存的对比</h2><p><img src="/2018/09/02/Hibernate缓存策略/markdown-img-paste-20180902172656770.png" alt="hibernate_cache_compare"></p>
 
-          
-        
       
     </div>
     
@@ -425,346 +432,83 @@
 
     <div>
     
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+      
     </div>
     
 
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>熬夜写博客挺辛苦的，生怕猝死，所以每当写博客都带着听诊器，心脏一有异响，随时按Ctrl+S。</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: block;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="rocklei123 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/aipay.jpg" alt="rocklei123 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
     
 
     
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/04/如何将-Oracle-WebLogic-Server-使用的-JDK-升级到不同的版本-文档-ID-1600832-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rocklei123">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="rocklei123 米宝窝">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/04/如何将-Oracle-WebLogic-Server-使用的-JDK-升级到不同的版本-文档-ID-1600832-1/" itemprop="url">如何将 Oracle WebLogic Server 使用的 JDK 升级到不同的版本 (文档 ID 1600832.1)</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-04T15:16:52+08:00">
-                2018-05-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/WebLogic/" itemprop="url" rel="index">
-                    <span itemprop="name">WebLogic</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/Hibernate/" rel="tag"># Hibernate</a>
           
-
+            <a href="/tags/缓存/" rel="tag"># 缓存</a>
           
-            
-              <span class="post-comments-count">
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-comment-o"></i>
-              </span>
-              
-                <a href="/2018/05/04/如何将-Oracle-WebLogic-Server-使用的-JDK-升级到不同的版本-文档-ID-1600832-1/#SOHUCS" itemprop="discussionUrl">
-                  <span id="url::http://yoursite.com/2018/05/04/如何将-Oracle-WebLogic-Server-使用的-JDK-升级到不同的版本-文档-ID-1600832-1/" class="cy_cmt_count" data-xid="2018/05/04/如何将-Oracle-WebLogic-Server-使用的-JDK-升级到不同的版本-文档-ID-1600832-1/" itemprop="commentsCount" ></span>
-                </a>
-              
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          <h2 id="适用于"><a href="#适用于" class="headerlink" title="适用于:"></a>适用于:</h2><p>Oracle WebLogic Server - 版本 8.1 和更高版本<br>本文档所含信息适用于所有平台</p>
-<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>本文的主要目标是说明将 Oracle WebLogic Server 安装所用的 JDK 升级到更新版本的步骤。<br>必须注意，支持将 Java SE（或分为 JDK/JRE）更新到最新版本的前提是，这样做仍然能得到认证。因此，用户应检查目标 JDK版本是否已经过相应 Weblogic Server 版本的认证，然后自行实施以下说明中的事项。<br>免责声明<br>Oracle WebLogic Server 可以作为独立产品使用，也可以作为许多其它多层产品的核心，例如对于 Oracle Fusion Middleware 11g 安装。本文不会考虑新 JDK 能否得到特定 Fusion Middleware 版本认证这一点，因此，用户应自己负责查看产品认证表，以确认您的安装类型是否支持所需的 JDK 版本。</p>
-<p>1) 对于 Oracle Fusion Middleware 11g，查看以下两个文档中的认证信息：</p>
-<p>Document 1492980.1 - How to Maintain the Java SE Installed or Used with FMW 11g Products<br>Document 431578.1 - How to Find Certification Details for Oracle Application Server 10g and Oracle Fusion Middleware.<br>2) 对于个别的 Oracle Weblogic Server 配置，涉及 10.3.0 之前版本的，查看以下位置的认证信息：<br><a href="http://download.oracle.com/docs/cd/E13196_01/platform/suppconfigs/config_wls.html" target="_blank" rel="noopener">http://download.oracle.com/docs/cd/E13196_01/platform/suppconfigs/config_wls.html</a><br>3) 对于 Weblogic Server 12.1.2 ，请参阅 Document 1616397.1 - After JDK Upgrade How To Change JDK References For WebLogic Server 12c<br>如果安装的是 Oracle Fusion Middleware 11g，请参阅以下文档：<br>Document 1492980.1 - How to Maintain the Java SE Installed or Used with FMW 11g Products</p>
-<p>本文未涉及的两种情况：</p>
-<p>1) 如果您的目标不是升级，而是从 Java SUN JDK 转换到 Oracle JRockit JDK，请参阅： <document 1058804.1=""> - How To Change Type of JDK (Sun / JRockit) for FMW 11g Domain.</document></p>
-<p>2) 如果您的目标是将 32 位 JDK 版本替换为新的 64 位 JDK 版本，本文不适用。请参阅： <document 1312755.1=""> - How Re-Create, Copy, or Re-Use Existing WLS Domains from 32 bit to 64 bit Architecture</document></p>
-<p>本文中的步骤通常适用于从安装过程中默认使用的 JDK 转换到更高的版本，甚至也可以同样地用来降低版本。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/04/如何将-Oracle-WebLogic-Server-使用的-JDK-升级到不同的版本-文档-ID-1600832-1/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/04/如何将-Oracle-WebLogic-Server-使用的-JDK-升级到不同的版本-文档-ID-1600832-1/" rel="next" title="如何将 Oracle WebLogic Server 使用的 JDK 升级到不同的版本 (文档 ID 1600832.1)">
+                <i class="fa fa-chevron-left"></i> 如何将 Oracle WebLogic Server 使用的 JDK 升级到不同的版本 (文档 ID 1600832.1)
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
 
-    <div>
-    
-    </div>
-    
+          <span class="post-nav-divider"></span>
 
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/29/windows平台npm-install-hexo-cli-g-卡住问题的解决办法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rocklei123">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="rocklei123 米宝窝">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/29/windows平台npm-install-hexo-cli-g-卡住问题的解决办法/" itemprop="url">windows平台npm install hexo-cli -g 卡住问题的解决办法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+          <div class="post-nav-prev post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-29T16:35:59+08:00">
-                2018-03-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/其他技术/" itemprop="url" rel="index">
-                    <span itemprop="name">其他技术</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-comment-o"></i>
-              </span>
-              
-                <a href="/2018/03/29/windows平台npm-install-hexo-cli-g-卡住问题的解决办法/#SOHUCS" itemprop="discussionUrl">
-                  <span id="url::http://yoursite.com/2018/03/29/windows平台npm-install-hexo-cli-g-卡住问题的解决办法/" class="cy_cmt_count" data-xid="2018/03/29/windows平台npm-install-hexo-cli-g-卡住问题的解决办法/" itemprop="commentsCount" ></span>
-                </a>
-              
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>可以试试切换下你的NPM源。看是否能得到解决。<br>国内的NPM有CNPM和淘宝的NPM源比较稳定。<br>npm源切换和工具可参照站内贴 <a href="https://segmentfault.com/a/1190000000473869" target="_blank" rel="noopener">【nrm工具的使用】</a><br>或者是直接用命令切换:<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    <div>
-    
-    </div>
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -774,171 +518,11 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/28/hello-world-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rocklei123">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="rocklei123 米宝窝">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/28/hello-world-1/" itemprop="url">第一篇博客</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-28T13:14:54+08:00">
-                2018-03-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/生活/" itemprop="url" rel="index">
-                    <span itemprop="name">生活</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-comment-o"></i>
-              </span>
-              
-                <a href="/2018/03/28/hello-world-1/#SOHUCS" itemprop="discussionUrl">
-                  <span id="url::http://yoursite.com/2018/03/28/hello-world-1/" class="cy_cmt_count" data-xid="2018/03/28/hello-world-1/" itemprop="commentsCount" ></span>
-                </a>
-              
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这是我的第一篇博客，从此开启点滴技术生活。</p>
-<p>水滴石穿<br>合抱之木，生于毫末；九层之台，起于垒土；千里之行，始于足下。</p>
-<p><img src="/2018/03/28/hello-world-1/zsy1.JPG" alt="zsy1.JPG"></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> com.rocklei123.test;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Title</span>: sqlrobe</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/8/27 13:19</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span>: 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrintHeart</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		System.out.println(printHeart(<span class="string">"*"</span>));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title">printHeart</span><span class="params">(String input)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span>[] array = &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>&#125;;</span><br><span class="line">		StringBuffer pi = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++) &#123;</span><br><span class="line">			<span class="keyword">if</span> (i % <span class="number">7</span> == <span class="number">0</span>)</span><br><span class="line">				pi.append(<span class="string">"\n"</span>);</span><br><span class="line">			<span class="keyword">if</span> (array[i] == <span class="number">0</span>)</span><br><span class="line">				pi.append(<span class="string">"   "</span>);</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (array[i] == <span class="number">4</span>)</span><br><span class="line">				pi.append(<span class="string">"  "</span>);</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (array[i] == <span class="number">5</span>)</span><br><span class="line">				pi.append(<span class="string">" 周 "</span>);</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (array[i] == <span class="number">2</span>)</span><br><span class="line">				pi.append(<span class="string">" 书 "</span>);</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (array[i] == <span class="number">3</span>)</span><br><span class="line">				pi.append(<span class="string">" 瑶 "</span>);</span><br><span class="line">			<span class="keyword">else</span></span><br><span class="line">				pi.append(<span class="string">"  "</span> + input);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> pi.toString();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/2018/03/28/hello-world-1/love.jpg" alt="love.jpg"></p>
-<p> 谨以此文献给我的女儿周书瑶！</p>
-
-          
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    <div>
-    
-    </div>
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -946,6 +530,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -966,8 +559,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -1060,6 +662,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、什么是Hibernate一级缓存"><span class="nav-number">1.</span> <span class="nav-text">一、什么是Hibernate一级缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、-一级缓存范围"><span class="nav-number">1.1.</span> <span class="nav-text">1、 一级缓存范围</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、-清理一级缓存"><span class="nav-number">1.2.</span> <span class="nav-text">2、 清理一级缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、一级缓存注意问题："><span class="nav-number">1.3.</span> <span class="nav-text">3、一级缓存注意问题：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Hibernate二级缓存"><span class="nav-number">2.</span> <span class="nav-text">二、Hibernate二级缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、-二级缓存简介"><span class="nav-number">2.1.</span> <span class="nav-text">1、 二级缓存简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-、二级缓存配置步骤"><span class="nav-number">2.2.</span> <span class="nav-text">2 、二级缓存配置步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#配置文件配置"><span class="nav-number">2.2.1.</span> <span class="nav-text">配置文件配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注解方式"><span class="nav-number">2.2.2.</span> <span class="nav-text">注解方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、二级缓存注意事项"><span class="nav-number">2.3.</span> <span class="nav-text">3、二级缓存注意事项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、-二级缓存使用场景"><span class="nav-number">2.4.</span> <span class="nav-text">4、 二级缓存使用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、Hibernate一级、二级缓存的对比"><span class="nav-number">3.</span> <span class="nav-text">三、Hibernate一级、二级缓存的对比</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1220,6 +838,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -1254,7 +876,18 @@
 
 
   
-    <script id="cy_cmt_num" src="https://changyan.sohu.com/upload/plugins/plugins.list.count.js?clientId=cytMPyKrf"></script>
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cytMPyKrf';
+      var conf = '193a394926f19428e645007868bcefe0';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
   
 
 
