@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Oracle,数据泵," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rocklei123 米宝窝" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="0.目标通过Oracle数据泵工具导入导出数据  测试版本 Oracle  Release 11.2.0.4.0 - 64bit Production  1 从原始库通过expdp 导出数据库指定对象或一个用户schema 到文件dmp中  2 通过impdp将数据文件导入到目标库中  1. 创建导出文件夹目录12SQL&amp;gt;create directory expdir as &apos;D:\myja">
+<meta name="keywords" content="Oracle,数据泵">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Oracle-数据泵导入导出数据步骤">
+<meta property="og:url" content="http://yoursite.com/2018/09/14/Oracle-数据泵导入导出数据步骤/index.html">
+<meta property="og:site_name" content="rocklei123 米宝窝">
+<meta property="og:description" content="0.目标通过Oracle数据泵工具导入导出数据  测试版本 Oracle  Release 11.2.0.4.0 - 64bit Production  1 从原始库通过expdp 导出数据库指定对象或一个用户schema 到文件dmp中  2 通过impdp将数据文件导入到目标库中  1. 创建导出文件夹目录12SQL&amp;gt;create directory expdir as &apos;D:\myja">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-14T09:28:26.479Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Oracle-数据泵导入导出数据步骤">
+<meta name="twitter:description" content="0.目标通过Oracle数据泵工具导入导出数据  测试版本 Oracle  Release 11.2.0.4.0 - 64bit Production  1 从原始库通过expdp 导出数据库指定对象或一个用户schema 到文件dmp中  2 通过impdp将数据文件导入到目标库中  1. 创建导出文件夹目录12SQL&amp;gt;create directory expdir as &apos;D:\myja">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/14/Oracle-数据泵导入导出数据步骤/"/>
+
+
+
+
+
+  <title>Oracle-数据泵导入导出数据步骤 | rocklei123 米宝窝</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rocklei123 米宝窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">水滴石穿</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/14/Oracle-数据泵导入导出数据步骤/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rocklei123">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rocklei123 米宝窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Oracle-数据泵导入导出数据步骤</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-14T16:47:10+08:00">
+                2018-09-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Oracle/" itemprop="url" rel="index">
+                    <span itemprop="name">Oracle</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2018/09/14/Oracle-数据泵导入导出数据步骤/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2018/09/14/Oracle-数据泵导入导出数据步骤/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="0-目标"><a href="#0-目标" class="headerlink" title="0.目标"></a>0.目标</h1><p>通过Oracle数据泵工具导入导出数据</p>
+<ul>
+<li><p>测试版本 Oracle  Release 11.2.0.4.0 - 64bit Production</p>
+</li>
+<li><p>1 从原始库通过expdp 导出数据库指定对象或一个用户schema 到文件dmp中</p>
+</li>
+<li>2 通过impdp将数据文件导入到目标库中</li>
+</ul>
+<h1 id="1-创建导出文件夹目录"><a href="#1-创建导出文件夹目录" class="headerlink" title="1. 创建导出文件夹目录"></a>1. 创建导出文件夹目录</h1><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SQL&gt;create directory expdir as 'D:\myjava\olm\20170913\approbe0904';</span><br><span class="line">SQL&gt;grant read,write on directory expdir to public;</span><br></pre></td></tr></table></figure>
+<h1 id="2-查询已经有的directory"><a href="#2-查询已经有的directory" class="headerlink" title="2. 查询已经有的directory"></a>2. 查询已经有的directory</h1><p>查看当前数据库导入导出路径</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> dba_directories;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h1 id="3-导出dmp文件"><a href="#3-导出dmp文件" class="headerlink" title="3. 导出dmp文件"></a>3. 导出dmp文件</h1><p><strong>注意</strong><br>users是本地的表空间，请用实际的表空间替换users</p>
+<p>操作系统命令：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expdp "'/ as sysdba'" directory=expdir dumpfile=si0915.dmp logfile=si0915_exp.log schemas=appuser</span><br></pre></td></tr></table></figure></p>
+<h1 id="4-目标数据库导入全量表方法如下："><a href="#4-目标数据库导入全量表方法如下：" class="headerlink" title="4.目标数据库导入全量表方法如下："></a>4.目标数据库导入全量表方法如下：</h1><p>（1） 删除approbe用户</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">drop</span> <span class="keyword">user</span> approbe <span class="keyword">cascade</span>;</span><br></pre></td></tr></table></figure>
+<p>（2）导入新的全量数据</p>
+<p><strong>注意</strong>—users是本地的表空间，请用实际的表空间替换users<br>将appuser用户的数据导入到approbe用户下</p>
+<p>操作系统命令：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">impdp "'/ as sysdba'" directory=expdir dumpfile=si0915.dmp logfile=si0915_imp.log remap_schema=appuser:approbe</span><br></pre></td></tr></table></figure></p>
+<h1 id="5-可能遇到的问题"><a href="#5-可能遇到的问题" class="headerlink" title="5.可能遇到的问题"></a>5.可能遇到的问题</h1><h2 id="5-1-问题1-：Object-type-TYPE-failed-to-create-with-error"><a href="#5-1-问题1-：Object-type-TYPE-failed-to-create-with-error" class="headerlink" title="5.1 问题1 ：Object type TYPE failed to create with error"></a>5.1 问题1 ：Object type TYPE failed to create with error</h2><h3 id="5-1-1-错误信息"><a href="#5-1-1-错误信息" class="headerlink" title="5.1.1 错误信息"></a>5.1.1 错误信息</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">TYPE:</span><br><span class="line">ORA-39083: Object type TYPE failed to <span class="keyword">create</span> <span class="keyword">with</span> <span class="keyword">error</span>:</span><br><span class="line">ORA<span class="number">-02304</span>: invalid <span class="keyword">object</span> identifier literal</span><br><span class="line">Failing <span class="keyword">sql</span> <span class="keyword">is</span>:</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TYPE</span> <span class="string">"APPROBEBAK"</span>.<span class="string">"XXX_TAB_XXX_DDL"</span>   <span class="keyword">OID</span> <span class="string">'253439611478D21AE050A8C0D240D7B3'</span> <span class="keyword">as</span> <span class="keyword">object</span> (</span><br><span class="line"><span class="keyword">id</span> <span class="built_in">number</span>,</span><br><span class="line">  PROJECT_ID <span class="built_in">number</span>,</span><br><span class="line">  module_id <span class="built_in">number</span>,</span><br><span class="line">  TABLE_NAME VARCHAR2(<span class="number">30</span>),</span><br><span class="line">  <span class="keyword">status</span> varchar2(<span class="number">20</span>),</span><br><span class="line">  <span class="keyword">action</span> varchar2(<span class="number">20</span>),</span><br><span class="line">  ddl_part_flag <span class="built_in">number</span>,</span><br><span class="line">  ddl_str varchar2(<span class="number">32767</span>)</span><br><span class="line">  )</span><br><span class="line"></span><br><span class="line">ORA<span class="number">-39083</span>: <span class="keyword">Object</span> <span class="keyword">type</span> <span class="keyword">TYPE</span> <span class="keyword">failed</span> <span class="keyword">to</span> <span class="keyword">create</span> <span class="keyword">with</span> <span class="keyword">error</span>:</span><br><span class="line">ORA<span class="number">-02304</span>: invalid <span class="keyword">object</span> identifier literal</span><br><span class="line">Failing <span class="keyword">sql</span> <span class="keyword">is</span>:</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TYPE</span> <span class="string">"APPROBEBAK"</span>.<span class="string">"XXX_TAB_XXX_RM"</span>   <span class="keyword">OID</span> <span class="string">'253439611487D21AE050A8C0D240D7B3'</span> <span class="keyword">as</span> <span class="keyword">object</span></span><br><span class="line">(</span><br><span class="line">  owner          VARCHAR2(<span class="number">30</span>),</span><br><span class="line">  table_name     VARCHAR2(<span class="number">30</span>),</span><br><span class="line">  column_name    VARCHAR2(<span class="number">30</span>),</span><br><span class="line">  data_type      VARCHAR2(<span class="number">106</span>),</span><br><span class="line">  data_length    <span class="built_in">NUMBER</span>,</span><br><span class="line">  data_precision <span class="built_in">NUMBER</span>,</span><br><span class="line">  data_scale     <span class="built_in">NUMBER</span>,</span><br><span class="line">  nullable       VARCHAR2(<span class="number">1</span>),</span><br><span class="line">  column_id      <span class="built_in">NUMBER</span>,</span><br><span class="line">  default_length <span class="built_in">NUMBER</span>,</span><br><span class="line">  data_defau</span><br></pre></td></tr></table></figure>
+<h3 id="5-1-2-错误原因"><a href="#5-1-2-错误原因" class="headerlink" title="5.1.2 错误原因"></a>5.1.2 错误原因</h3><p>这个错误是因为同一个OID的对象已经在数据库中存在了，所以导致冲突无法创建，通过impdp help=y命令查看帮助，发现有参数如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">123 TRANSFORM             Metadata transform to apply to applicable objects.                      Valid transform keywords: SEGMENT_ATTRIBUTES, STORAGE                      OID, and PCTSPACE.</span><br></pre></td></tr></table></figure></p>
+<p>查看联机文档发现关于OID这个参数的解释如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 OID - If the value is specified as n, the assignment of the exported OID during the creation of object tables and types is inhibited. Instead, a new OID is assigned. This can be useful for cloning schemas, but does not affect referenced objects. The default value is y.</span><br></pre></td></tr></table></figure></p>
+<p>意思就是说如果这个OID参数设置为“N”，那么导出的对象的OID在object table和type被创建时会被抑制，它会被分配一个新的OID，这个参数可以被用来clone schema，但是对被引用的对象是无效的。这个参数默认值为“Y”<br>于是只要将参数transform的OID显示的设置为N即可解决，如下所示：</p>
+<p><a href="http://www.ask600.com/ora-39083-object-type-type-failed-to-create-with-error.html" target="_blank" rel="noopener">http://www.ask600.com/ora-39083-object-type-type-failed-to-create-with-error.html</a></p>
+<h3 id="5-1-3-解决办法"><a href="#5-1-3-解决办法" class="headerlink" title="5.1.3 解决办法"></a>5.1.3 解决办法</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">impdp "'/ as sysdba'" directory=approbebak dumpfile=APPROBE_V2.4.DMP logfile=APPROBE_V2.4_imp.log remap_schema=approbe:approbebak   transform=oid:n</span><br></pre></td></tr></table></figure>
+<h2 id="5-2-问题2：违反唯一性约束-JOB-ID重复"><a href="#5-2-问题2：违反唯一性约束-JOB-ID重复" class="headerlink" title="5.2 问题2：违反唯一性约束 JOB_ID重复"></a>5.2 问题2：违反唯一性约束 JOB_ID重复</h2><h3 id="5-2-1-错误日志"><a href="#5-2-1-错误日志" class="headerlink" title="5.2.1 错误日志"></a>5.2.1 错误日志</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ORA-39083: Object type JOB failed to <span class="keyword">create</span> <span class="keyword">with</span> <span class="keyword">error</span>:</span><br><span class="line">ORA<span class="number">-00001</span>: <span class="keyword">unique</span> <span class="keyword">constraint</span> (SYS.I_JOB_JOB) violated</span><br><span class="line">Failing <span class="keyword">sql</span> <span class="keyword">is</span>:</span><br><span class="line"> <span class="keyword">BEGIN</span> SYS.XXXX.SUBMIT( JOB=&gt; <span class="number">401</span>, LUSER=&gt; <span class="string">'XXX'</span>, PUSER=&gt; <span class="string">'XXX'</span>, CUSER=&gt; <span class="string">'XXX'</span>, NEXT_DATE=&gt; <span class="keyword">TO_DATE</span>(<span class="string">'2014-11-13 22:03:45'</span>, <span class="string">'YYYY-MM-DD:HH24:MI:SS'</span>), <span class="built_in">INTERVAL</span>=&gt; <span class="string">'SYSDATE + 120/1440  '</span>, BROKEN=&gt;  <span class="literal">FALSE</span>, WHAT=&gt; <span class="string">'dbms_refresh.refresh(''"XXX"."XXX"'');'</span>, NLSENV=&gt; <span class="string">'NLS_LANGUAGE=''AMERICAN'' NLS_TERRITORY=''AMERICA'' NLS_CURRENCY=''$'' NLS_ISO_CURRENCY=''AMER</span></span><br><span class="line"><span class="string">Processing object type SCHEMA_EXPORT/REFRESH_GROUP</span></span><br><span class="line"><span class="string">Job "SYSTEM"."SYS_IMPORT_SCHEMA_02" completed with 4 error(s) at Fri Nov 14 09:00:27 2014 elapsed 0 00:30:37</span></span><br></pre></td></tr></table></figure>
+<h3 id="5-2-2-解决办法"><a href="#5-2-2-解决办法" class="headerlink" title="5.2.2 解决办法"></a>5.2.2 解决办法</h3><p> <strong>（1）导出dmp文件中的ddl sql语句</strong><br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">impdp &quot;&apos;/ as sysdba&apos;&quot; directory=approbebak dumpfile=APPROBE_V2.4.DMP logfile=APPROBE_V2.4_imp.log remap_schema=approbe:approbebak   transform=oid:n SQLFILE=impdp.sql</span><br></pre></td></tr></table></figure></p>
+<p><strong>（2）在SQLFILE=impdp.sql找到相关JOB id的创建语句</strong><br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- new object type path: SCHEMA_EXPORT/JOB</span></span><br><span class="line"> <span class="keyword">BEGIN</span> SYS.DBMS_IJOB.SUBMIT(</span><br><span class="line">      JOB=&gt; <span class="number">401</span>,</span><br><span class="line">      LUSER=&gt; <span class="string">'APPROBEBAK'</span>,</span><br><span class="line">      PUSER=&gt; <span class="string">'APPROBEBAK'</span>,</span><br><span class="line">      CUSER=&gt; <span class="string">'APPROBEBAK'</span>,</span><br><span class="line">      NEXT_DATE=&gt; <span class="keyword">TO_DATE</span>(<span class="string">'2017-12-15 09:08:27'</span>, <span class="string">'YYYY-MM-DD:HH24:MI:SS'</span>),</span><br><span class="line">      <span class="built_in">INTERVAL</span>=&gt; <span class="string">'sysdate+1'</span>,</span><br><span class="line">      BROKEN=&gt;  <span class="literal">FALSE</span>,</span><br><span class="line">      WHAT=&gt; <span class="string">'pkg_XXXXX;'</span>,</span><br><span class="line">      NLSENV=&gt; <span class="string">'NLS_LANGUAGE=''AMERICAN'' NLS_TERRITORY=''AMERICA'' NLS_CURRENCY=''$'' NLS_ISO_CURRENCY=''AMERICA'' NLS_NUMERIC_CHARACTERS=''.,'' NLS_DATE_FORMAT=''DD-MON-RR'' NLS_DATE_LANGUAGE=''AMERICAN'' NLS_SORT=''BINARY'''</span>,</span><br><span class="line">      ENV=&gt; <span class="string">'0102000200000000'</span>);</span><br><span class="line">      <span class="keyword">END</span>;</span><br><span class="line"> /</span><br><span class="line"></span><br><span class="line"> <span class="keyword">BEGIN</span> SYS.DBMS_IJOB.SUBMIT(</span><br><span class="line">      JOB=&gt; <span class="number">402</span>,</span><br><span class="line">      LUSER=&gt; <span class="string">'APPROBEBAK'</span>,</span><br><span class="line">      PUSER=&gt; <span class="string">'APPROBEBAK'</span>,</span><br><span class="line">      CUSER=&gt; <span class="string">'APPROBEBAK'</span>,</span><br><span class="line">      NEXT_DATE=&gt; <span class="keyword">TO_DATE</span>(<span class="string">'2017-12-15 09:08:27'</span>, <span class="string">'YYYY-MM-DD:HH24:MI:SS'</span>),</span><br><span class="line">      <span class="built_in">INTERVAL</span>=&gt; <span class="string">'sysdate+1'</span>,</span><br><span class="line">      BROKEN=&gt;  <span class="literal">FALSE</span>,</span><br><span class="line">      WHAT=&gt; <span class="string">'pkg_XXXXX.222_XXXXX;'</span>,</span><br><span class="line">      NLSENV=&gt; <span class="string">'NLS_LANGUAGE=''AMERICAN'' NLS_TERRITORY=''AMERICA'' NLS_CURRENCY=''$'' NLS_ISO_CURRENCY=''AMERICA'' NLS_NUMERIC_CHARACTERS=''.,'' NLS_DATE_FORMAT=''DD-MON-RR'' NLS_DATE_LANGUAGE=''AMERICAN'' NLS_SORT=''BINARY'''</span>,</span><br><span class="line">      ENV=&gt; <span class="string">'0102000200000000'</span>);</span><br><span class="line">      <span class="keyword">END</span>;</span><br><span class="line"> /</span><br></pre></td></tr></table></figure></p>
+<p><strong>（3）  查到最大JOB_ID修改语句</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select max (job)  from   dba_jobs;</span><br></pre></td></tr></table></figure>
+<p><strong>（4） 调整报错SQL语句为最大JOB_ID ，本例为403 404，手工创建如下语句 SYStem用户执行</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- new object type path: SCHEMA_EXPORT/JOB</span></span><br><span class="line"> <span class="keyword">BEGIN</span> SYS.DBMS_IJOB.SUBMIT(</span><br><span class="line">      JOB=&gt; <span class="number">403</span>,</span><br><span class="line">      LUSER=&gt; <span class="string">'APPROBEBAK'</span>,</span><br><span class="line">      PUSER=&gt; <span class="string">'APPROBEBAK'</span>,</span><br><span class="line">      CUSER=&gt; <span class="string">'APPROBEBAK'</span>,</span><br><span class="line">      NEXT_DATE=&gt; <span class="keyword">TO_DATE</span>(<span class="string">'2017-12-15 09:08:27'</span>, <span class="string">'YYYY-MM-DD:HH24:MI:SS'</span>),</span><br><span class="line">      <span class="built_in">INTERVAL</span>=&gt; <span class="string">'sysdate+1'</span>,</span><br><span class="line">      BROKEN=&gt;  <span class="literal">FALSE</span>,</span><br><span class="line">      WHAT=&gt; <span class="string">'pkg_XXXXX;'</span>,</span><br><span class="line">      NLSENV=&gt; <span class="string">'NLS_LANGUAGE=''AMERICAN'' NLS_TERRITORY=''AMERICA'' NLS_CURRENCY=''$'' NLS_ISO_CURRENCY=''AMERICA'' NLS_NUMERIC_CHARACTERS=''.,'' NLS_DATE_FORMAT=''DD-MON-RR'' NLS_DATE_LANGUAGE=''AMERICAN'' NLS_SORT=''BINARY'''</span>,</span><br><span class="line">      ENV=&gt; <span class="string">'0102000200000000'</span>);</span><br><span class="line">      <span class="keyword">END</span>;</span><br><span class="line"> /</span><br><span class="line"></span><br><span class="line"> <span class="keyword">BEGIN</span> SYS.DBMS_IJOB.SUBMIT(</span><br><span class="line">      JOB=&gt; <span class="number">404</span>,</span><br><span class="line">      LUSER=&gt; <span class="string">'APPROBEBAK'</span>,</span><br><span class="line">      PUSER=&gt; <span class="string">'APPROBEBAK'</span>,</span><br><span class="line">      CUSER=&gt; <span class="string">'APPROBEBAK'</span>,</span><br><span class="line">      NEXT_DATE=&gt; <span class="keyword">TO_DATE</span>(<span class="string">'2017-12-15 09:08:27'</span>, <span class="string">'YYYY-MM-DD:HH24:MI:SS'</span>),</span><br><span class="line">      <span class="built_in">INTERVAL</span>=&gt; <span class="string">'sysdate+1'</span>,</span><br><span class="line">      BROKEN=&gt;  <span class="literal">FALSE</span>,</span><br><span class="line">      WHAT=&gt; <span class="string">'pkg_XXXXX.222_XXXXX;'</span>,</span><br><span class="line">      NLSENV=&gt; <span class="string">'NLS_LANGUAGE=''AMERICAN'' NLS_TERRITORY=''AMERICA'' NLS_CURRENCY=''$'' NLS_ISO_CURRENCY=''AMERICA'' NLS_NUMERIC_CHARACTERS=''.,'' NLS_DATE_FORMAT=''DD-MON-RR'' NLS_DATE_LANGUAGE=''AMERICAN'' NLS_SORT=''BINARY'''</span>,</span><br><span class="line">      ENV=&gt; <span class="string">'0102000200000000'</span>);</span><br><span class="line">      <span class="keyword">END</span>;</span><br><span class="line"> /</span><br></pre></td></tr></table></figure>
+<p>（5）查看最后结果是否插入成功</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">SQL&gt; select job,SCHEMA_USER,what from dba_jobs;</span><br><span class="line"></span><br><span class="line">       JOB SCHEMA_USER</span><br><span class="line"><span class="comment">---------- ------------------------------</span></span><br><span class="line">WHAT</span><br><span class="line"><span class="comment">--------------------------------------------------------------------------------</span></span><br><span class="line">       403 APPROBEBAK</span><br><span class="line">pkg_XXXXX.222_XXXXX;</span><br><span class="line"></span><br><span class="line">       404 APPROBEBAK</span><br><span class="line">pkg_XXXXX;</span><br><span class="line"></span><br><span class="line">       402 APPROBE</span><br><span class="line">pkg_XXXXX.222_XXXXX;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       JOB SCHEMA_USER</span><br><span class="line"><span class="comment">---------- ------------------------------</span></span><br><span class="line">WHAT</span><br><span class="line"><span class="comment">--------------------------------------------------------------------------------</span></span><br><span class="line">       401 APPROBE</span><br><span class="line">pkg_XXXXX;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">SQL&gt;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+    
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+      
+    </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>熬夜写博客挺辛苦的，生怕猝死，所以每当写博客都带着听诊器，心脏一有异响，随时按Ctrl+S。</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: block;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="rocklei123 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/aipay.jpg" alt="rocklei123 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Oracle/" rel="tag"># Oracle</a>
+          
+            <a href="/tags/数据泵/" rel="tag"># 数据泵</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/10/Spring-AOP实践-统计方法执行时间/" rel="next" title="Spring AOP实践-统计方法执行时间">
+                <i class="fa fa-chevron-left"></i> Spring AOP实践-统计方法执行时间
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="rocklei123" />
+            
+              <p class="site-author-name" itemprop="name">rocklei123</p>
+              <p class="site-description motion-element" itemprop="description">rocklei123的点滴技术生活</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/rocklei123" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/rocklei123" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zhoulei091@126.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0-目标"><span class="nav-number">1.</span> <span class="nav-text">0.目标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-创建导出文件夹目录"><span class="nav-number">2.</span> <span class="nav-text">1. 创建导出文件夹目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-查询已经有的directory"><span class="nav-number">3.</span> <span class="nav-text">2. 查询已经有的directory</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-导出dmp文件"><span class="nav-number">4.</span> <span class="nav-text">3. 导出dmp文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-目标数据库导入全量表方法如下："><span class="nav-number">5.</span> <span class="nav-text">4.目标数据库导入全量表方法如下：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-可能遇到的问题"><span class="nav-number">6.</span> <span class="nav-text">5.可能遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-问题1-：Object-type-TYPE-failed-to-create-with-error"><span class="nav-number">6.1.</span> <span class="nav-text">5.1 问题1 ：Object type TYPE failed to create with error</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-1-错误信息"><span class="nav-number">6.1.1.</span> <span class="nav-text">5.1.1 错误信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-2-错误原因"><span class="nav-number">6.1.2.</span> <span class="nav-text">5.1.2 错误原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-3-解决办法"><span class="nav-number">6.1.3.</span> <span class="nav-text">5.1.3 解决办法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-问题2：违反唯一性约束-JOB-ID重复"><span class="nav-number">6.2.</span> <span class="nav-text">5.2 问题2：违反唯一性约束 JOB_ID重复</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-1-错误日志"><span class="nav-number">6.2.1.</span> <span class="nav-text">5.2.1 错误日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-2-解决办法"><span class="nav-number">6.2.2.</span> <span class="nav-text">5.2.2 解决办法</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rocklei123</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cytMPyKrf';
+      var conf = '193a394926f19428e645007868bcefe0';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
