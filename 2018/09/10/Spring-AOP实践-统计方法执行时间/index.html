@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spring AOP,Spring," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rocklei123 米宝窝" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1.目标 背景：基于Spring+Strust2+Ibatis 的JAVA Web项目，后台实现分传统的3层结构，dao层，service层，action层。业务调用链一般为 action层–&amp;gt; service层 –&amp;gt; dao层。  目标：统计Action层某个方法的执行时间，只需要在该方法上加入一个注解便可以打印出该方法的执行时间。（通过Action层统计方法，基本能粗略统计从客户发">
+<meta name="keywords" content="Spring AOP,Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring AOP实践-统计方法执行时间">
+<meta property="og:url" content="http://yoursite.com/2018/09/10/Spring-AOP实践-统计方法执行时间/index.html">
+<meta property="og:site_name" content="rocklei123 米宝窝">
+<meta property="og:description" content="1.目标 背景：基于Spring+Strust2+Ibatis 的JAVA Web项目，后台实现分传统的3层结构，dao层，service层，action层。业务调用链一般为 action层–&amp;gt; service层 –&amp;gt; dao层。  目标：统计Action层某个方法的执行时间，只需要在该方法上加入一个注解便可以打印出该方法的执行时间。（通过Action层统计方法，基本能粗略统计从客户发">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-14T06:16:24.653Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring AOP实践-统计方法执行时间">
+<meta name="twitter:description" content="1.目标 背景：基于Spring+Strust2+Ibatis 的JAVA Web项目，后台实现分传统的3层结构，dao层，service层，action层。业务调用链一般为 action层–&amp;gt; service层 –&amp;gt; dao层。  目标：统计Action层某个方法的执行时间，只需要在该方法上加入一个注解便可以打印出该方法的执行时间。（通过Action层统计方法，基本能粗略统计从客户发">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/10/Spring-AOP实践-统计方法执行时间/"/>
+
+
+
+
+
+  <title>Spring AOP实践-统计方法执行时间 | rocklei123 米宝窝</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rocklei123 米宝窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">水滴石穿</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/10/Spring-AOP实践-统计方法执行时间/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rocklei123">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rocklei123 米宝窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring AOP实践-统计方法执行时间</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-10T22:23:37+08:00">
+                2018-09-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2018/09/10/Spring-AOP实践-统计方法执行时间/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2018/09/10/Spring-AOP实践-统计方法执行时间/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-目标"><a href="#1-目标" class="headerlink" title="1.目标"></a>1.目标</h1><ul>
+<li><p>背景：<br>基于Spring+Strust2+Ibatis 的JAVA Web项目，后台实现分传统的3层结构，dao层，service层，action层。业务调用链一般为 action层–&gt; service层 –&gt; dao层。</p>
+</li>
+<li><p>目标：<br>统计Action层某个方法的执行时间，只需要在该方法上加入一个注解便可以打印出该方法的执行时间。（通过Action层统计方法，基本能粗略统计从客户发起到完成请求反馈给前台页面的总时间。）</p>
+</li>
+</ul>
+<h1 id="2-项目环境"><a href="#2-项目环境" class="headerlink" title="2.项目环境"></a>2.项目环境</h1><p>基于Spring Strust2 Ibatis JAVA Web项目</p>
+<ul>
+<li>spring-XXX-3.0.5.RELEASE.jar</li>
+<li>aspectjrt-1.6.8.jar</li>
+<li>struts2-core-2.3.24.jar</li>
+<li>log4j-1.2.17.jar<br>（等）</li>
+</ul>
+<a id="more"></a>
+<h1 id="3-通过Spring-AOP-实现"><a href="#3-通过Spring-AOP-实现" class="headerlink" title="3.通过Spring AOP 实现"></a>3.通过Spring AOP 实现</h1><h2 id="3-1-注解类（为统计方法上加入该注解）"><a href="#3-1-注解类（为统计方法上加入该注解）" class="headerlink" title="3.1 注解类（为统计方法上加入该注解）"></a>3.1 注解类（为统计方法上加入该注解）</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.annotaion;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Documented;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.ElementType;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Target;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Title</span>: rocklei123 用于记录方法耗时</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/8/10 17:59</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span>: 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Target</span>(&#123;ElementType.METHOD, ElementType.TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MethodPerformanceLog &#123;</span><br><span class="line">    <span class="function">String <span class="title">module</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;  <span class="comment">//功能模块</span></span><br><span class="line">    <span class="function">String <span class="title">remark</span><span class="params">()</span> <span class="keyword">default</span> ""</span>; <span class="comment">// 操作备注</span></span><br><span class="line">    <span class="function">String <span class="title">operateType</span><span class="params">()</span> <span class="keyword">default</span> ""</span>; <span class="comment">// 操作类型：Add/Update/Delete/Search/Login等</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3-2-log4j-配置（单独生成文件并按日期滚动）"><a href="#3-2-log4j-配置（单独生成文件并按日期滚动）" class="headerlink" title="3.2 log4j 配置（单独生成文件并按日期滚动）"></a>3.2 log4j 配置（单独生成文件并按日期滚动）</h2><p>%l 表示：输出日志事件的发生位置，包括类目名、发生的线程，以及在代码中的行数<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">loglevel=DEBUG</span><br><span class="line">log4j.rootLogger=$&#123;loglevel&#125;,stdout,perfile</span><br><span class="line">log4j.logger.com.mchange=ERROR</span><br><span class="line">log4j.logger.org.apache=ERROR</span><br><span class="line">log4j.logger.org.springframework=ERROR</span><br><span class="line">log4j.logger.org.apache.catalina=ERROR</span><br><span class="line">log4j.logger.org.apache.struts2=ERROR</span><br><span class="line">log4j.logger.org.apache.struts2.util.StrutsTypeConverter=ERROR</span><br><span class="line">log4j.logger.com.opensymphony.xwork2=ERROR</span><br><span class="line">log4j.logger.org.quartz=ERROR</span><br><span class="line">log4j.appender.stdout=org.apache.log4j.ConsoleAppender</span><br><span class="line">log4j.appender.stdout.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.stdout.layout.ConversionPattern=[sqlrobe] %d&#123;yyyy-MM-dd HH:mm:ss SSS&#125; [%-5p] %t(%c:%L) - %m%n</span><br><span class="line">log4j.appender.perfile=org.apache.log4j.DailyRollingFileAppender</span><br><span class="line">log4j.appender.perfile.File=$&#123;catalina.base&#125;/logs/sqlrobe/sqlrobe.log</span><br><span class="line">log4j.appender.perfile.layout.ConversionPattern=[sqlrobe] %d&#123;yyyy-MM-dd HH:mm:ss SSS&#125; [%-5p] %t(%c:%L) - %m%n</span><br><span class="line">log4j.appender.perfile.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.perfile.threshold=DEBUG</span><br><span class="line">log4j.appender.perfile.DatePattern='.'yyyy-MM-dd</span><br><span class="line">log4j.appender.perfile.BufferedIO=true</span><br><span class="line">log4j.appender.perfile.BufferSize=8192</span><br><span class="line"></span><br><span class="line">##middleware</span><br><span class="line">log4j.logger.middleware=$&#123;loglevel&#125;,middleware    </span><br><span class="line">log4j.appender.middleware=org.apache.log4j.DailyRollingFileAppender   </span><br><span class="line">log4j.appender.middleware.File=$&#123;catalina.base&#125;/logs/sqlrobe/middleware.log</span><br><span class="line">log4j.appender.middleware.DatePattern='.'yyyy-MM-dd</span><br><span class="line">log4j.appender.middleware.layout=org.apache.log4j.PatternLayout  </span><br><span class="line">log4j.appender.middleware.layout.ConversionPattern=[middleware] %d&#123;yyyy-MM-dd HH:mm:ss SSS&#125; [%-5p] %t(%l) - %m%n</span><br><span class="line">log4j.additivity.middleware=false</span><br></pre></td></tr></table></figure></p>
+<h2 id="3-3-利用-Spring-AOP的思想来统计方法执行时间并打印"><a href="#3-3-利用-Spring-AOP的思想来统计方法执行时间并打印" class="headerlink" title="3.3 利用 Spring AOP的思想来统计方法执行时间并打印"></a>3.3 利用 Spring AOP的思想来统计方法执行时间并打印</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.aop;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.log4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.aspectj.lang.ProceedingJoinPoint;</span><br><span class="line"><span class="keyword">import</span> org.aspectj.lang.annotation.Around;</span><br><span class="line"><span class="keyword">import</span> org.aspectj.lang.annotation.Aspect;</span><br><span class="line"><span class="keyword">import</span> org.aspectj.lang.annotation.Pointcut;</span><br><span class="line"><span class="keyword">import</span> org.aspectj.lang.reflect.MethodSignature;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Title</span>: sqlrobe</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/8/10 17:59</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span>: 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Aspect</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PerformanceMonitorMiddleware</span> </span>&#123;</span><br><span class="line">    <span class="comment">//日志记录</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = Logger.getLogger(<span class="string">"middleware"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 一分钟，即60000ms。为超过一分钟的方法统计到日志中</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> ONE_MINUTE = <span class="number">60000</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//定义切点</span></span><br><span class="line">    <span class="meta">@Pointcut</span>(<span class="string">"@annotation(com.approbe.annotaion.MethodPerformanceLog)"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodCachePointcut</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 统计方法执行耗时Around环绕通知</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> joinPoint</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Around</span>(<span class="string">"methodCachePointcut()"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">timeAround</span><span class="params">(ProceedingJoinPoint joinPoint)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 定义返回对象、得到方法需要的参数</span></span><br><span class="line">        Object obj = <span class="keyword">null</span>;</span><br><span class="line">        Object[] args = joinPoint.getArgs();</span><br><span class="line">        <span class="keyword">long</span> startTime = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            obj = joinPoint.proceed(args);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            logger.error(<span class="string">"统计某方法执行耗时环绕通知出错"</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取执行的方法名</span></span><br><span class="line">        <span class="keyword">long</span> endTime = System.currentTimeMillis();</span><br><span class="line">        MethodSignature signature = (MethodSignature) joinPoint.getSignature();</span><br><span class="line">        String methodName = signature.getDeclaringTypeName() + <span class="string">"."</span> + signature.getName();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 打印耗时的信息</span></span><br><span class="line">        <span class="keyword">this</span>.printExecTime(methodName, startTime, endTime);</span><br><span class="line">        <span class="keyword">return</span> obj;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 打印方法执行耗时的信息，如果超过了一定的时间，才打印</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> methodName</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> startTime</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> endTime</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">printExecTime</span><span class="params">(String methodName, <span class="keyword">long</span> startTime, <span class="keyword">long</span> endTime)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> diffTime = endTime - startTime;</span><br><span class="line">        <span class="comment">//超过1分钟的方法单独打印</span></span><br><span class="line">        <span class="keyword">if</span> (diffTime &gt; ONE_MINUTE) &#123;</span><br><span class="line">            logger.warn(<span class="string">"-----"</span> + methodName + <span class="string">" 方法执行耗时："</span> + diffTime + <span class="string">" ms"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        logger.info(<span class="string">"--------------------------------------------"</span> + methodName + <span class="string">" 方法执行耗时："</span> + diffTime + <span class="string">" ms"</span>);</span><br><span class="line">        System.out.println(<span class="string">"--------------------------------------"</span> + methodName + <span class="string">" 方法执行耗时："</span> + diffTime + <span class="string">" ms"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3-4-Spring-配置文件配置"><a href="#3-4-Spring-配置文件配置" class="headerlink" title="3.4 Spring 配置文件配置"></a>3.4 Spring 配置文件配置</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">aop:config</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">aop:aspect</span> <span class="attr">id</span>=<span class="string">"performenceMonitorMiddlewareAop"</span> <span class="attr">ref</span>=<span class="string">"performenceMonitorMiddleware"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">aop:config</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 注入bean--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"performenceMonitorMiddleware"</span> <span class="attr">class</span>=<span class="string">"com.approbe.aop.PerformanceMonitorMiddleware"</span>&gt;</span><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 强制使用cglib代理--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">aop:aspectj-autoproxy</span> <span class="attr">proxy-target-class</span>=<span class="string">"true"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong> 为什么强制使用cglib代理呢？</strong></p>
+<p>spring的动态代理如果不指定，他会根据类的信息来进行代理，如果类有接口的会使用JDK的动态代理，如果类没有接口的就会使用cglib，因为struts2的ActionSupport是有实现接口的，所以他用了JDK的动态代理，那样你类中自己的属性自然就没有了。而你指定了使用cglib，那他就会动态生成一个继承你这个Action的子类，自然你Action类中可供子类访问的属性都有了。 不过struts2有自己的拦截器没必要也是不建议用spring的AOP 出处：<a href="http://bbs.csdn.net/topics/390630278" target="_blank" rel="noopener">http://bbs.csdn.net/topics/390630278</a></p>
+<h2 id="3-5-Struts2-配置文件配置"><a href="#3-5-Struts2-配置文件配置" class="headerlink" title="3.5 Struts2 配置文件配置"></a>3.5 Struts2 配置文件配置</h2><p>分析：一般struts2+spring应用中，spring的插件只负责action的ioc部分，但并没有进行功能加强，即采用代理的机制，所有的action还是使用struts2进行管理，在使用AOP后，这些action需要由spring进行管理，如果没有被spring进行呢代理，将出现注入失败。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">&lt;!-- 让struts2始终先考虑spring的自动装箱--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">constant</span> <span class="attr">name</span>=<span class="string">"struts.objectFactory.spring.autoWire.alwaysRespect"</span> <span class="attr">value</span>=<span class="string">"true"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>故如果不增加这句话，Action 中的service方法为空。会报空指针异常：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">java.lang.NullPointerException</span><br><span class="line">	at com.approbe.middlware.action.WlsServerInfoAction.updateWlsBySystemId(WlsServerInfoAction.java:<span class="number">92</span>)</span><br><span class="line">	at com.approbe.middlware.action.WlsServerInfoAction$$FastClassByCGLIB$$<span class="number">2291828</span>.invoke(&lt;generated&gt;)</span><br><span class="line">	at net.sf.cglib.proxy.MethodProxy.invoke(MethodProxy.java:<span class="number">191</span>)</span><br><span class="line">	at org.springframework.aop.framework.Cglib2AopProxy$CglibMethodInvocation.invokeJoinpoint(Cglib2AopProxy.java:<span class="number">688</span>)</span><br><span class="line">	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:<span class="number">150</span>)</span><br><span class="line">	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:<span class="number">91</span>)</span><br><span class="line">	at com.approbe.aop.PerformanceMonitorMiddleware.timeAround(PerformanceMonitorMiddleware.java:<span class="number">46</span>)</span><br><span class="line">	at sun.reflect.GeneratedMethodAccessor543.invoke(Unknown Source)</span><br><span class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)</span><br><span class="line">	at java.lang.reflect.Method.invoke(Unknown Source)</span><br><span class="line">	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:<span class="number">621</span>)</span><br><span class="line">	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:<span class="number">610</span>)</span><br><span class="line">	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:<span class="number">65</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="3-6-实现效果"><a href="#3-6-实现效果" class="headerlink" title="3.6 实现效果"></a>3.6 实现效果</h2><ul>
+<li>在希望统计的方法上加注释</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"updateWlsBySystemId"</span>)</span><br><span class="line"><span class="meta">@MethodPerformanceLog</span>(<span class="keyword">module</span> = <span class="string">"中间件批量修改/中间件树结构管理"</span>, remark = <span class="string">"更新功能"</span>, operateType = <span class="string">"更新"</span>)</span><br><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateWlsBySystemId</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">"更新系统------------------------"</span>);</span><br><span class="line">    middlewareLogger.info(<span class="string">"更新系统----------------"</span>);</span><br><span class="line">    String remoteAddr = GetRemoteAddrUtil.getRemoteIpAddr(request);</span><br><span class="line">    String requestUserName = HttpSessionUtil.getSessionUserName(request);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>执行方法打印执行时间</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--------------------------------------com.approbe.middlware.action.WlsServerInfoAction.updateWlsBySystemId 方法执行耗时：<span class="number">6853</span> ms</span><br></pre></td></tr></table></figure>
+<h1 id="4-参考"><a href="#4-参考" class="headerlink" title="4.参考"></a>4.参考</h1><p><a href="http://jinnianshilongnian.iteye.com/category/283252" title="京东jinnianshilongnian 《java开发常见问题分析》" target="_blank" rel="noopener">京东jinnianshilongnian 《java开发常见问题分析》 http://jinnianshilongnian.iteye.com/category/283252 </a></p>
+<p><a href="http://jinnianshilongnian.iteye.com/blog/1901694" title="京东jinnianshilongnian 《请不要再使用低级别的AOP API》" target="_blank" rel="noopener">京东jinnianshilongnian 《请不要再使用低级别的AOP API》 http://jinnianshilongnian.iteye.com/blog/1901694</a></p>
+<p><a href="https://blog.csdn.net/unei66/article/details/9422339" title="9876- 《spring aop拦截action配置》" target="_blank" rel="noopener">《spring aop拦截action配置》 https://blog.csdn.net/unei66/article/details/9422339</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+    
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+      
+    </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>熬夜写博客挺辛苦的，生怕猝死，所以每当写博客都带着听诊器，心脏一有异响，随时按Ctrl+S。</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: block;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="rocklei123 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/aipay.jpg" alt="rocklei123 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring-AOP/" rel="tag"># Spring AOP</a>
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/02/某保险公司核心系统中间件Hibernate-一级缓存导致内存溢出的故障诊断/" rel="next" title="某保险公司核心系统中间件Hibernate 一级缓存导致内存溢出的故障诊断">
+                <i class="fa fa-chevron-left"></i> 某保险公司核心系统中间件Hibernate 一级缓存导致内存溢出的故障诊断
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="rocklei123" />
+            
+              <p class="site-author-name" itemprop="name">rocklei123</p>
+              <p class="site-description motion-element" itemprop="description">rocklei123的点滴技术生活</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/rocklei123" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/rocklei123" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zhoulei091@126.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-目标"><span class="nav-number">1.</span> <span class="nav-text">1.目标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-项目环境"><span class="nav-number">2.</span> <span class="nav-text">2.项目环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-通过Spring-AOP-实现"><span class="nav-number">3.</span> <span class="nav-text">3.通过Spring AOP 实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-注解类（为统计方法上加入该注解）"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 注解类（为统计方法上加入该注解）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-log4j-配置（单独生成文件并按日期滚动）"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 log4j 配置（单独生成文件并按日期滚动）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-利用-Spring-AOP的思想来统计方法执行时间并打印"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 利用 Spring AOP的思想来统计方法执行时间并打印</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-Spring-配置文件配置"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 Spring 配置文件配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-Struts2-配置文件配置"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 Struts2 配置文件配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-6-实现效果"><span class="nav-number">3.6.</span> <span class="nav-text">3.6 实现效果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-参考"><span class="nav-number">4.</span> <span class="nav-text">4.参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rocklei123</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cytMPyKrf';
+      var conf = '193a394926f19428e645007868bcefe0';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
