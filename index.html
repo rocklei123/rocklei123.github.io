@@ -389,15 +389,17 @@
       
         
           <h1 id="0-概述："><a href="#0-概述：" class="headerlink" title="0. 概述："></a>0. 概述：</h1><p>本文针对这几年来WebLogic软件经常报出的java反序列化漏洞问题进行总结，其他中间件软件本文暂不讨论。内容主要涵盖客户最关心的一些问题、工程师打补丁时需要注意事项。</p>
-<h1 id="1-序列化与反序列化介绍"><a href="#1-序列化与反序列化介绍" class="headerlink" title="1. 序列化与反序列化介绍"></a>1. 序列化与反序列化介绍</h1><p>Java 序列化与反序列化<br>Java 序列化是指把 Java 对象转换为字节序列的过程便于保存在内存、文件、数据库中，ObjectOutputStream类的 writeObject() 方法可以实现序列化。</p>
-<p><img src="/2018/09/25/WebLogic-Java反序列化漏洞终极建议/markdown-img-paste-20180925111252598.png" alt="WebLogic Java反序列化漏洞终极建议-2"><br>Java 反序列化是指把字节序列恢复为 Java 对象的过程，ObjectInputStream 类的 readObject() 方法用于反序列化。</p>
+<h1 id="1-序列化与反序列化介绍"><a href="#1-序列化与反序列化介绍" class="headerlink" title="1. 序列化与反序列化介绍"></a>1. 序列化与反序列化介绍</h1><p>Java 序列化与反序列化</p>
+<ul>
+<li>Java 序列化是指把 Java 对象转换为字节序列的过程便于保存在内存、文件、数据库中，ObjectOutputStream类的 writeObject() 方法可以实现序列化。</li>
+<li>Java 反序列化是指把字节序列恢复为 Java 对象的过程，ObjectInputStream 类的 readObject() 方法用于反序列化。</li>
+</ul>
+<p><img src="/2018/09/25/WebLogic-Java反序列化漏洞终极建议/markdown-img-paste-20180925111252598.png" alt="WebLogic Java反序列化漏洞终极建议-2"></p>
 <p>序列化与反序列化是让 Java 对象脱离 Java 运行环境的一种手段，可以有效的实现多平台之间的通信、对象持久化存储。主要应用在以下场景：</p>
 <p><strong> HTTP： </strong> 多平台之间的通信，管理等</p>
 <p><strong> RMI：</strong> 是 Java 的一组拥护开发分布式应用程序的 API，实现了不同操作系统之间程序的方法调用。值得注意的是，RMI 的传输 100% 基于反序列化，Java RMI 的默认端口是 1099 端口。</p>
 <p><strong> JMX：</strong> JMX 是一套标准的代理和服务，用户可以在任何 Java 应用程序中使用这些代理和服务实现管理,中间件软件 WebLogic 的管理页面就是基于 JMX 开发的，而 JBoss 则整个系统都基于 JMX 构架。 ​</p>
 <p>2016年Spring RMI反序列化漏洞今年比较出名的：Jackson，FastJson<br>Java 十分受开发者喜爱的一点是其拥有完善的第三方类库，和满足各种需求的框架；但正因为很多第三方类库引用广泛，如果其中某些组件出现安全问题，那么受影响范围将极为广泛。</p>
-<p>3.</p>
-<p>两个或多个看似安全的模块在同一运行环境下，共同产生的安全问题 ​</p>
 <h1 id="2-Java反序列化漏洞与Weblogic反序列化漏洞介绍"><a href="#2-Java反序列化漏洞与Weblogic反序列化漏洞介绍" class="headerlink" title="2. Java反序列化漏洞与Weblogic反序列化漏洞介绍"></a>2. Java反序列化漏洞与Weblogic反序列化漏洞介绍</h1><h2 id="2-1-Java反序列化漏洞历史"><a href="#2-1-Java反序列化漏洞历史" class="headerlink" title="2.1 Java反序列化漏洞历史"></a>2.1 Java反序列化漏洞历史</h2><p>最为出名的大概应该是：15年的Apache Commons Collections 反序列化远程命令执行漏洞，其当初影响范围包括：WebSphere、JBoss、Jenkins、WebLogic 和 OpenNMSd等。</p>
 <p>Apache Commons Collections 3和4，Groovy，Spring，只要目标应用的Class Path中包含这些库，可让readObject()实现任意命令执行。影响比较广泛的就是Apache Commons Collections这个库，中间件基本都会涉及使用此库。</p>
 <h2 id="2-2-Weblogic-Java反序列化漏洞介绍"><a href="#2-2-Weblogic-Java反序列化漏洞介绍" class="headerlink" title="2.2 Weblogic Java反序列化漏洞介绍"></a>2.2 Weblogic Java反序列化漏洞介绍</h2><p>因为weblogic底层也使用Apache Commons Collections库，WebLogic 存在Java反序列化漏洞无疑的。不过在漏洞修复这方面，Oracle可是不走心啊。正所谓，新三年，旧三年，缝缝补补又三年，还是未修完。以下是基于Weblogic t3协议引起远程代码执行的反序列化漏洞统计：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CVE-2015-4852</span><br><span class="line"></span><br><span class="line">CVE-2016-0638</span><br><span class="line"></span><br><span class="line">CVE-2016-3510</span><br><span class="line"></span><br><span class="line">CVE-2017-3248</span><br><span class="line"></span><br><span class="line">CVE-2018-2628</span><br></pre></td></tr></table></figure></p>
