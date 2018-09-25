@@ -92,7 +92,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/09/18/架构师不得不知的Spring事务不能回滚的深层次原因/markdown-img-paste-20180919105357114.png">
 <meta property="og:image" content="http://yoursite.com/2018/09/18/架构师不得不知的Spring事务不能回滚的深层次原因/markdown-img-paste-2018091910593830.png">
 <meta property="og:image" content="http://yoursite.com/2018/09/18/架构师不得不知的Spring事务不能回滚的深层次原因/markdown-img-paste-20180919143123549.png">
-<meta property="og:updated_time" content="2018-09-19T07:17:30.613Z">
+<meta property="og:updated_time" content="2018-09-25T00:38:06.603Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="架构师不得不知的Spring事务不能回滚的深层次原因">
 <meta name="twitter:description" content="1.目标 本文汇总了常见Spring事务无法回滚的问题，并配合实际案例模拟，并给出解决方案。通过本文可以更加详细的了解Spring事务无法回滚的原因。 希望大家手动敲一遍代码，会收获颇丰。">
@@ -435,6 +435,7 @@
 </ul>
 <h1 id="7-参考"><a href="#7-参考" class="headerlink" title="7.参考"></a>7.参考</h1><p><a href="http://jinnianshilongnian.iteye.com/blog/1850432" title="http://jinnianshilongnian.iteye.com/blog/1850432" target="_blank" rel="noopener">http://jinnianshilongnian.iteye.com/blog/1850432</a></p>
 <p>图灵学院张飞老师–《架构师不得不知道的Spring事物不能回滚的深层次原因-张飞》</p>
+<h1 id="8-欢迎关注米宝窝，持续更新中，谢谢！"><a href="#8-欢迎关注米宝窝，持续更新中，谢谢！" class="headerlink" title="8.欢迎关注米宝窝，持续更新中，谢谢！"></a>8.欢迎关注米宝窝，持续更新中，谢谢！</h1><p><a href="https://rocklei123.github.io/" title="https://rocklei123.github.io/" target="_blank" rel="noopener">米宝窝 https://rocklei123.github.io/ </a></p>
 
       
     </div>
@@ -517,6 +518,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/25/WebLogic-Java反序列化漏洞终极建议/" rel="prev" title="WebLogic Java反序列化漏洞终极建议">
+                WebLogic Java反序列化漏洞终极建议 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -602,7 +607,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -686,7 +691,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-目标"><span class="nav-number">1.</span> <span class="nav-text">1.目标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-测试环境信息"><span class="nav-number">2.</span> <span class="nav-text">2.测试环境信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-try-catch-非RuntimeException-导致回滚失败"><span class="nav-number">3.</span> <span class="nav-text">3.try{}catch{非RuntimeException} 导致回滚失败</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-测试场景"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 测试场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-测试代码"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 测试代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-测试结果"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 测试结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-回滚失败原因"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 回滚失败原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-回滚失败解决办法"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 回滚失败解决办法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-this调用导致回滚失败"><span class="nav-number">4.</span> <span class="nav-text">4.this调用导致回滚失败</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-测试场景"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 测试场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-测试代码"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 测试代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-测试结果"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 测试结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-回滚失败原因"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 回滚失败原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-回滚失败解决办法"><span class="nav-number">4.5.</span> <span class="nav-text">4.5 回滚失败解决办法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-其他原因导致回滚失败"><span class="nav-number">5.</span> <span class="nav-text">5.其他原因导致回滚失败</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-总结"><span class="nav-number">6.</span> <span class="nav-text">6.总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-参考"><span class="nav-number">7.</span> <span class="nav-text">7.参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-目标"><span class="nav-number">1.</span> <span class="nav-text">1.目标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-测试环境信息"><span class="nav-number">2.</span> <span class="nav-text">2.测试环境信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-try-catch-非RuntimeException-导致回滚失败"><span class="nav-number">3.</span> <span class="nav-text">3.try{}catch{非RuntimeException} 导致回滚失败</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-测试场景"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 测试场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-测试代码"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 测试代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-测试结果"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 测试结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-回滚失败原因"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 回滚失败原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-回滚失败解决办法"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 回滚失败解决办法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-this调用导致回滚失败"><span class="nav-number">4.</span> <span class="nav-text">4.this调用导致回滚失败</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-测试场景"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 测试场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-测试代码"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 测试代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-测试结果"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 测试结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-回滚失败原因"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 回滚失败原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-回滚失败解决办法"><span class="nav-number">4.5.</span> <span class="nav-text">4.5 回滚失败解决办法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-其他原因导致回滚失败"><span class="nav-number">5.</span> <span class="nav-text">5.其他原因导致回滚失败</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-总结"><span class="nav-number">6.</span> <span class="nav-text">6.总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-参考"><span class="nav-number">7.</span> <span class="nav-text">7.参考</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-欢迎关注米宝窝，持续更新中，谢谢！"><span class="nav-number">8.</span> <span class="nav-text">8.欢迎关注米宝窝，持续更新中，谢谢！</span></a></li></ol></div>
             
 
           </div>
