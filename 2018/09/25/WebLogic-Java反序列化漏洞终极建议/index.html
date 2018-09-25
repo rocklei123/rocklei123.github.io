@@ -91,7 +91,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2018/09/25/WebLogic-Java反序列化漏洞终极建议/markdown-img-paste-20180925111252598.png">
 <meta property="og:image" content="http://yoursite.com/2018/09/25/WebLogic-Java反序列化漏洞终极建议/markdown-img-paste-20180925095114461.png">
-<meta property="og:updated_time" content="2018-09-25T04:30:32.824Z">
+<meta property="og:updated_time" content="2018-09-25T04:33:05.936Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WebLogic Java反序列化漏洞终极建议">
 <meta name="twitter:description" content="0. 概述：本文针对这几年来WebLogic软件经常报出的java反序列化漏洞问题进行总结，其他中间件软件本文暂不讨论。内容主要涵盖客户最关心的一些问题、工程师打补丁时需要注意事项。 1. 序列化与反序列化介绍Java 序列化与反序列化  Java 序列化是指把 Java 对象转换为字节序列的过程便于保存在内存、文件、数据库中，ObjectOutputStream类的 writeObject()">
@@ -401,6 +401,7 @@
 </ul>
 <p><img src="/2018/09/25/WebLogic-Java反序列化漏洞终极建议/markdown-img-paste-20180925111252598.png" alt="WebLogic Java反序列化漏洞终极建议-2"></p>
 <p>序列化与反序列化是让 Java 对象脱离 Java 运行环境的一种手段，可以有效的实现多平台之间的通信、对象持久化存储。主要应用在以下场景：</p>
+<a id="more"></a>
 <p><strong> HTTP： </strong> 多平台之间的通信，管理等</p>
 <p><strong> RMI：</strong> 是 Java 的一组拥护开发分布式应用程序的 API，实现了不同操作系统之间程序的方法调用。值得注意的是，RMI 的传输 100% 基于反序列化，Java RMI 的默认端口是 1099 端口。</p>
 <p><strong> JMX：</strong> JMX 是一套标准的代理和服务，用户可以在任何 Java 应用程序中使用这些代理和服务实现管理,中间件软件 WebLogic 的管理页面就是基于 JMX 开发的，而 JBoss 则整个系统都基于 JMX 构架。 ​</p>
@@ -415,7 +416,6 @@
 <p>原因就在下文链接中：</p>
 <p><a href="https://paper.seebug.org/333/" target="_blank" rel="noopener">https://paper.seebug.org/333/</a></p>
 <p><a href="http://blog.knownsec.com/2018/04/weblogic-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Ecve-2018-2628%E6%BC%AB%E8%B0%88/" target="_blank" rel="noopener">Weblogic 反序列化漏洞(CVE-2018-2628)漫谈</a></p>
-<a id="more"></a>
 <h1 id="3-Weblogic-Java-反序列化客户关心的几个问题"><a href="#3-Weblogic-Java-反序列化客户关心的几个问题" class="headerlink" title="3.Weblogic Java 反序列化客户关心的几个问题?"></a>3.Weblogic Java 反序列化客户关心的几个问题?</h1><h2 id="3-1-客户关心的：t3协议是否默认开启？"><a href="#3-1-客户关心的：t3协议是否默认开启？" class="headerlink" title="3.1 客户关心的：t3协议是否默认开启？"></a>3.1 客户关心的：t3协议是否默认开启？</h2><p> 问题 ：大多数WebLogic反序列化漏洞主要是针对T3协议，我们默认是否已经启用此协议？通过什么方法确认？</p>
 <p>  答 ：t3协议默认都是开启的，t3协议是非常重要的WebLogic内部的通讯协议。</p>
 <h2 id="3-2-客户关心的：关于配置t3协议过滤器相关问题"><a href="#3-2-客户关心的：关于配置t3协议过滤器相关问题" class="headerlink" title="3.2 客户关心的：关于配置t3协议过滤器相关问题"></a>3.2 客户关心的：关于配置t3协议过滤器相关问题</h2><p>因为基本都是基于t3协议造成的Java反序列化问题，且Oracle提供的补丁集合无法完全解决java反序列化问题，官方提供一种临时解决办法就是过滤T3协议，即WebLogicServer 提供了名为weblogic.security.net.ConnectionFilterImpl 的默认连接筛选器，在此连接筛选器上添加过滤规则过滤连接。如果参考 <a href="http://www.sohu.com/a/241934306_465935" target="_blank" rel="noopener">http://www.sohu.com/a/241934306_465935</a> ，是否起到防护作用，文中配置方式是否正确？</p>
