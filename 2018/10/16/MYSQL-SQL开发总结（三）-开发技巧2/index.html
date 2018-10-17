@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SQL,MYSQL," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rocklei123 米宝窝" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="0. 目标通过本文可以了解在使用mysql数据库开发时，一些开发技巧。本文比较基础，大神请绕道。 通过本人能够掌握：  MySQL 行列转换 MySQL 列转行 MySQL 行转列 MySQL 生成唯一序列号 MySQL 删除重复数据  使用数据及导入方法见MYSQL-SQL开发总结（一）-SQL基础">
+<meta name="keywords" content="SQL,MYSQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MYSQL-SQL开发总结（三）-开发技巧2">
+<meta property="og:url" content="http://yoursite.com/2018/10/16/MYSQL-SQL开发总结（三）-开发技巧2/index.html">
+<meta property="og:site_name" content="rocklei123 米宝窝">
+<meta property="og:description" content="0. 目标通过本文可以了解在使用mysql数据库开发时，一些开发技巧。本文比较基础，大神请绕道。 通过本人能够掌握：  MySQL 行列转换 MySQL 列转行 MySQL 行转列 MySQL 生成唯一序列号 MySQL 删除重复数据  使用数据及导入方法见MYSQL-SQL开发总结（一）-SQL基础">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/10/16/MYSQL-SQL开发总结（三）-开发技巧2/markdown-img-paste-2018101615040595.png">
+<meta property="og:image" content="http://yoursite.com/2018/10/16/MYSQL-SQL开发总结（三）-开发技巧2/markdown-img-paste-20181016163536370.png">
+<meta property="og:image" content="http://yoursite.com/2018/10/16/MYSQL-SQL开发总结（三）-开发技巧2/markdown-img-paste-20181016170406360.png">
+<meta property="og:updated_time" content="2018-10-17T10:16:36.176Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MYSQL-SQL开发总结（三）-开发技巧2">
+<meta name="twitter:description" content="0. 目标通过本文可以了解在使用mysql数据库开发时，一些开发技巧。本文比较基础，大神请绕道。 通过本人能够掌握：  MySQL 行列转换 MySQL 列转行 MySQL 行转列 MySQL 生成唯一序列号 MySQL 删除重复数据  使用数据及导入方法见MYSQL-SQL开发总结（一）-SQL基础">
+<meta name="twitter:image" content="http://yoursite.com/2018/10/16/MYSQL-SQL开发总结（三）-开发技巧2/markdown-img-paste-2018101615040595.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/16/MYSQL-SQL开发总结（三）-开发技巧2/"/>
+
+
+
+
+
+  <title>MYSQL-SQL开发总结（三）-开发技巧2 | rocklei123 米宝窝</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rocklei123 米宝窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">水滴石穿</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/MYSQL-SQL开发总结（三）-开发技巧2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rocklei123">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rocklei123 米宝窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MYSQL-SQL开发总结（三）-开发技巧2</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T13:27:29+08:00">
+                2018-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MYSQL/" itemprop="url" rel="index">
+                    <span itemprop="name">MYSQL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2018/10/16/MYSQL-SQL开发总结（三）-开发技巧2/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2018/10/16/MYSQL-SQL开发总结（三）-开发技巧2/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="0-目标"><a href="#0-目标" class="headerlink" title="0. 目标"></a>0. 目标</h1><p>通过本文可以了解在使用mysql数据库开发时，一些开发技巧。本文比较基础，大神请绕道。</p>
+<p>通过本人能够掌握：</p>
+<ul>
+<li>MySQL 行列转换</li>
+<li>MySQL 列转行</li>
+<li>MySQL 行转列</li>
+<li>MySQL 生成唯一序列号</li>
+<li>MySQL 删除重复数据</li>
+</ul>
+<p>使用数据及导入方法见<a href="MYSQL-SQL开发总结（一）-SQL基础&quot;&quot;">MYSQL-SQL开发总结（一）-SQL基础</a></p>
+<a id="more"></a>
+<h1 id="1-测试表数据"><a href="#1-测试表数据" class="headerlink" title="1. 测试表数据"></a>1. 测试表数据</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT * FROM websites;</span><br><span class="line">+<span class="comment">----+----------+---------------------------+-------+---------+</span></span><br><span class="line">| id | name     | url                       | alexa | country |</span><br><span class="line">+<span class="comment">----+----------+---------------------------+-------+---------+</span></span><br><span class="line">|  1 | Google   | https://www.google.cm/    |     1 | USA     |</span><br><span class="line">|  2 | 淘宝     | https://www.taobao.com/   |    13 | CN      |</span><br><span class="line">|  3 | 菜鸟教程 | http://www.runoob.com/    |  4689 | CN      |</span><br><span class="line">|  4 | 微博     | http://weibo.com/         |    20 | CN      |</span><br><span class="line">|  5 | Facebook | https://www.facebook.com/ |     3 | USA     |</span><br><span class="line">+<span class="comment">----+----------+---------------------------+-------+---------+</span></span><br><span class="line">5 rows in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> access_log;</span><br><span class="line">+<span class="comment">-----+---------+-------+------------+</span></span><br><span class="line">| aid | site_id | count | date       |</span><br><span class="line">+<span class="comment">-----+---------+-------+------------+</span></span><br><span class="line">|   1 |       1 |    45 | 2016-05-10 |</span><br><span class="line">|   2 |       3 |   100 | 2016-05-13 |</span><br><span class="line">|   3 |       1 |   230 | 2016-05-14 |</span><br><span class="line">|   4 |       2 |    10 | 2016-05-14 |</span><br><span class="line">|   5 |       5 |   205 | 2016-05-14 |</span><br><span class="line">|   6 |       4 |    13 | 2016-05-15 |</span><br><span class="line">|   7 |       3 |   220 | 2016-05-15 |</span><br><span class="line">|   8 |       5 |   545 | 2016-05-16 |</span><br><span class="line">|   9 |       3 |   201 | 2016-05-17 |</span><br><span class="line">+<span class="comment">-----+---------+-------+------------+</span></span><br><span class="line">9 rows in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT w.name ,a.count FROM websites w JOIN access_log a ON w.id = a.site_id;</span><br><span class="line">+<span class="comment">----------+-------+</span></span><br><span class="line">| name     | count |</span><br><span class="line">+<span class="comment">----------+-------+</span></span><br><span class="line">| Google   |    45 |</span><br><span class="line">| Google   |   230 |</span><br><span class="line">| 淘宝     |    10 |</span><br><span class="line">| 菜鸟教程 |   100 |</span><br><span class="line">| 菜鸟教程 |   220 |</span><br><span class="line">| 菜鸟教程 |   201 |</span><br><span class="line">| 微博     |    13 |</span><br><span class="line">| Facebook |   205 |</span><br><span class="line">| Facebook |   545 |</span><br><span class="line">+<span class="comment">----------+-------+</span></span><br><span class="line">9 rows in <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+<h1 id="2-行转列场景"><a href="#2-行转列场景" class="headerlink" title="2.行转列场景"></a>2.行转列场景</h1><p>欲实现效果，将各个公司网站访问总数统一在一行显示。实现效果如下：</p>
+<p><img src="/2018/10/16/MYSQL-SQL开发总结（三）-开发技巧2/markdown-img-paste-2018101615040595.png" alt="行转列场景-使用自连接方法实现行转列"></p>
+<h2 id="2-1-使用自连接方法实现行转列"><a href="#2-1-使用自连接方法实现行转列" class="headerlink" title="2.1 使用自连接方法实现行转列"></a>2.1 使用自连接方法实现行转列</h2><p><strong> 思路 </strong> 我们可以通过单独查询其中一种应用总的访问次数，然后在对几种结果通过cross join 聚合。</p>
+<ul>
+<li>Google 公司网站访问次数总计</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT SUM(COUNT) AS 'Google' FROM access_log a JOIN websites w ON w.id = a.site_id AND w.name = 'Google';</span><br><span class="line">+<span class="comment">--------+</span></span><br><span class="line">| Google |</span><br><span class="line">+<span class="comment">--------+</span></span><br><span class="line">|    275 |</span><br><span class="line">+<span class="comment">--------+</span></span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Facebook公司网站访问次数总计</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT SUM(COUNT) AS 'Facebook' FROM access_log a JOIN websites w ON w.id = a.site_id AND w.name = 'Facebook';</span><br><span class="line">+<span class="comment">----------+</span></span><br><span class="line">| Facebook |</span><br><span class="line">+<span class="comment">----------+</span></span><br><span class="line">|      750 |</span><br><span class="line">+<span class="comment">----------+</span></span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>菜鸟教程公司网站访问次数总计</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT SUM(COUNT) AS '菜鸟教程' FROM access_log a JOIN websites w ON w.id = a.site_id AND w.name = '菜鸟教程';</span><br><span class="line">+<span class="comment">----------+</span></span><br><span class="line">| 菜鸟教程 |</span><br><span class="line">+<span class="comment">----------+</span></span><br><span class="line">|      521 |</span><br><span class="line">+<span class="comment">----------+</span></span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过cross join 结果聚合</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> (<span class="keyword">SELECT</span></span><br><span class="line">        <span class="keyword">SUM</span>(<span class="keyword">COUNT</span>) <span class="keyword">AS</span> <span class="string">'Google'</span></span><br><span class="line">      <span class="keyword">FROM</span> access_log a</span><br><span class="line">        <span class="keyword">JOIN</span> websites w</span><br><span class="line">          <span class="keyword">ON</span> w.id = a.site_id</span><br><span class="line">            <span class="keyword">AND</span> w.name = <span class="string">'Google'</span>) G</span><br><span class="line">  <span class="keyword">CROSS</span> <span class="keyword">JOIN</span> (<span class="keyword">SELECT</span></span><br><span class="line">                <span class="keyword">SUM</span>(<span class="keyword">COUNT</span>) <span class="keyword">AS</span> <span class="string">'Facebook'</span></span><br><span class="line">              <span class="keyword">FROM</span> access_log a</span><br><span class="line">                <span class="keyword">JOIN</span> websites w</span><br><span class="line">                  <span class="keyword">ON</span> w.id = a.site_id</span><br><span class="line">                    <span class="keyword">AND</span> w.name = <span class="string">'Facebook'</span>) F</span><br><span class="line">  <span class="keyword">CROSS</span> <span class="keyword">JOIN</span> (<span class="keyword">SELECT</span></span><br><span class="line">                <span class="keyword">SUM</span>(<span class="keyword">COUNT</span>) <span class="keyword">AS</span> <span class="string">'菜鸟教程'</span></span><br><span class="line">              <span class="keyword">FROM</span> access_log a</span><br><span class="line">                <span class="keyword">JOIN</span> websites w</span><br><span class="line">                  <span class="keyword">ON</span> w.id = a.site_id</span><br><span class="line">                    <span class="keyword">AND</span> w.name = <span class="string">'菜鸟教程'</span>) C;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;</span><br><span class="line">+<span class="comment">--------+----------+----------+</span></span><br><span class="line">| Google | Facebook | 菜鸟教程 |</span><br><span class="line">+<span class="comment">--------+----------+----------+</span></span><br><span class="line">|    275 |      750 |      521 |</span><br><span class="line">+<span class="comment">--------+----------+----------+</span></span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<p><strong> 缺点：</strong> 是将原来查询的结果每一行单独查询出来，再进行拼接。因此每增加一个同学就增加一个SELECT语句。并且是通过交叉连接，要保证每个查询的结果只能是一个，不然没办法通过交叉连接实现转换。</p>
+<h2 id="2-2-使用CASE实现行转列"><a href="#2-2-使用CASE实现行转列" class="headerlink" title="2.2 使用CASE实现行转列"></a>2.2 使用CASE实现行转列</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  <span class="keyword">SUM</span>(<span class="keyword">CASE</span> <span class="keyword">WHEN</span> <span class="keyword">NAME</span> = <span class="string">'Google'</span> <span class="keyword">THEN</span> <span class="keyword">COUNT</span> <span class="keyword">END</span> ) <span class="keyword">AS</span> <span class="string">'Google'</span>,</span><br><span class="line">  <span class="keyword">SUM</span>(<span class="keyword">CASE</span> <span class="keyword">WHEN</span> <span class="keyword">NAME</span> = <span class="string">'Facebook'</span> <span class="keyword">THEN</span> <span class="keyword">COUNT</span> <span class="keyword">END</span> ) <span class="keyword">AS</span> <span class="string">'Facebook'</span>,</span><br><span class="line">  <span class="keyword">SUM</span>(<span class="keyword">CASE</span> <span class="keyword">WHEN</span> <span class="keyword">NAME</span> = <span class="string">'菜鸟教程'</span> <span class="keyword">THEN</span> <span class="keyword">COUNT</span> <span class="keyword">END</span> ) <span class="keyword">AS</span> <span class="string">'菜鸟教程'</span></span><br><span class="line"><span class="keyword">FROM</span> websites w</span><br><span class="line">  <span class="keyword">JOIN</span> access_log a</span><br><span class="line">    <span class="keyword">ON</span> w.id = a.site_id;</span><br></pre></td></tr></table></figure>
+<h1 id="3-列转行场景"><a href="#3-列转行场景" class="headerlink" title="3 列转行场景"></a>3 列转行场景</h1><h2 id="3-1-单列转多行场景"><a href="#3-1-单列转多行场景" class="headerlink" title="3.1 单列转多行场景"></a>3.1 单列转多行场景</h2><h3 id="3-1-1-单列转多行场景实际用途"><a href="#3-1-1-单列转多行场景实际用途" class="headerlink" title="3.1.1 单列转多行场景实际用途"></a>3.1.1 单列转多行场景实际用途</h3><ul>
+<li>（1）属性拆分</li>
+<li>（2）ETL数据处理</li>
+</ul>
+<h3 id="3-1-2-单列转多行场景演示-权限拆分"><a href="#3-1-2-单列转多行场景演示-权限拆分" class="headerlink" title="3.1.2 单列转多行场景演示-权限拆分"></a>3.1.2 单列转多行场景演示-权限拆分</h3><p><strong> 原始数据建表语句及数据 </strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Create</span> <span class="keyword">Table</span>: <span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`user_roles`</span> (</span><br><span class="line">  <span class="string">`user_roles_id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`role_name`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`major_roles`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`creation_time`</span> datetime <span class="keyword">DEFAULT</span> <span class="literal">NULL</span></span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> USER_ROLES</span><br><span class="line">            (USER_ROLES_ID,</span><br><span class="line">             ROLE_NAME,</span><br><span class="line">             MAJOR_ROLES,</span><br><span class="line">             CREATION_TIME)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="number">1</span>,</span><br><span class="line">        <span class="string">'middleware'</span>,</span><br><span class="line">        <span class="string">'2,21,22,23,24'</span>,</span><br><span class="line">        <span class="keyword">CURTIME</span>());</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> USER_ROLES (USER_ROLES_ID, ROLE_NAME, MAJOR_ROLES, CREATION_TIME)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="number">2</span>, <span class="string">'db'</span>,<span class="string">'9,10'</span>, <span class="keyword">CURTIME</span>());</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> USER_ROLES (USER_ROLES_ID, ROLE_NAME, MAJOR_ROLES, CREATION_TIME)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="number">3</span>, <span class="string">'SYSTEM'</span>,  <span class="string">'4,6,7,8'</span>, <span class="keyword">CURTIME</span>());</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> USER_ROLES (USER_ROLES_ID, ROLE_NAME, MAJOR_ROLES, CREATION_TIME)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="number">4</span>, <span class="string">'bcy109'</span>, <span class="string">'21,22,25,26,27,28,23,24,16'</span>,<span class="keyword">CURTIME</span>());</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> USER_ROLES (USER_ROLES_ID, ROLE_NAME, MAJOR_ROLES, CREATION_TIME)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="number">5</span>, <span class="string">'bcytest'</span>, <span class="string">'17,18,23,24'</span>,<span class="keyword">CURTIME</span>());</span><br></pre></td></tr></table></figure>
+<p><strong> 表数据 </strong></p>
+<p> <img src="/2018/10/16/MYSQL-SQL开发总结（三）-开发技巧2/markdown-img-paste-20181016163536370.png" alt="单列转多行场景-原始数据"></p>
+<p> <strong> 预期实现目标 </strong></p>
+<p><img src="/2018/10/16/MYSQL-SQL开发总结（三）-开发技巧2/markdown-img-paste-20181016170406360.png" alt="单列转多行场景-预期目标"></p>
+<h3 id="3-1-3-使用序列化表的方法实现行转列"><a href="#3-1-3-使用序列化表的方法实现行转列" class="headerlink" title="3.1.3 使用序列化表的方法实现行转列"></a>3.1.3 使用序列化表的方法实现行转列</h3><p><strong> 建立序列表：</strong><br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span>  tb_sequence(<span class="keyword">id</span> <span class="built_in">INT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT PRIMARY <span class="keyword">KEY</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> tb_sequence <span class="keyword">VALUES</span>(),(),(),(),(),(),(),(),();</span><br><span class="line"></span><br><span class="line">mysql&gt; SELECT * FROM tb_sequence;</span><br><span class="line">+<span class="comment">----+</span></span><br><span class="line">| id |</span><br><span class="line">+<span class="comment">----+</span></span><br><span class="line">|  1 |</span><br><span class="line">|  2 |</span><br><span class="line">|  3 |</span><br><span class="line">|  4 |</span><br><span class="line">|  5 |</span><br><span class="line">|  6 |</span><br><span class="line">|  7 |</span><br><span class="line">|  8 |</span><br><span class="line">|  9 |</span><br><span class="line">+<span class="comment">----+</span></span><br><span class="line">9 rows in <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure></p>
+<p><strong> 最终语句 </strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> b.user_roles_id,b.role_name,</span><br><span class="line"><span class="keyword">REPLACE</span>(<span class="keyword">SUBSTRING</span>(SUBSTRING_INDEX(major_roles,<span class="string">','</span>,a.id),<span class="keyword">CHAR_LENGTH</span>(SUBSTRING_INDEX(major_roles,<span class="string">','</span>,a.id<span class="number">-1</span>))+<span class="number">1</span>),<span class="string">','</span>,<span class="string">''</span>) <span class="keyword">AS</span> major_roles <span class="keyword">FROM</span> tb_sequence a <span class="keyword">CROSS</span> <span class="keyword">JOIN</span>(<span class="keyword">SELECT</span> user_roles_id,role_name,<span class="keyword">CONCAT</span>(major_roles,<span class="string">','</span>) <span class="keyword">AS</span> major_roles,</span><br><span class="line"><span class="keyword">LENGTH</span>(major_roles)-<span class="keyword">LENGTH</span>(<span class="keyword">REPLACE</span>(major_roles,<span class="string">','</span>,<span class="string">''</span>))+<span class="number">1</span> <span class="keyword">size</span></span><br><span class="line"><span class="keyword">FROM</span> user_roles b <span class="keyword">ORDER</span> <span class="keyword">BY</span> b.user_roles_id) b <span class="keyword">ON</span> a.id&lt;=b.size;</span><br></pre></td></tr></table></figure>
+<p><strong> 语句解读 </strong></p>
+<ul>
+<li>内部子查询：目的是在 major_roles 每行数据增加一个逗号，在用总长度减去没有逗号的情况时的长度 = size （表示有几个权限，将要转成几行记录）</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT user_roles_id,role_name,CONCAT(major_roles,',') AS major_roles,</span><br><span class="line">    -&gt; LENGTH(major_roles)-LENGTH(REPLACE(major_roles,',',''))+1 size</span><br><span class="line">    -&gt; FROM user_roles b ORDER BY b.user_roles_id;</span><br><span class="line">+<span class="comment">---------------+------------+-----------------------------+------+</span></span><br><span class="line">| user_roles_id | role_name  | major_roles                 | size |</span><br><span class="line">+<span class="comment">---------------+------------+-----------------------------+------+</span></span><br><span class="line">|             1 | middleware | 2,21,22,23,24,              |    5 |</span><br><span class="line">|             2 | db         | 9,10,                       |    2 |</span><br><span class="line">|             3 | SYSTEM     | 4,6,7,8,                    |    4 |</span><br><span class="line">|             4 | bcy109     | 21,22,25,26,27,28,23,24,16, |    9 |</span><br><span class="line">|             5 | bcytest    | 17,18,23,24,                |    4 |</span><br><span class="line">+<span class="comment">---------------+------------+-----------------------------+------+</span></span><br><span class="line">5 rows in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>外部查询：外层查询根据序列表 cross join 子查询结果</li>
+</ul>
+<h2 id="3-2-多列转多行场景"><a href="#3-2-多列转多行场景" class="headerlink" title="3.2 多列转多行场景"></a>3.2 多列转多行场景</h2><h3 id="3-2-1-多列转多行场景实际用途"><a href="#3-2-1-多列转多行场景实际用途" class="headerlink" title="3.2.1 多列转多行场景实际用途"></a>3.2.1 多列转多行场景实际用途</h3><ul>
+<li>（1）学生成绩查询</li>
+<li>（2） ETL 数据抽取</li>
+</ul>
+<h3 id="3-2-2-多列转多行案例分析-学生成绩行列转换"><a href="#3-2-2-多列转多行案例分析-学生成绩行列转换" class="headerlink" title="3.2.2 多列转多行案例分析-学生成绩行列转换"></a>3.2.2 多列转多行案例分析-学生成绩行列转换</h3><p><strong> 建表语句及原始数据插入语句 </strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`TB_GRADE`</span> (</span><br><span class="line">  <span class="string">`ID`</span> <span class="built_in">INT</span>(<span class="number">10</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`USER_NAME`</span> <span class="built_in">VARCHAR</span>(<span class="number">20</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`CN_SCORE`</span> <span class="built_in">FLOAT</span> <span class="keyword">DEFAULT</span> <span class="string">'0'</span>,</span><br><span class="line">  <span class="string">`MATCH_SCORE`</span> <span class="built_in">FLOAT</span> <span class="keyword">DEFAULT</span> <span class="string">'0'</span>,</span><br><span class="line">  <span class="string">`EN_SCORE`</span> <span class="built_in">FLOAT</span> <span class="keyword">DEFAULT</span> <span class="string">'0'</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`ID`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">INNODB</span> AUTO_INCREMENT=<span class="number">1</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> TB_GRADE(USER_NAME, CN_SCORE, MATCH_SCORE,EN_SCORE)  <span class="keyword">VALUES</span></span><br><span class="line">(<span class="string">"张三"</span>,<span class="number">58</span> ,<span class="number">34</span>,<span class="number">72</span>),</span><br><span class="line">(<span class="string">"李四"</span>,<span class="number">87</span> ,<span class="number">79</span>,<span class="number">72</span>),</span><br><span class="line">(<span class="string">"王五"</span>,<span class="number">88</span> ,<span class="number">76</span>,<span class="number">90</span>);</span><br></pre></td></tr></table></figure>
+<p><strong> 表中原始数据 </strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT * FROM TB_GRADE;</span><br><span class="line">+<span class="comment">----+-----------+----------+-------------+----------+</span></span><br><span class="line">| ID | USER_NAME | CN_SCORE | MATCH_SCORE | EN_SCORE |</span><br><span class="line">+<span class="comment">----+-----------+----------+-------------+----------+</span></span><br><span class="line">|  1 | 张三      |       58 |          34 |       72 |</span><br><span class="line">|  2 | 李四      |       87 |          79 |       72 |</span><br><span class="line">|  3 | 王五      |       88 |          76 |       90 |</span><br><span class="line">+<span class="comment">----+-----------+----------+-------------+----------+</span></span><br><span class="line">3 rows in <span class="keyword">set</span> (<span class="number">0.02</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<p><strong> 预期实现目标 </strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">+<span class="comment">-----------+-------------+------+</span></span><br><span class="line">| user_name | 学科        | 成绩 |</span><br><span class="line">+<span class="comment">-----------+-------------+------+</span></span><br><span class="line">| 张三      | CN_SCORE    |   58 |</span><br><span class="line">| 李四      | CN_SCORE    |   87 |</span><br><span class="line">| 王五      | CN_SCORE    |   88 |</span><br><span class="line">| 张三      | MATCH_SCORE |   34 |</span><br><span class="line">| 李四      | MATCH_SCORE |   79 |</span><br><span class="line">| 王五      | MATCH_SCORE |   76 |</span><br><span class="line">| 张三      | EN_SCORE    |   72 |</span><br><span class="line">| 李四      | EN_SCORE    |   72 |</span><br><span class="line">| 王五      | EN_SCORE    |   90 |</span><br><span class="line">+<span class="comment">-----------+-------------+------+</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-2-3-使用UNION方法实现列转行"><a href="#3-2-3-使用UNION方法实现列转行" class="headerlink" title="3.2.3 使用UNION方法实现列转行"></a>3.2.3 使用UNION方法实现列转行</h3><p><strong> 语句拆分解读 </strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT user_name,'CN_SCORE' AS '语文',CN_SCORE AS '成绩' FROM TB_GRADE a;</span><br><span class="line">+<span class="comment">-----------+----------+------+</span></span><br><span class="line">| user_name | 语文     | 成绩 |</span><br><span class="line">+<span class="comment">-----------+----------+------+</span></span><br><span class="line">| 张三      | CN_SCORE |   58 |</span><br><span class="line">| 李四      | CN_SCORE |   87 |</span><br><span class="line">| 王五      | CN_SCORE |   88 |</span><br><span class="line">+<span class="comment">-----------+----------+------+</span></span><br><span class="line">3 rows in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; <span class="keyword">SELECT</span> user_name,<span class="string">'MATCH_SCORE'</span> <span class="keyword">AS</span> <span class="string">'数学'</span>,MATCH_SCORE <span class="keyword">AS</span> <span class="string">'成绩'</span> <span class="keyword">FROM</span> TB_GRADE a;</span><br><span class="line">+<span class="comment">-----------+-------------+------+</span></span><br><span class="line">| user_name | 数学        | 成绩 |</span><br><span class="line">+<span class="comment">-----------+-------------+------+</span></span><br><span class="line">| 张三      | MATCH_SCORE |   34 |</span><br><span class="line">| 李四      | MATCH_SCORE |   79 |</span><br><span class="line">| 王五      | MATCH_SCORE |   76 |</span><br><span class="line">+<span class="comment">-----------+-------------+------+</span></span><br><span class="line">3 rows in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; <span class="keyword">SELECT</span> user_name,<span class="string">'EN_SCORE'</span> <span class="keyword">AS</span> <span class="string">'英语'</span>,EN_SCORE <span class="keyword">AS</span> <span class="string">'成绩'</span> <span class="keyword">FROM</span> TB_GRADE a;</span><br><span class="line">+<span class="comment">-----------+----------+------+</span></span><br><span class="line">| user_name | 英语     | 成绩 |</span><br><span class="line">+<span class="comment">-----------+----------+------+</span></span><br><span class="line">| 张三      | EN_SCORE |   72 |</span><br><span class="line">| 李四      | EN_SCORE |   72 |</span><br><span class="line">| 王五      | EN_SCORE |   90 |</span><br><span class="line">+<span class="comment">-----------+----------+------+</span></span><br><span class="line">3 rows in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p><strong> 最终语句 </strong><br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> user_name,<span class="string">'CN_SCORE'</span> <span class="keyword">AS</span> <span class="string">'学科'</span>,CN_SCORE <span class="keyword">AS</span> <span class="string">'成绩'</span> <span class="keyword">FROM</span> TB_GRADE a</span><br><span class="line"><span class="keyword">UNION</span> ALL</span><br><span class="line"><span class="keyword">SELECT</span> user_name,<span class="string">'MATCH_SCORE'</span> <span class="keyword">AS</span> <span class="string">'学科'</span>,MATCH_SCORE <span class="keyword">AS</span> <span class="string">'成绩'</span> <span class="keyword">FROM</span> TB_GRADE a</span><br><span class="line"><span class="keyword">UNION</span> ALL</span><br><span class="line"><span class="keyword">SELECT</span> user_name,<span class="string">'EN_SCORE'</span> <span class="keyword">AS</span> <span class="string">'学科'</span>,EN_SCORE <span class="keyword">AS</span> <span class="string">'成绩'</span> <span class="keyword">FROM</span> TB_GRADE a;</span><br></pre></td></tr></table></figure></p>
+<p><strong>  最终效果 </strong><br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT user_name,'CN_SCORE' AS '学科',CN_SCORE AS '成绩' FROM TB_GRADE a</span><br><span class="line">    -&gt; UNION ALL</span><br><span class="line">    -&gt; SELECT user_name,'MATCH_SCORE' AS '学科',MATCH_SCORE AS '成绩' FROM TB_GRADE a</span><br><span class="line">    -&gt; UNION ALL</span><br><span class="line">    -&gt; SELECT user_name,'EN_SCORE' AS '学科',EN_SCORE AS '成绩' FROM TB_GRADE a;</span><br><span class="line">+<span class="comment">-----------+-------------+------+</span></span><br><span class="line">| user_name | 学科        | 成绩 |</span><br><span class="line">+<span class="comment">-----------+-------------+------+</span></span><br><span class="line">| 张三      | CN_SCORE    |   58 |</span><br><span class="line">| 李四      | CN_SCORE    |   87 |</span><br><span class="line">| 王五      | CN_SCORE    |   88 |</span><br><span class="line">| 张三      | MATCH_SCORE |   34 |</span><br><span class="line">| 李四      | MATCH_SCORE |   79 |</span><br><span class="line">| 王五      | MATCH_SCORE |   76 |</span><br><span class="line">| 张三      | EN_SCORE    |   72 |</span><br><span class="line">| 李四      | EN_SCORE    |   72 |</span><br><span class="line">| 王五      | EN_SCORE    |   90 |</span><br><span class="line">+<span class="comment">-----------+-------------+------+</span></span><br><span class="line">9 rows in <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-2-4-使用序列化表的方法实现列转行"><a href="#3-2-4-使用序列化表的方法实现列转行" class="headerlink" title="3.2.4 使用序列化表的方法实现列转行"></a>3.2.4 使用序列化表的方法实现列转行</h3><p><strong> 语句拆分解析 </strong></p>
+<ul>
+<li>通过序列固定获取学科</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT user_name, CASE WHEN c.id=1 THEN 'CN_SCORE' WHEN c.id=2 THEN 'MATCH_SCORE' WHEN c.id=3 THEN 'EN_SCORE' END AS '学科'</span><br><span class="line">    -&gt; FROM   TB_GRADE a</span><br><span class="line">    -&gt; CROSS JOIN tb_sequence c WHERE c.id&lt;=3 ;</span><br><span class="line">+<span class="comment">-----------+-------------+</span></span><br><span class="line">| user_name | 学科        |</span><br><span class="line">+<span class="comment">-----------+-------------+</span></span><br><span class="line">| 张三      | CN_SCORE    |</span><br><span class="line">| 李四      | CN_SCORE    |</span><br><span class="line">| 王五      | CN_SCORE    |</span><br><span class="line">| 张三      | MATCH_SCORE |</span><br><span class="line">| 李四      | MATCH_SCORE |</span><br><span class="line">| 王五      | MATCH_SCORE |</span><br><span class="line">| 张三      | EN_SCORE    |</span><br><span class="line">| 李四      | EN_SCORE    |</span><br><span class="line">| 王五      | EN_SCORE    |</span><br><span class="line">+<span class="comment">-----------+-------------+</span></span><br><span class="line">9 rows in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过序列固定获取成绩</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">mysql&gt; SELECT user_name, COALESCE(CASE WHEN c.id=1 THEN CN_SCORE END, CASE WHEN c.id=2 THEN MATCH_SCORE END, CASE WHEN c.id=3 THEN EN_SCORE END) AS '成绩'</span><br><span class="line">    -&gt; FROM   TB_GRADE a</span><br><span class="line">    -&gt; CROSS JOIN tb_sequence c WHERE c.id&lt;=3</span><br><span class="line">    -&gt; ;</span><br><span class="line">+<span class="comment">-----------+------+</span></span><br><span class="line">| user_name | 成绩 |</span><br><span class="line">+<span class="comment">-----------+------+</span></span><br><span class="line">| 张三      |   58 |</span><br><span class="line">| 李四      |   87 |</span><br><span class="line">| 王五      |   88 |</span><br><span class="line">| 张三      |   34 |</span><br><span class="line">| 李四      |   79 |</span><br><span class="line">| 王五      |   76 |</span><br><span class="line">| 张三      |   72 |</span><br><span class="line">| 李四      |   72 |</span><br><span class="line">| 王五      |   90 |</span><br><span class="line">+<span class="comment">-----------+------+</span></span><br><span class="line">9 rows in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>最终查询</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> user_name, <span class="keyword">CASE</span> <span class="keyword">WHEN</span> c.id=<span class="number">1</span> <span class="keyword">THEN</span> <span class="string">'CN_SCORE'</span> <span class="keyword">WHEN</span> c.id=<span class="number">2</span> <span class="keyword">THEN</span> <span class="string">'MATCH_SCORE'</span> <span class="keyword">WHEN</span> c.id=<span class="number">3</span> <span class="keyword">THEN</span> <span class="string">'EN_SCORE'</span> <span class="keyword">END</span> <span class="keyword">AS</span> <span class="string">'学科'</span>,</span><br><span class="line"><span class="keyword">COALESCE</span>(<span class="keyword">CASE</span> <span class="keyword">WHEN</span> c.id=<span class="number">1</span> <span class="keyword">THEN</span> CN_SCORE <span class="keyword">END</span>, <span class="keyword">CASE</span> <span class="keyword">WHEN</span> c.id=<span class="number">2</span> <span class="keyword">THEN</span> MATCH_SCORE <span class="keyword">END</span>, <span class="keyword">CASE</span> <span class="keyword">WHEN</span> c.id=<span class="number">3</span> <span class="keyword">THEN</span> EN_SCORE <span class="keyword">END</span>) <span class="keyword">AS</span> <span class="string">'成绩'</span></span><br><span class="line"><span class="keyword">FROM</span>   TB_GRADE a</span><br><span class="line"><span class="keyword">CROSS</span> <span class="keyword">JOIN</span> tb_sequence c <span class="keyword">WHERE</span> c.id&lt;=<span class="number">3</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> user_name;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT user_name, CASE WHEN c.id=1 THEN 'CN_SCORE' WHEN c.id=2 THEN 'MATCH_SCORE' WHEN c.id=3 THEN 'EN_SCORE' END AS '学科',</span><br><span class="line">    -&gt; COALESCE(CASE WHEN c.id=1 THEN CN_SCORE END, CASE WHEN c.id=2 THEN MATCH_SCORE END, CASE WHEN c.id=3 THEN EN_SCORE END) AS '成绩'</span><br><span class="line">    -&gt; FROM   TB_GRADE a</span><br><span class="line">    -&gt; CROSS JOIN tb_sequence c WHERE c.id&lt;=3 ORDER BY user_name;</span><br><span class="line">+<span class="comment">-----------+-------------+------+</span></span><br><span class="line">| user_name | 学科        | 成绩 |</span><br><span class="line">+<span class="comment">-----------+-------------+------+</span></span><br><span class="line">| 张三      | MATCH_SCORE |   34 |</span><br><span class="line">| 张三      | EN_SCORE    |   72 |</span><br><span class="line">| 张三      | CN_SCORE    |   58 |</span><br><span class="line">| 李四      | CN_SCORE    |   87 |</span><br><span class="line">| 李四      | MATCH_SCORE |   79 |</span><br><span class="line">| 李四      | EN_SCORE    |   72 |</span><br><span class="line">| 王五      | CN_SCORE    |   88 |</span><br><span class="line">| 王五      | MATCH_SCORE |   76 |</span><br><span class="line">| 王五      | EN_SCORE    |   90 |</span><br><span class="line">+<span class="comment">-----------+-------------+------+</span></span><br><span class="line">9 rows in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="4-生成唯一序列号"><a href="#4-生成唯一序列号" class="headerlink" title="4. 生成唯一序列号"></a>4. 生成唯一序列号</h1><h2 id="4-1-唯一序列号场景及序列号生成方式"><a href="#4-1-唯一序列号场景及序列号生成方式" class="headerlink" title="4.1 唯一序列号场景及序列号生成方式"></a>4.1 唯一序列号场景及序列号生成方式</h2><p><strong> 需要使用唯一序列号的场景：</strong></p>
+<ol>
+<li><p>作为数据库主键。</p>
+</li>
+<li><p>业务序列号。</p>
+</li>
+</ol>
+<p><strong> 生成序列号的方法：</strong></p>
+<ul>
+<li><p>MySQL：AUTO_INCREMENT</p>
+</li>
+<li><p>SQLServer：IDENTITY/SEQUENCE</p>
+</li>
+<li><p>Oracle：SEQUENCE</p>
+</li>
+<li><p>PgSQL：SEQUENCE</p>
+</li>
+</ul>
+<p><strong> 如何选择生成序列号的方式：</strong></p>
+<p>【原则】：优先选择系统提供的序列号生成方式。</p>
+<p>【优点】：</p>
+<ol>
+<li><p>控制并发；</p>
+</li>
+<li><p>不重复，保证序列号的唯一性。</p>
+</li>
+</ol>
+<p>【缺点】：序列号不连续（数据空洞），例如 1、2、4。</p>
+<p>【原因】：对已有的数据的删除，以及事务回滚等方式不会影响自增长的序号，例如已有数据 1、2、3，删除 3 号数据。之后再插入一条数据，此时数据表的数据为 1、2、4。</p>
+<h2 id="4-2-建立特殊需求的序列号"><a href="#4-2-建立特殊需求的序列号" class="headerlink" title="4.2 建立特殊需求的序列号"></a>4.2 建立特殊需求的序列号</h2><p>创建订单号，订单序列号格式如下：YYYYMMDDnnnnnnn。如201810170000002</p>
+<p><strong> 基础表 </strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> order_seq(</span><br><span class="line">timestr <span class="built_in">INT</span> <span class="keyword">UNSIGNED</span>,</span><br><span class="line">order_sn <span class="built_in">INT</span> <span class="keyword">UNSIGNED</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p><strong> 存储过程 </strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">DELIMITER //</span><br><span class="line">  <span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> seq_no()</span><br><span class="line">  <span class="keyword">BEGIN</span></span><br><span class="line">	  <span class="keyword">DECLARE</span> v_cnt   <span class="built_in">INT</span>;</span><br><span class="line">	  <span class="keyword">DECLARE</span> v_timestr <span class="built_in">INT</span>;</span><br><span class="line">	  <span class="keyword">DECLARE</span> rowcount <span class="built_in">BIGINT</span>;</span><br><span class="line">	  <span class="keyword">SET</span>     v_timestr = <span class="keyword">DATE_FORMAT</span>(<span class="keyword">NOW</span>(), <span class="string">'%Y%m%d'</span>);</span><br><span class="line">	  <span class="keyword">SELECT</span>  <span class="keyword">ROUND</span>(<span class="keyword">RAND</span>() * <span class="number">100</span>, <span class="number">0</span>) + <span class="number">1</span> <span class="keyword">INTO</span> v_cnt;</span><br><span class="line">	  <span class="keyword">START</span>   <span class="keyword">TRANSACTION</span>;</span><br><span class="line">		<span class="keyword">UPDATE</span>  order_seq <span class="keyword">SET</span> order_sn = order_sn + v_cnt <span class="keyword">WHERE</span> timestr = v_timestr;</span><br><span class="line">		IF      </span><br><span class="line">			ROW_COUNT() = 0 THEN <span class="keyword">INSERT</span> <span class="keyword">INTO</span> order_seq(timestr, order_sn) <span class="keyword">VALUES</span>(v_timestr,v_cnt);</span><br><span class="line">		<span class="keyword">END</span> <span class="keyword">IF</span>;</span><br><span class="line">		<span class="keyword">SELECT</span> <span class="keyword">CONCAT</span>(v_timestr, <span class="keyword">LPAD</span>(order_sn, <span class="number">7</span>, <span class="number">0</span>)) <span class="keyword">AS</span> order_sn</span><br><span class="line">			<span class="keyword">FROM</span> order_seq</span><br><span class="line">		<span class="keyword">WHERE</span> timestr = v_timestr;</span><br><span class="line">	  <span class="keyword">COMMIT</span>;</span><br><span class="line">  <span class="keyword">END</span></span><br><span class="line">//</span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure>
+<p><strong> 结果展示 </strong><br>此存储过程经测试，每秒中可以生成1千个订单号</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; call seq_no();</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line">| order_sn        |</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line">| 201810170000135 |</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line"><span class="keyword">Query</span> OK, <span class="number">0</span> <span class="keyword">rows</span> affected (<span class="number">0.05</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; <span class="keyword">select</span> * <span class="keyword">from</span> order_seq;</span><br><span class="line">+<span class="comment">----------+----------+</span></span><br><span class="line">| timestr  | order_sn |</span><br><span class="line">+<span class="comment">----------+----------+</span></span><br><span class="line">| 20181017 |      135 |</span><br><span class="line">+<span class="comment">----------+----------+</span></span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<p>知识点：</p>
+<ul>
+<li><p>1、在sql语句中添加变量。 declare @local_variable data_type 声明时需要指定变量的类型，可以使用SET、SELECT、SELECT…INTO对变量进行赋值，在sql语句中就可以使用@local_variable来调用变量。</p>
+</li>
+<li><p>2、RAND()返回一个介于 0 到 1（不包括 0 和 1）之间的伪随机 float 值。</p>
+</li>
+<li><p>3、事务</p>
+</li>
+<li><p>4、ROW_COUNT()函数返回查询语句执行后，被影响的列数目</p>
+</li>
+<li><p>5、IF…THEN…END IF;</p>
+</li>
+</ul>
+<h1 id="5-删除重复数据"><a href="#5-删除重复数据" class="headerlink" title="5. 删除重复数据"></a>5. 删除重复数据</h1><h2 id="5-1-查询数据是否重复"><a href="#5-1-查询数据是否重复" class="headerlink" title="5.1 查询数据是否重复"></a>5.1 查询数据是否重复</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT * FROM runoob_tbl;</span><br><span class="line">+<span class="comment">-----------+--------------+---------------+-----------------+</span></span><br><span class="line">| runoob_id | runoob_title | runoob_author | submission_date |</span><br><span class="line">+<span class="comment">-----------+--------------+---------------+-----------------+</span></span><br><span class="line">|         1 | 学习 PHP     | 菜鸟教程      | 2017-04-12      |</span><br><span class="line">|         2 | 学习 MySQL   | 菜鸟教程      | 2017-04-12      |</span><br><span class="line">|         3 | 学习 Java    | RUNOOB.COM    | 2015-05-01      |</span><br><span class="line">|         4 | 学习 Python  | RUNOOB.COM    | 2016-03-06      |</span><br><span class="line">|         5 | 学习 C       | FK            | 2017-04-05      |</span><br><span class="line">+<span class="comment">-----------+--------------+---------------+-----------------+</span></span><br><span class="line">5 rows in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br><span class="line">mysql&gt; <span class="keyword">SELECT</span> runoob_author,<span class="keyword">COUNT</span>(*) <span class="keyword">FROM</span> runoob_tbl <span class="keyword">GROUP</span> <span class="keyword">BY</span> runoob_author <span class="keyword">HAVING</span> <span class="keyword">COUNT</span>(*)&gt;<span class="number">1</span>;</span><br><span class="line">+<span class="comment">---------------+----------+</span></span><br><span class="line">| runoob_author | COUNT(*) |</span><br><span class="line">+<span class="comment">---------------+----------+</span></span><br><span class="line">| RUNOOB.COM    |        2 |</span><br><span class="line">| 菜鸟教程      |        2 |</span><br><span class="line">+<span class="comment">---------------+----------+</span></span><br><span class="line">2 rows in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="5-2-删除重复数据，对于相同数据保留ID最大的"><a href="#5-2-删除重复数据，对于相同数据保留ID最大的" class="headerlink" title="5.2 删除重复数据，对于相同数据保留ID最大的"></a>5.2 删除重复数据，对于相同数据保留ID最大的</h2><p><strong> sql 语句</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> a</span><br><span class="line"><span class="keyword">FROM</span> runoob_tbl a</span><br><span class="line">  <span class="keyword">JOIN</span> (<span class="keyword">SELECT</span></span><br><span class="line">          runoob_author,</span><br><span class="line">          <span class="keyword">COUNT</span>(*),</span><br><span class="line">          <span class="keyword">MAX</span>(runoob_id) <span class="keyword">AS</span> runoob_id</span><br><span class="line">        <span class="keyword">FROM</span> runoob_tbl</span><br><span class="line">        <span class="keyword">GROUP</span> <span class="keyword">BY</span> runoob_author</span><br><span class="line">        <span class="keyword">HAVING</span> <span class="keyword">COUNT</span>( * ) &gt; <span class="number">1</span>) b</span><br><span class="line">    <span class="keyword">ON</span> a.runoob_author = b.runoob_author</span><br><span class="line"><span class="keyword">WHERE</span> a.runoob_id &lt; b.runoob_id;</span><br></pre></td></tr></table></figure>
+<p><strong> 效果 </strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; DELETE a</span><br><span class="line">    -&gt; FROM runoob_tbl a</span><br><span class="line">    -&gt;   JOIN (SELECT</span><br><span class="line">    -&gt;           runoob_author,</span><br><span class="line">    -&gt;           COUNT(*),</span><br><span class="line">    -&gt;           MAX(runoob_id) AS runoob_id</span><br><span class="line">    -&gt;         FROM runoob_tbl</span><br><span class="line">    -&gt;         GROUP BY runoob_author</span><br><span class="line">    -&gt;         HAVING COUNT( * ) &gt; 1) b</span><br><span class="line">    -&gt;     ON a.runoob_author = b.runoob_author</span><br><span class="line">    -&gt; WHERE a.runoob_id &lt; b.runoob_id;</span><br><span class="line">Query OK, 2 rows affected, 1 warning (0.22 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from  runoob_tbl;</span><br><span class="line">+<span class="comment">-----------+--------------+---------------+-----------------+</span></span><br><span class="line">| runoob_id | runoob_title | runoob_author | submission_date |</span><br><span class="line">+<span class="comment">-----------+--------------+---------------+-----------------+</span></span><br><span class="line">|         2 | 学习 MySQL   | 菜鸟教程      | 2017-04-12      |</span><br><span class="line">|         4 | 学习 Python  | RUNOOB.COM    | 2016-03-06      |</span><br><span class="line">|         5 | 学习 C       | FK            | 2017-04-05      |</span><br><span class="line">+<span class="comment">-----------+--------------+---------------+-----------------+</span></span><br><span class="line">3 rows in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="6-希望大家手动敲一遍代码，会收获颇丰！"><a href="#6-希望大家手动敲一遍代码，会收获颇丰！" class="headerlink" title="6 希望大家手动敲一遍代码，会收获颇丰！"></a>6 希望大家手动敲一遍代码，会收获颇丰！</h1><h1 id="7-参考"><a href="#7-参考" class="headerlink" title="7 参考"></a>7 参考</h1><p><a href="&quot;http://www.runoob.com/sql/sql-tutorial.html&quot;">菜鸟教程 http://www.runoob.com/sql/sql-tutorial.html</a></p>
+<p><a href="&quot;https://www.imooc.com/learn/427&quot;">慕课网sqlercn老师-mysql 开发技巧  https://www.imooc.com/learn/427</a></p>
+<h1 id="10-欢迎关注米宝窝，持续更新中，谢谢！"><a href="#10-欢迎关注米宝窝，持续更新中，谢谢！" class="headerlink" title="10.欢迎关注米宝窝，持续更新中，谢谢！"></a>10.欢迎关注米宝窝，持续更新中，谢谢！</h1><p><a href="https://rocklei123.github.io/" title="https://rocklei123.github.io/" target="_blank" rel="noopener">米宝窝 https://rocklei123.github.io/ </a></p>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+    
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+        <div style="text-align:center;color: #ccc;font-size:14px;">欢迎持续关注米宝窝，定期更新谢谢！ https://rocklei123.github.io/ </div>
+                <div style="text-align:center;color: #ccc;font-size:14px;">欢迎持续关注我的CSDN https://blog.csdn.net/rocklei123 </div>
+        <div ><img src="images/rocklei123-weixin.jpg" alt="rocklei123的技术点滴" width="258" height="258"> </div>
+    
+</div>
+
+      
+    </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>熬夜写博客挺辛苦的，生怕猝死，所以每当写博客都带着听诊器，心脏一有异响，随时按Ctrl+S。</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: block;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="rocklei123 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/aipay.jpg" alt="rocklei123 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SQL/" rel="tag"># SQL</a>
+          
+            <a href="/tags/MYSQL/" rel="tag"># MYSQL</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/11/MYSQL-SQL开发总结（二）-开发技巧1/" rel="next" title="MYSQL-SQL开发总结（二）-开发技巧1">
+                <i class="fa fa-chevron-left"></i> MYSQL-SQL开发总结（二）-开发技巧1
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="rocklei123" />
+            
+              <p class="site-author-name" itemprop="name">rocklei123</p>
+              <p class="site-description motion-element" itemprop="description">rocklei123的点滴技术生活</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/rocklei123" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/rocklei123" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zhoulei091@126.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0-目标"><span class="nav-number">1.</span> <span class="nav-text">0. 目标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-测试表数据"><span class="nav-number">2.</span> <span class="nav-text">1. 测试表数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-行转列场景"><span class="nav-number">3.</span> <span class="nav-text">2.行转列场景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-使用自连接方法实现行转列"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 使用自连接方法实现行转列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-使用CASE实现行转列"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 使用CASE实现行转列</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-列转行场景"><span class="nav-number">4.</span> <span class="nav-text">3 列转行场景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-单列转多行场景"><span class="nav-number">4.1.</span> <span class="nav-text">3.1 单列转多行场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-1-单列转多行场景实际用途"><span class="nav-number">4.1.1.</span> <span class="nav-text">3.1.1 单列转多行场景实际用途</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-2-单列转多行场景演示-权限拆分"><span class="nav-number">4.1.2.</span> <span class="nav-text">3.1.2 单列转多行场景演示-权限拆分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-3-使用序列化表的方法实现行转列"><span class="nav-number">4.1.3.</span> <span class="nav-text">3.1.3 使用序列化表的方法实现行转列</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-多列转多行场景"><span class="nav-number">4.2.</span> <span class="nav-text">3.2 多列转多行场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-1-多列转多行场景实际用途"><span class="nav-number">4.2.1.</span> <span class="nav-text">3.2.1 多列转多行场景实际用途</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-2-多列转多行案例分析-学生成绩行列转换"><span class="nav-number">4.2.2.</span> <span class="nav-text">3.2.2 多列转多行案例分析-学生成绩行列转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-3-使用UNION方法实现列转行"><span class="nav-number">4.2.3.</span> <span class="nav-text">3.2.3 使用UNION方法实现列转行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-4-使用序列化表的方法实现列转行"><span class="nav-number">4.2.4.</span> <span class="nav-text">3.2.4 使用序列化表的方法实现列转行</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-生成唯一序列号"><span class="nav-number">5.</span> <span class="nav-text">4. 生成唯一序列号</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-唯一序列号场景及序列号生成方式"><span class="nav-number">5.1.</span> <span class="nav-text">4.1 唯一序列号场景及序列号生成方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-建立特殊需求的序列号"><span class="nav-number">5.2.</span> <span class="nav-text">4.2 建立特殊需求的序列号</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-删除重复数据"><span class="nav-number">6.</span> <span class="nav-text">5. 删除重复数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-查询数据是否重复"><span class="nav-number">6.1.</span> <span class="nav-text">5.1 查询数据是否重复</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-删除重复数据，对于相同数据保留ID最大的"><span class="nav-number">6.2.</span> <span class="nav-text">5.2 删除重复数据，对于相同数据保留ID最大的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-希望大家手动敲一遍代码，会收获颇丰！"><span class="nav-number">7.</span> <span class="nav-text">6 希望大家手动敲一遍代码，会收获颇丰！</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-参考"><span class="nav-number">8.</span> <span class="nav-text">7 参考</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-欢迎关注米宝窝，持续更新中，谢谢！"><span class="nav-number">9.</span> <span class="nav-text">10.欢迎关注米宝窝，持续更新中，谢谢！</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rocklei123</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cytMPyKrf';
+      var conf = '193a394926f19428e645007868bcefe0';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
