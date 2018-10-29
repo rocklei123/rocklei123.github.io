@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java,设计模式,代理模式," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rocklei123 米宝窝" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1.目标随着对spring框架的了解，代理模式在其中发乎了很大作用，要想更好的理解spring的核心之一AOP需要对代理模式有一些了解。通过本本能够更好的理解代理模式设计思想、应用实例、优缺点、与适配器模式的不同、JDK动态代理、Cglib动态代理。">
+<meta name="keywords" content="Java,设计模式,代理模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式之-代理模式">
+<meta property="og:url" content="http://yoursite.com/2018/10/28/设计模式之-代理模式/index.html">
+<meta property="og:site_name" content="rocklei123 米宝窝">
+<meta property="og:description" content="1.目标随着对spring框架的了解，代理模式在其中发乎了很大作用，要想更好的理解spring的核心之一AOP需要对代理模式有一些了解。通过本本能够更好的理解代理模式设计思想、应用实例、优缺点、与适配器模式的不同、JDK动态代理、Cglib动态代理。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/10/28/设计模式之-代理模式/markdown-img-paste-20181028230958975.png">
+<meta property="og:image" content="http://yoursite.com/2018/10/28/设计模式之-代理模式/markdown-img-paste-20181029000352701.png">
+<meta property="og:updated_time" content="2018-10-29T06:26:18.997Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="设计模式之-代理模式">
+<meta name="twitter:description" content="1.目标随着对spring框架的了解，代理模式在其中发乎了很大作用，要想更好的理解spring的核心之一AOP需要对代理模式有一些了解。通过本本能够更好的理解代理模式设计思想、应用实例、优缺点、与适配器模式的不同、JDK动态代理、Cglib动态代理。">
+<meta name="twitter:image" content="http://yoursite.com/2018/10/28/设计模式之-代理模式/markdown-img-paste-20181028230958975.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/28/设计模式之-代理模式/"/>
+
+
+
+
+
+  <title>设计模式之-代理模式 | rocklei123 米宝窝</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rocklei123 米宝窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">水滴石穿</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/28/设计模式之-代理模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rocklei123">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rocklei123 米宝窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">设计模式之-代理模式</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-28T22:50:20+08:00">
+                2018-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2018/10/28/设计模式之-代理模式/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2018/10/28/设计模式之-代理模式/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-目标"><a href="#1-目标" class="headerlink" title="1.目标"></a>1.目标</h1><p>随着对spring框架的了解，代理模式在其中发乎了很大作用，要想更好的理解spring的核心之一AOP需要对代理模式有一些了解。通过本本能够更好的理解代理模式设计思想、应用实例、优缺点、与适配器模式的不同、JDK动态代理、Cglib动态代理。</p>
+<a id="more"></a>
+<h1 id="2-介绍"><a href="#2-介绍" class="headerlink" title="2.介绍"></a>2.介绍</h1><h2 id="2-1-概述"><a href="#2-1-概述" class="headerlink" title="2.1 概述"></a>2.1 概述</h2><p>在代理模式（Proxy Pattern）中，一个类代表另一个类的功能。<br>一句话总结：<strong> 为其他对象提供一种代理以控制对这个对象的访问。代理对象起到中介作用，可去掉功能服务或增加额外的服务。 </strong></p>
+<h2 id="2-2-代理模式详细理解"><a href="#2-2-代理模式详细理解" class="headerlink" title="2.2 代理模式详细理解"></a>2.2 代理模式详细理解</h2><ul>
+<li><p>意图：为其他对象提供一种代理以控制对这个对象的访问。</p>
+</li>
+<li><p>主要解决：在直接访问对象时带来的问题，比如说：要访问的对象在远程的机器上。在面向对象系统中，有些对象由于某些原因（比如对象创建开销很大，或者某些操作需要安全控制，或者需要进程外的访问），直接访问会给使用者或者系统结构带来很多麻烦，我们可以在访问此对象时加上一个对此对象的访问层。</p>
+</li>
+<li><p>何时使用：想在访问一个类时做一些控制。</p>
+</li>
+<li><p>如何解决：增加中间层。</p>
+</li>
+<li><p>关键代码：实现与被代理类组合。</p>
+</li>
+</ul>
+<h2 id="2-3-实际用途"><a href="#2-3-实际用途" class="headerlink" title="2.3 实际用途"></a>2.3 实际用途</h2><ul>
+<li><p>1、Windows 里面的快捷方式。</p>
+</li>
+<li><p>2、买火车票不一定在火车站买，也可以去代售点。</p>
+</li>
+<li><p>3、一张支票或银行存单是账户中资金的代理。支票在市场交易中用来代替现金，并提供对签发人账号上资金的控制。</p>
+</li>
+<li><p>4、spring aop。</p>
+</li>
+</ul>
+<h2 id="2-4-代理模式优缺点"><a href="#2-4-代理模式优缺点" class="headerlink" title="2.4 代理模式优缺点"></a>2.4 代理模式优缺点</h2><ul>
+<li>优点：<ul>
+<li>1、职责清晰。</li>
+<li>2、高扩展性。</li>
+<li>3、智能化。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>缺点：</p>
+</li>
+<li><p>1、由于在客户端和真实主题之间增加了代理对象，因此有些类型的代理模式可能会造成请求的处理速度变慢。</p>
+</li>
+<li><p>2、实现代理模式需要额外的工作，有些代理模式的实现非常复杂。</p>
+</li>
+</ul>
+<h2 id="2-5-按使用场景分类"><a href="#2-5-按使用场景分类" class="headerlink" title="2.5 按使用场景分类"></a>2.5 按使用场景分类</h2><p>使用场景：按职责来划分，通常有以下使用场景：</p>
+<ul>
+<li>1、远程代理。</li>
+<li>2、虚拟代理。</li>
+<li>3、Copy-on-Write 代理。</li>
+<li>4、保护（Protect or Access）代理。</li>
+<li>5、Cache代理。</li>
+<li>6、防火墙（Firewall）代理。</li>
+<li>7、同步化（Synchronization）代理。</li>
+<li>8、智能引用（Smart Reference）代理。</li>
+</ul>
+<h2 id="2-6-与适配器模式和装饰器模式的不同"><a href="#2-6-与适配器模式和装饰器模式的不同" class="headerlink" title="2.6 与适配器模式和装饰器模式的不同"></a>2.6 与适配器模式和装饰器模式的不同</h2><p><strong> 注意事项： </strong></p>
+<p>1、和适配器模式的区别：适配器模式主要改变所考虑对象的接口，而代理模式不能改变所代理类的接口。</p>
+<p>适配器模式是因为新旧接口不一致导致出现了客户端无法得到满足的问题，因为我们还想使用实现了这个接口的一些服务，旧的接口是不能被完全重构掉。故：那么为了使用以前实现旧接口的服务，我们就应该把新的接口转换成旧接口；相比于适配器的应用场景，代理就不一样了，虽然代理也同样是增加了一层，但是，<strong> 代理提供的接口和原本的接口是一样的 </strong> ，代理模式的作用是不把实现直接暴露给client，而是通过代理这个层，代理能够做一些处理；</p>
+<p>2、和装饰器模式的区别：装饰器模式为了增强功能，而代理模式是为了加以控制。</p>
+<h1 id="3-静态代理"><a href="#3-静态代理" class="headerlink" title="3.静态代理"></a>3.静态代理</h1><p>静态代理： 代理和被代理对象在代理之前是确定的。他们都实现相同的接口或者继承相同的抽象类</p>
+<p><img src="/2018/10/28/设计模式之-代理模式/markdown-img-paste-20181028230958975.png" alt="代理模式-静态代理"></p>
+<h2 id="3-1-静态代理简单实现"><a href="#3-1-静态代理简单实现" class="headerlink" title="3.1 静态代理简单实现"></a>3.1 静态代理简单实现</h2><p>以汽车行驶，记录汽车行驶时间为例子进行讲解，首先创建一个Movable接口。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.staticproxy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MoveAble</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">move</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>创建一个Car实现MoveAble接口<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.staticproxy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: Car</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/10/28 23:35</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Car</span> <span class="keyword">implements</span> <span class="title">MoveAble</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> starttime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"汽车开始行驶。。。"</span>); <span class="comment">//实现开车</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="keyword">new</span> Random().nextInt(<span class="number">1000</span>));</span><br><span class="line">            System.out.println(<span class="string">"汽车行驶中。。。"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">long</span> endtime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"汽车结束行驶。。。 汽车行驶时间："</span> + (endtime - starttime) + <span class="string">"毫秒！"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>创建一个测试Client类用户测试<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.staticproxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: Client</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/10/28 23:38</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Car car = <span class="keyword">new</span> Car();</span><br><span class="line">        car.move();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>测试结果<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">汽车开始行驶。。。</span><br><span class="line">汽车行驶中。。。</span><br><span class="line">汽车结束行驶。。。 汽车行驶时间：<span class="number">717</span>毫秒！</span><br></pre></td></tr></table></figure></p>
+<h2 id="3-2-通过继承实现代理"><a href="#3-2-通过继承实现代理" class="headerlink" title="3.2 通过继承实现代理"></a>3.2 通过继承实现代理</h2><p>创建一个ExtendsCarForProxy继承Car，然后删除Car里面有关计时的代码，放到ExtendsCarForProxy里面。</p>
+<p>修改Car类代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.staticproxy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: Car</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/10/28 23:35</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Car</span> <span class="keyword">implements</span> <span class="title">MoveAble</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="comment">/* long starttime = System.currentTimeMillis();</span></span><br><span class="line"><span class="comment">        System.out.println("汽车开始行驶。。。"); //实现开车*/</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="keyword">new</span> Random().nextInt(<span class="number">1000</span>));</span><br><span class="line">            System.out.println(<span class="string">"汽车行驶中。。。"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/*long endtime = System.currentTimeMillis();</span></span><br><span class="line"><span class="comment">        System.out.println("汽车结束行驶。。。 汽车行驶时间：" + (endtime - starttime) + "毫秒！");*/</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>创建ExtendsCarForProxy集成Car 类，重写move方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.staticproxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: ExtendsCarForProxy</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/10/28 23:39</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExtendsCarForProxy</span> <span class="keyword">extends</span> <span class="title">Car</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> starttime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"ExtendsCarForProxy 汽车开始行驶。。。"</span>);</span><br><span class="line">        <span class="keyword">super</span>.move();</span><br><span class="line">        <span class="keyword">long</span> endtime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"ExtendsCarForProxy 汽车结束行驶。。。 汽车行驶时间："</span> + (endtime - starttime) + <span class="string">"毫秒！"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修改Client类代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.staticproxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: Client</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/10/28 23:38</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//Car car = new Car();</span></span><br><span class="line">        MoveAble m = <span class="keyword">new</span> ExtendsCarForProxy();</span><br><span class="line">        m.move();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>通过继承实现代理结果输出</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ExtendsCarForProxy 汽车开始行驶。。。</span><br><span class="line">汽车行驶中。。。</span><br><span class="line">ExtendsCarForProxy 汽车结束行驶。。。 汽车行驶时间：<span class="number">838</span>毫秒！</span><br></pre></td></tr></table></figure>
+<h2 id="3-3-使用聚合方式"><a href="#3-3-使用聚合方式" class="headerlink" title="3.3 使用聚合方式"></a>3.3 使用聚合方式</h2><p>创建聚合方式的Car类AggregationCarForProxy,实现MoveAble接口，并创建有参构造方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.staticproxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: AggregationCarForProxy</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/10/28 23:51</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AggregationCarForProxy</span> <span class="keyword">implements</span> <span class="title">MoveAble</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Car car;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AggregationCarForProxy</span><span class="params">(Car car)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.car = car;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> starttime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"AggregationCarForProxy 汽车开始行驶。。。"</span>);</span><br><span class="line">        car.move();</span><br><span class="line">        <span class="keyword">long</span> endtime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"AggregationCarForProxy 汽车结束行驶。。。 汽车行驶时间："</span> + (endtime - starttime) + <span class="string">"毫秒！"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>修改Client类代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.staticproxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: Client</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/10/28 23:38</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">       <span class="comment">/* Car car = new Car();</span></span><br><span class="line"><span class="comment">        MoveAble m = new ExtendsCarForProxy();</span></span><br><span class="line"><span class="comment">        m.move();*/</span></span><br><span class="line">        Car car = <span class="keyword">new</span> Car();</span><br><span class="line">        MoveAble m = <span class="keyword">new</span> AggregationCarForProxy(car);</span><br><span class="line">        m.move();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>聚合类型执行结果<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AggregationCarForProxy 汽车开始行驶。。。</span><br><span class="line">汽车行驶中。。。</span><br><span class="line">AggregationCarForProxy 汽车结束行驶。。。 汽车行驶时间：<span class="number">764</span>毫秒！</span><br></pre></td></tr></table></figure></p>
+<p>聚合方式就是两个类实现同一个接口，Car类实现move功能，然后通过构造函数把Car类注入到AggregationCarForProxy中，在调用Car类move时做一些处理，从而实现了代理功能。</p>
+<h2 id="3-4-聚合方式优点体现"><a href="#3-4-聚合方式优点体现" class="headerlink" title="3.4 聚合方式优点体现"></a>3.4 聚合方式优点体现</h2><p><strong> 问题 </strong></p>
+<p>如果我们需要在Move上实现时间处理、权限、日志等功能。比如需要实现先输出时间，再输出日志就需要创建一个Car4继承Car，如果我想先输出日志，再输出时间呢？就需要在创建一个Car5继承Car，只是顺序颠倒一下，就需要在创建一个，如果功能多的话，就需要创建很多类，太麻烦了。使用聚合就不会有这种问题出现。</p>
+<p><img src="/2018/10/28/设计模式之-代理模式/markdown-img-paste-20181029000352701.png" alt="设计模式-代理模式2"></p>
+<p><strong> 聚合方式创建多个代理类，根据需求顺序调用 </strong></p>
+<p>创建时间代理类，专门处理时间<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.staticproxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: AggregationCarTimeStaticProxy</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/10/29 00:05</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AggregationCarTimeStaticProxy</span> <span class="keyword">implements</span> <span class="title">MoveAble</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> MoveAble m;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AggregationCarTimeStaticProxy</span><span class="params">(MoveAble m)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.m = m;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> starttime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"AggregationCarTimeStaticProxy 汽车开始行驶。。。"</span>);</span><br><span class="line">        m.move();</span><br><span class="line">        <span class="keyword">long</span> endtime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"AggregationCarTimeStaticProxy 汽车结束行驶。。。 汽车行驶时间："</span> + (endtime - starttime) + <span class="string">"毫秒！"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>创建专门处理日志的代理类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.staticproxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: AggregationCarLogStaticProxy</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/10/29 00:06</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AggregationCarLogStaticProxy</span> <span class="keyword">implements</span> <span class="title">MoveAble</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> MoveAble m;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AggregationCarLogStaticProxy</span><span class="params">(MoveAble m)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.m = m;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"AggregationCarLogStaticProxy 开始日志记录。。。"</span>);</span><br><span class="line">        m.move();</span><br><span class="line">        System.out.println(<span class="string">"AggregationCarLogStaticProxy 日志记录结束。。。"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>修改Client类代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.staticproxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: Client</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Auther</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/10/28 23:38</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">       <span class="comment">/* Car car = new Car();</span></span><br><span class="line"><span class="comment">        MoveAble m = new ExtendsCarForProxy();</span></span><br><span class="line"><span class="comment">        m.move();*/</span></span><br><span class="line">        <span class="comment">/*Car car = new Car();</span></span><br><span class="line"><span class="comment">        MoveAble m = new AggregationCarForProxy(car);</span></span><br><span class="line"><span class="comment">        m.move();*/</span></span><br><span class="line"></span><br><span class="line">        Car car = <span class="keyword">new</span> Car();</span><br><span class="line">        MoveAble ctp = <span class="keyword">new</span> AggregationCarTimeStaticProxy(car);<span class="comment">//执行时间</span></span><br><span class="line">        MoveAble clp = <span class="keyword">new</span> AggregationCarLogStaticProxy(ctp);<span class="comment">//记录日志</span></span><br><span class="line">        clp.move();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>执行结果<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AggregationCarLogStaticProxy 开始日志记录。。。</span><br><span class="line">AggregationCarTimeStaticProxy 汽车开始行驶。。。</span><br><span class="line">汽车行驶中。。。</span><br><span class="line">AggregationCarTimeStaticProxy 汽车结束行驶。。。 汽车行驶时间：<span class="number">881</span>毫秒！</span><br><span class="line">AggregationCarLogStaticProxy 日志记录结束。。。</span><br></pre></td></tr></table></figure></p>
+<h2 id="3-5-静态代理类优缺点总结"><a href="#3-5-静态代理类优缺点总结" class="headerlink" title="3.5 静态代理类优缺点总结"></a>3.5 静态代理类优缺点总结</h2><ul>
+<li>优点：</li>
+</ul>
+<p>代理使客户端不需要知道实现类是什么，怎么做的，而客户端只需知道代理即可（解耦合）。</p>
+<ul>
+<li>缺点：</li>
+</ul>
+<p>1）代理类和委托类实现了相同的接口，代理类通过委托类实现了相同的方法。这样就出现了大量的代码重复。如果接口增加一个方法，除了所有实现类需要实现这个方法外，所有代理类也需要实现此方法。增加了代码维护的复杂度。</p>
+<p>2）代理对象只服务于一种类型的对象，如果要服务多类型的对象。势必要为每一种对象都进行代理，静态代理在程序规模稍大时就无法胜任了。即静态代理类只能为特定的接口(Service)服务。如想要为多个接口服务则需要建立很多个代理类。</p>
+<p>引入下文，动态代理</p>
+<h1 id="4-Java动态代理"><a href="#4-Java动态代理" class="headerlink" title="4.Java动态代理"></a>4.Java动态代理</h1><p>书接上文，现在只是对小汽车进行代理，如果要实现对火车，自行车的代理是不是需要创建火车代理类，自行车代理类等，太麻烦了。可以通过动态代理进行实现。</p>
+<h2 id="4-1-Java动态代理概念"><a href="#4-1-Java动态代理概念" class="headerlink" title="4.1 Java动态代理概念"></a>4.1 Java动态代理概念</h2><p>Java 动态代理机制的出现，使得 Java 开发人员不用手工编写代理类，只要简单地指定一组接口及委托类对象，便能动态地获得代理类。代理类会负责将所有的方法调用分派到委托对象上反射执行，在分派执行的过程中，开发人员还可以按需调整委托类对象及其功能，这是一套非常灵活有弹性的代理框架。</p>
+<h2 id="4-2-JDK动态代理"><a href="#4-2-JDK动态代理" class="headerlink" title="4.2 JDK动态代理"></a>4.2 JDK动态代理</h2><p>JDK自从1.3版本开始，就引入了动态代理，JDK的动态代理用起来非常简单，但是它有一个限制，就是使用动态代理的对象必须实现一个或多个接口 。如果想代理没有实现接口的类可以使用CGLIB包。</p>
+<p>首先让我们来了解一下如何使用 Java 动态代理。具体有如下四步骤：</p>
+<ul>
+<li>1、通过实现 InvocationHandler 接口创建自己的调用处理器；</li>
+<li>2、通过为 Proxy 类指定 ClassLoader 对象和一组 interface 来创建动态代理类；</li>
+<li>3、通过反射机制获得动态代理类的构造函数，其唯一参数类型是调用处理器接口类型；</li>
+<li>4、通过构造函数创建动态代理类实例，构造时调用处理器对象作为参数被传入</li>
+</ul>
+<p>自定义自己的InvocationHandler<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.dynamic.jdkdynamicproxy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationHandler;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: TimeHadlerJdkDynamicProxy</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/10/29 11:22</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TimeHadlerJdkDynamicProxy</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Object target;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TimeHadlerJdkDynamicProxy</span><span class="params">(Object target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.target = target;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> proxy  proxy 被代理对象</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> method 被代理对象的方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> args   被代理对象方法的参数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Throwable</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> starttime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"TimeHadlerJdkDynamicProxy 汽车开始行驶。。。"</span>);</span><br><span class="line">        method.invoke(target);</span><br><span class="line">        <span class="keyword">long</span> endtime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"TimeHadlerJdkDynamicProxy 汽车结束行驶。。。 汽车行驶时间："</span> + (endtime - starttime) + <span class="string">"毫秒！"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>客户端调用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.dynamic.jdkdynamicproxy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.rocklei123.designpatterns.proxypattern.staticproxy.Car;</span><br><span class="line"><span class="keyword">import</span> com.rocklei123.designpatterns.proxypattern.staticproxy.MoveAble;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationHandler;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Proxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: Client</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/10/29 11:27</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Car car = <span class="keyword">new</span> Car();</span><br><span class="line">        InvocationHandler h = <span class="keyword">new</span> TimeHadlerJdkDynamicProxy(car);</span><br><span class="line">        Class&lt;?&gt; clazz = car.getClass();</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         *  loader 类加载器</span></span><br><span class="line"><span class="comment">         *  interfaces 实现接口</span></span><br><span class="line"><span class="comment">         *  h InvocationHandler</span></span><br><span class="line"><span class="comment">         * */</span></span><br><span class="line">        MoveAble m = (MoveAble) Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(), h);</span><br><span class="line">        m.move();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>执行效果<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TimeHadlerJdkDynamicProxy 汽车开始行驶。。。</span><br><span class="line">汽车行驶中。。。</span><br><span class="line">TimeHadlerJdkDynamicProxy 汽车结束行驶。。。 汽车行驶时间：<span class="number">524</span>毫秒！</span><br></pre></td></tr></table></figure></p>
+<h2 id="4-2-Cglib动态代理"><a href="#4-2-Cglib动态代理" class="headerlink" title="4.2 Cglib动态代理"></a>4.2 Cglib动态代理</h2><p>CGLIB(Code Generation Library)是一个开源项目。是一个强大的，高性能，高质量的Code生成类库，它可以在运行期扩展Java类与实现Java接口。它的底层使用ASM在内存中动态的生成被代理类的子类，使用CGLIB即使代理类没有实现任何接口也可以实现动态代理功能。CGLIB具有简单易用，它的运行速度要远远快于JDK的Proxy动态代理.</p>
+<p>cglib有两种可选方式，继承和引用。第一种是基于继承实现的动态代理，所以可以直接通过super调用target方法，但是这种方式在spring中是不支持的，因为这样的话，这个target对象就不能被spring所管理，所以cglib还是才用类似jdk的方式，通过持有target对象来达到拦截方法的效果。</p>
+<p><strong> 注意：</strong>  CGLIB不能对final修饰的类进行代理。</p>
+<p>CGLIB的核心类：</p>
+<pre><code>* net.sf.cglib.proxy.Enhancer – 主要的增强类
+* net.sf.cglib.proxy.MethodInterceptor – 主要的方法拦截类，它是Callback接口的子接口，需要用户实现
+* net.sf.cglib.proxy.MethodProxy – JDK的java.lang.reflect.Method类的代理类，可以方便的实现对源对象方法的调用,如使用：
+* Object o = methodProxy.invokeSuper(proxy, args);//虽然第一个参数是被代理对象，也不会出现死循环的问题。
+</code></pre><p>Maven 构建需要的jar包<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- https://mvnrepository.com/artifact/cglib/cglib --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;cglib&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;cglib&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.2.4&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<p>准备被代理类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.dynamic.cglibdynamicproxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: Train</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/10/29 12:30</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"火车行驶中。。。"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>cglib实现动态代理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.dynamic.cglibdynamicproxy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> net.sf.cglib.proxy.Enhancer;</span><br><span class="line"><span class="keyword">import</span> net.sf.cglib.proxy.MethodInterceptor;</span><br><span class="line"><span class="keyword">import</span> net.sf.cglib.proxy.MethodProxy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: TrainTimerCglibDynamicProxy</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/10/29 12:31</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TrainTimerCglibDynamicProxy</span> <span class="keyword">implements</span> <span class="title">MethodInterceptor</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Enhancer enhancer = <span class="keyword">new</span> Enhancer();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getProxy</span><span class="params">(Class clazz)</span> </span>&#123;</span><br><span class="line">        enhancer.setSuperclass(clazz);</span><br><span class="line">        enhancer.setCallback(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">return</span> enhancer.create();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> o           目标类的实例</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> method      目标类的反射方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> objects     方法的参数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> methodProxy 代理类的实例</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Throwable</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object o, Method method, Object[] objects, MethodProxy methodProxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> starttime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"TrainTimerCglibDynamicProxy 火车开始行驶。。。"</span>);</span><br><span class="line">        Object c = methodProxy.invokeSuper(o, objects);</span><br><span class="line">        <span class="keyword">long</span> endtime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"TrainTimerCglibDynamicProxy 火车结束行驶。。。 火车行驶时间："</span> + (endtime - starttime) + <span class="string">"毫秒！"</span>);</span><br><span class="line">        <span class="keyword">return</span> c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>客户端测试类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.designpatterns.proxypattern.dynamic.cglibdynamicproxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: Client</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/10/29 13:05</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TrainClient</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        TrainTimerCglibDynamicProxy proxy = <span class="keyword">new</span> TrainTimerCglibDynamicProxy();</span><br><span class="line">        Train train = (Train) proxy.getProxy(Train.class);</span><br><span class="line">        train.move();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>测试结果</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TrainTimerCglibDynamicProxy 火车开始行驶。。。</span><br><span class="line">火车行驶中。。。</span><br><span class="line">TrainTimerCglibDynamicProxy 火车结束行驶。。。 火车行驶时间：<span class="number">127</span>毫秒！</span><br></pre></td></tr></table></figure>
+<h2 id="4-3-JDK动态代理和Cglib动态代理的区别"><a href="#4-3-JDK动态代理和Cglib动态代理的区别" class="headerlink" title="4.3 JDK动态代理和Cglib动态代理的区别"></a>4.3 JDK动态代理和Cglib动态代理的区别</h2><table>
+<thead>
+<tr>
+<th>JDK动态代理</th>
+<th style="text-align:center">CGLIB动态代理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>只能代理实现了接口的类</td>
+<td style="text-align:center">针对类来实现代理的</td>
+</tr>
+<tr>
+<td>没有实现接口的类不能实现JDK的动态代理</td>
+<td style="text-align:center">对指定目标类产生一个子类，通过方法拦截技术拦截所有父类方法的调用</td>
+</tr>
+</tbody>
+</table>
+<h1 id="5-希望大家手动敲一遍代码，会收获颇丰！"><a href="#5-希望大家手动敲一遍代码，会收获颇丰！" class="headerlink" title="5 希望大家手动敲一遍代码，会收获颇丰！"></a>5 希望大家手动敲一遍代码，会收获颇丰！</h1><h1 id="6-欢迎关注米宝窝，持续更新中，谢谢！"><a href="#6-欢迎关注米宝窝，持续更新中，谢谢！" class="headerlink" title="6.欢迎关注米宝窝，持续更新中，谢谢！"></a>6.欢迎关注米宝窝，持续更新中，谢谢！</h1><p><a href="https://rocklei123.github.io/" title="https://rocklei123.github.io/" target="_blank" rel="noopener">米宝窝 https://rocklei123.github.io/ </a></p>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+    
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+        <div style="text-align:center;color: #ccc;font-size:14px;">欢迎持续关注米宝窝，定期更新谢谢！ https://rocklei123.github.io/ </div>
+                <div style="text-align:center;color: #ccc;font-size:14px;">欢迎持续关注我的CSDN https://blog.csdn.net/rocklei123 </div>
+        <div ><img src="images/rocklei123-weixin.jpg" alt="rocklei123的技术点滴" width="258" height="258"> </div>
+    
+</div>
+
+      
+    </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>熬夜写博客挺辛苦的，生怕猝死，所以每当写博客都带着听诊器，心脏一有异响，随时按Ctrl+S。</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: block;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="rocklei123 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/aipay.jpg" alt="rocklei123 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+            <a href="/tags/代理模式/" rel="tag"># 代理模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/16/MYSQL-SQL开发总结（三）-开发技巧2/" rel="next" title="MYSQL-SQL开发总结（三）-开发技巧2">
+                <i class="fa fa-chevron-left"></i> MYSQL-SQL开发总结（三）-开发技巧2
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="rocklei123" />
+            
+              <p class="site-author-name" itemprop="name">rocklei123</p>
+              <p class="site-description motion-element" itemprop="description">rocklei123的点滴技术生活</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/rocklei123" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/rocklei123" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zhoulei091@126.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-目标"><span class="nav-number">1.</span> <span class="nav-text">1.目标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-介绍"><span class="nav-number">2.</span> <span class="nav-text">2.介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-概述"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-代理模式详细理解"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 代理模式详细理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-实际用途"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 实际用途</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-代理模式优缺点"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 代理模式优缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-按使用场景分类"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 按使用场景分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6-与适配器模式和装饰器模式的不同"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 与适配器模式和装饰器模式的不同</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-静态代理"><span class="nav-number">3.</span> <span class="nav-text">3.静态代理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-静态代理简单实现"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 静态代理简单实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-通过继承实现代理"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 通过继承实现代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-使用聚合方式"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 使用聚合方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-聚合方式优点体现"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 聚合方式优点体现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-静态代理类优缺点总结"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 静态代理类优缺点总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Java动态代理"><span class="nav-number">4.</span> <span class="nav-text">4.Java动态代理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-Java动态代理概念"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 Java动态代理概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-JDK动态代理"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 JDK动态代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-Cglib动态代理"><span class="nav-number">4.3.</span> <span class="nav-text">4.2 Cglib动态代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-JDK动态代理和Cglib动态代理的区别"><span class="nav-number">4.4.</span> <span class="nav-text">4.3 JDK动态代理和Cglib动态代理的区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-希望大家手动敲一遍代码，会收获颇丰！"><span class="nav-number">5.</span> <span class="nav-text">5 希望大家手动敲一遍代码，会收获颇丰！</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-欢迎关注米宝窝，持续更新中，谢谢！"><span class="nav-number">6.</span> <span class="nav-text">6.欢迎关注米宝窝，持续更新中，谢谢！</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rocklei123</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cytMPyKrf';
+      var conf = '193a394926f19428e645007868bcefe0';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
