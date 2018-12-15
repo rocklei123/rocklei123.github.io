@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java,Annotation,Spring," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rocklei123 米宝窝" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="1.属性赋值1.1 @Value使用@Value注解赋值；  基本数值 可以写Spring的EL表达式; #{} 可以写${}；取出配置文件【properties】中的值（在运行环境变量里面的值）">
+<meta name="keywords" content="Java,Annotation,Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring注解驱动开发（三）-属性赋值和自动装配">
+<meta property="og:url" content="http://yoursite.com/2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/index.html">
+<meta property="og:site_name" content="rocklei123 米宝窝">
+<meta property="og:description" content="1.属性赋值1.1 @Value使用@Value注解赋值；  基本数值 可以写Spring的EL表达式; #{} 可以写${}；取出配置文件【properties】中的值（在运行环境变量里面的值）">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-12-15T13:12:22.904Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring注解驱动开发（三）-属性赋值和自动装配">
+<meta name="twitter:description" content="1.属性赋值1.1 @Value使用@Value注解赋值；  基本数值 可以写Spring的EL表达式; #{} 可以写${}；取出配置文件【properties】中的值（在运行环境变量里面的值）">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/"/>
+
+
+
+
+
+  <title>Spring注解驱动开发（三）-属性赋值和自动装配 | rocklei123 米宝窝</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rocklei123 米宝窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">水滴石穿</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rocklei123">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rocklei123 米宝窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring注解驱动开发（三）-属性赋值和自动装配</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-01T21:45:44+08:00">
+                2018-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-属性赋值"><a href="#1-属性赋值" class="headerlink" title="1.属性赋值"></a>1.属性赋值</h1><h2 id="1-1-Value"><a href="#1-1-Value" class="headerlink" title="1.1 @Value"></a>1.1 @Value</h2><p>使用@Value注解赋值；</p>
+<ol>
+<li>基本数值</li>
+<li>可以写Spring的EL表达式; #{}</li>
+<li>可以写${}；取出配置文件【properties】中的值（在运行环境变量里面的值）</li>
+</ol>
+<a id="more"></a>
+<h2 id="1-2-PropertySource"><a href="#1-2-PropertySource" class="headerlink" title="1.2 @PropertySource"></a>1.2 @PropertySource</h2><ul>
+<li><p>使用@PropertySource读取外部配置文件中的k/v保存到运行的环境变量中;</p>
+</li>
+<li><p>加载完外部的配置文件以后使用${}取出配置文件的值</p>
+</li>
+<li><p>@PropertySource(value={“classpath:/person.properties”}) 数组类型，可以支持一次性引入多个文件。</p>
+</li>
+<li>另外@PropertySource 是一个可重复的注解，可以使用@PropertySources注解引入多个@PropertySource标注的properties配置文件</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> PropertySources &#123;</span><br><span class="line">    PropertySource[] value();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//实体类信息</span></span><br><span class="line"><span class="keyword">package</span> com.rocklei123.bean;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Value;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: Person</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/12/1 21:27</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Value</span>(value = <span class="string">"张三"</span>)</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="meta">@Value</span>(value = <span class="string">"#&#123;20-2&#125;"</span>)</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value</span>(value = <span class="string">"$&#123;person.nickName&#125;"</span>)</span><br><span class="line">    <span class="keyword">private</span> String nickName;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Person默认构造方法"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Person&#123;"</span> +</span><br><span class="line">                <span class="string">"name='"</span> + name + <span class="string">'\''</span> +</span><br><span class="line">                <span class="string">", age="</span> + age +</span><br><span class="line">                <span class="string">", nickName='"</span> + nickName + <span class="string">'\''</span> +</span><br><span class="line">                <span class="string">'&#125;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//配置类信息</span></span><br><span class="line"><span class="keyword">package</span> com.rocklei123.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.rocklei123.bean.Person;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@PropertySource</span>(value = &#123;<span class="string">"classpath:/person.properties"</span>&#125;)</span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainConfigOfPropertyValues</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Person <span class="title">person</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Person();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//测试类信息</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IocTestOfPropertyValues</span> </span>&#123;</span><br><span class="line">    ApplicationContext applicationContext = <span class="keyword">new</span> AnnotationConfigApplicationContext(MainConfigOfPropertyValues.class);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printBean</span><span class="params">(ApplicationContext applicationContext)</span> </span>&#123;</span><br><span class="line">        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();</span><br><span class="line">        <span class="keyword">for</span> (String beanDefinitionName : beanDefinitionNames) &#123;</span><br><span class="line">            Object o = applicationContext.getBean(beanDefinitionName);</span><br><span class="line">            System.out.println(o);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        printBean(applicationContext);</span><br><span class="line">        Environment environment = applicationContext.getEnvironment();</span><br><span class="line">        String nickName = environment.getProperty(<span class="string">"person.nickName"</span>);</span><br><span class="line">        System.out.println(<span class="string">"环境信息中property="</span> + nickName);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Person&#123;name=&apos;张三&apos;, age=18, nickName=&apos;小李四&apos;&#125;</span><br><span class="line">环境信息中property=小李四</span><br></pre></td></tr></table></figure>
+<h1 id="2-自动装配"><a href="#2-自动装配" class="headerlink" title="2.自动装配"></a>2.自动装配</h1><p>自动装配;<br>          Spring利用依赖注入（DI），完成对IOC容器中中各个组件的依赖关系赋值；</p>
+<h2 id="2-1-Autowired、-Qualifier、-Primary"><a href="#2-1-Autowired、-Qualifier、-Primary" class="headerlink" title="2.1 @Autowired、@Qualifier、@Primary"></a>2.1 @Autowired、@Qualifier、@Primary</h2><h3 id="2-1-1-Autowired"><a href="#2-1-1-Autowired" class="headerlink" title="2.1.1 @Autowired"></a>2.1.1 @Autowired</h3><h4 id="2-1-1-1-概念性总结"><a href="#2-1-1-1-概念性总结" class="headerlink" title="2.1.1.1 概念性总结"></a>2.1.1.1 概念性总结</h4><ul>
+<li><p><strong>概念：</strong>Spring 2.5 引入了 @Autowired 注释，它可以对类成员变量、方法及构造函数进行标注，完成自动装配的工作。 通过 @Autowired的使用来消除 set ，get方法。</p>
+</li>
+<li><p><strong>原理：</strong>其实在启动spring IOC容器时，容器自动装载了一个AutowiredAnnotationBeanPostProcessor后置处理器，当容器扫描到@Autowied、@Resource或@Inject时，就会在IoC容器自动查找需要的bean，并装配给该对象的属性。</p>
+</li>
+<li><p><strong>注意事项：</strong></p>
+<ul>
+<li>1）、默认优先按照<strong>类型</strong>去容器中找对应的组件:applicationContext.getBean(BookDao.class);找到就赋值</li>
+<li>2）、如果找到多个相同类型的组件，再将属性的名称作为组件的id去容器中查        applicationContext.getBean(“bookDao”)<u>所以容器中有多个相同组件时，名称不应该乱起。</u></li>
+<li>3）、自动装配默认一定要将属性赋值好，没有就会报错；可以使用@Autowired(required=false);默认required=true</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-1-1-2-默认注入情况测试"><a href="#2-1-1-2-默认注入情况测试" class="headerlink" title="2.1.1.2 默认注入情况测试"></a>2.1.1.2 默认注入情况测试</h4><p>默认注入情况：名字默认是类名首字母小写</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//service 层代码，自动注入dao层</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BookService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    BookDao bookDao;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"BookService&#123;"</span> +</span><br><span class="line">                <span class="string">"bookDao="</span> + bookDao +</span><br><span class="line">                <span class="string">'&#125;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//dao层代码，加入一个默认名称区别</span></span><br><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BookDao</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String nameFlag = <span class="string">"1"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BookDao</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BookDao</span><span class="params">(String nameFlag)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.nameFlag = nameFlag;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getNameFlag</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> nameFlag;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNameFlag</span><span class="params">(String nameFlag)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.nameFlag = nameFlag;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"BookDao&#123;"</span> +</span><br><span class="line">                <span class="string">"nameFlag='"</span> + nameFlag + <span class="string">'\''</span> +</span><br><span class="line">                <span class="string">'&#125;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//配置类，向容器中注入另一个bookDao，名称为BookDao2</span></span><br><span class="line"><span class="meta">@ComponentScan</span>(value = &#123;<span class="string">"com.rocklei123.service"</span>, <span class="string">"com.rocklei123.controller"</span>, <span class="string">"com.rocklei123.repository"</span>&#125;)</span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainConfigOfAutowired</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span>(value = <span class="string">"bookDao2"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> BookDao <span class="title">bookDao2</span><span class="params">(BookDao bookDao)</span> </span>&#123;</span><br><span class="line">        BookDao bookDao2 = <span class="keyword">new</span> BookDao();</span><br><span class="line">        bookDao2.setNameFlag(<span class="string">"2"</span>);</span><br><span class="line">        <span class="keyword">return</span> bookDao2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//测试类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IocTestOfAutowired</span> </span>&#123;</span><br><span class="line">    ApplicationContext applicationContext = <span class="keyword">new</span> AnnotationConfigApplicationContext(MainConfigOfAutowired.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        BookService bean = applicationContext.getBean(BookService.class);</span><br><span class="line">        System.out.println(bean);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试结果:通过上文注意事项可知，Spring容器注入时会先通过类型找到两个BookDao类型的对象，第二次会通过 <strong>默认是类名首字母小写</strong>在查找一次。故Service层注入的BookDao对象应该为nameFlag = “1”; 的对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">信息: Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@4aa8f0b4: startup date [Sat Dec 15 18:56:29 CST 2018]; root of context hierarchy</span><br><span class="line">BookService&#123;bookDao=BookDao&#123;nameFlag=&apos;1&apos;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>如果此时修改测试类使用IOC容器按类型获取BookDao此时，因为容器中有两个BookDao类型的对象，当打印时就会报错。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    BookDao bean = applicationContext.getBean(BookDao.class);</span><br><span class="line">    System.out.println(bean);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//异常信息</span></span><br><span class="line">org.springframework.beans.factory.NoUniqueBeanDefinitionException: No qualifying bean of type <span class="string">'com.rocklei123.repository.BookDao'</span> available: expected single matching bean but found <span class="number">2</span>: bookDao,bookDao2</span><br></pre></td></tr></table></figure>
+<h4 id="2-1-1-3-Autowired-required-false"><a href="#2-1-1-3-Autowired-required-false" class="headerlink" title="2.1.1.3 @Autowired(required=false)"></a>2.1.1.3 @Autowired(required=false)</h4><p>自动装配默认一定要将属性赋值好，没有就会报错；可以使用@Autowired(required=false);</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(&#123;ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD, ElementType.ANNOTATION_TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Autowired &#123;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">required</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">true</span></span>;</span><br><span class="line">&#125;</span><br><span class="line">默认required 为<span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+<p>测试用例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//业务层代码，自动注入Dao层对象，required = false</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BookService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Qualifier</span>(value = <span class="string">"bookDao2"</span>)</span><br><span class="line">    <span class="meta">@Autowired</span>(required = <span class="keyword">false</span>)</span><br><span class="line">    BookDao bookDao;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//将BookDao不注入到容器中</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//虽然容器中不含有BookDao,通过测试类打印业务层代码时，也不会报错。</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    BookService bean = applicationContext.getBean(BookService.class);</span><br><span class="line">    System.out.println(bean);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//测试结果</span></span><br><span class="line">BookService&#123;bookDao=<span class="keyword">null</span>&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-1-1-4-Autowired-构造器，参数，方法，属性"><a href="#2-1-1-4-Autowired-构造器，参数，方法，属性" class="headerlink" title="2.1.1.4 @Autowired:构造器，参数，方法，属性"></a>2.1.1.4 @Autowired:构造器，参数，方法，属性</h4><p>@Autowired:构造器，参数，方法，属性；都是从容器中获取参数组件的值</p>
+<p><strong>默认情况说明：</strong></p>
+<ul>
+<li>@Bean标注的方法创建对象的时候，方法参数的值从容器中获取</li>
+<li>默认加在ioc容器中的组件，容器启动会调用无参构造器创建对象，再进行初始化赋值等操作</li>
+</ul>
+<p><strong>@Autowired标注说明：</strong></p>
+<ul>
+<li>1）、[标注在方法位置]：@Bean+方法参数；参数从容器中获取;默认不写@Autowired效果是一样的；都能自动装配</li>
+<li>2）、[标在构造器上]：如果组件只有一个有参构造器，这个有参构造器的@Autowired可以省略，参数位置的组件还是可以自动从容器中获取.</li>
+<li>3）、放在参数位置：</li>
+</ul>
+<h3 id="2-1-2-Qualifier"><a href="#2-1-2-Qualifier" class="headerlink" title="2.1.2 @Qualifier"></a>2.1.2 @Qualifier</h3><p>​    @Qualifier(“XXX”) Spring的Bean注入配置注解，该注解指定注入的Bean的名称，Spring框架使用byName方式寻找合格的bean，这样就消除了byType方式产生的歧义。</p>
+<p>​    @Qualifier(“bookDao”)：使用@Qualifier指定需要装配的组件的id，而不是使用属性名。@Qualifier需要和 @Autowired一起使用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BookService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Qualifier</span>(value = <span class="string">"bookDao2"</span>)  <span class="comment">//指定装配组件的Id为bookDao2</span></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    BookDao bookDao;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//测试结果</span></span><br><span class="line">BookService&#123;bookDao=BookDao&#123;nameFlag=<span class="string">'2'</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-1-3-Primary"><a href="#2-1-3-Primary" class="headerlink" title="2.1.3 @Primary"></a>2.1.3 @Primary</h3><p>​    @Primary：让Spring进行自动装配的时候，默认使用首选的bean；也可以继续使用@Qualifier指定需要装配的bean的名字。</p>
+<p>​    通过下面的示例也可以看出@Primary和@Qualifier 在一定程度上有所冲突，如果我们service层代码使用@Qualifier指定注入名称，即使在相同类型的其他Bean 上标注@Primary，Spring注入Service层的也是根据@Qualifier标注注入的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BookService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Qualifier</span>(value = <span class="string">"bookDao"</span>)</span><br><span class="line">    <span class="meta">@Autowired</span>(required = <span class="keyword">false</span>)</span><br><span class="line">    BookDao bookDao;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"BookService&#123;"</span> +</span><br><span class="line">                <span class="string">"bookDao="</span> + bookDao +</span><br><span class="line">                <span class="string">'&#125;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@ComponentScan</span>(value = &#123;<span class="string">"com.rocklei123.service"</span>, <span class="string">"com.rocklei123.controller"</span>, <span class="string">"com.rocklei123.repository"</span>&#125;)</span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainConfigOfAutowired</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Primary</span></span><br><span class="line">    <span class="meta">@Bean</span>(value = <span class="string">"bookDao2"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> BookDao <span class="title">bookDao2</span><span class="params">(BookDao bookDao)</span> </span>&#123;</span><br><span class="line">        BookDao bookDao2 = <span class="keyword">new</span> BookDao();</span><br><span class="line">        bookDao2.setNameFlag(<span class="string">"2"</span>);</span><br><span class="line">        <span class="keyword">return</span> bookDao2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//测试代码</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IocTestOfAutowired</span> </span>&#123;</span><br><span class="line">    ApplicationContext applicationContext = <span class="keyword">new</span> AnnotationConfigApplicationContext(MainConfigOfAutowired.class);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printBean</span><span class="params">(ApplicationContext applicationContext)</span> </span>&#123;</span><br><span class="line">        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();</span><br><span class="line">        <span class="keyword">for</span> (String beanDefinitionName : beanDefinitionNames) &#123;</span><br><span class="line">            Object o = applicationContext.getBean(beanDefinitionName);</span><br><span class="line">            System.out.println(o);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        printBean(applicationContext);</span><br><span class="line">        System.out.println(<span class="string">"-----------------------------------"</span>);</span><br><span class="line">        BookService bean = applicationContext.getBean(BookService.class);</span><br><span class="line">        System.out.println(bean);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试结果:可以看出Spring容器加载了两个BookDao类型的bean,向Serveice层注入的是 @Qualifier(value = “bookDao”)标注的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">com.rocklei123.config.MainConfigOfAutowired$$EnhancerBySpringCGLIB$$7d34398f@37e547da</span><br><span class="line">BookService&#123;bookDao=BookDao&#123;nameFlag=&apos;1&apos;&#125;&#125;</span><br><span class="line">com.rocklei123.controller.BookController@5db45159</span><br><span class="line">BookDao&#123;nameFlag=&apos;1&apos;&#125;</span><br><span class="line">BookDao&#123;nameFlag=&apos;2&apos;&#125;</span><br><span class="line">-----------------------------------</span><br><span class="line">BookService&#123;bookDao=BookDao&#123;nameFlag=&apos;1&apos;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-2-Resource-JSR250-和-Inject-JSR330"><a href="#2-2-Resource-JSR250-和-Inject-JSR330" class="headerlink" title="2.2 @Resource(JSR250)和@Inject(JSR330)"></a>2.2 @Resource(JSR250)和@Inject(JSR330)</h2><p>Spring还支持使用@Resource(JSR250)和@Inject(JSR330)[java规范的注解]</p>
+<h3 id="2-2-1-Resource"><a href="#2-2-1-Resource" class="headerlink" title="2.2.1 @Resource:"></a>2.2.1 @Resource:</h3><ul>
+<li>可以和@Autowired一样实现自动装配功能；默认是按照组件名称进行装配的；</li>
+<li>没有能支持@Primary功能</li>
+<li>没有支持@Autowired（reqiured=false）;</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BookService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Resource</span>(name = <span class="string">"bookDao2"</span>)</span><br><span class="line">    BookDao bookDao;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-2-2-Inject"><a href="#2-2-2-Inject" class="headerlink" title="2.2.2 @Inject:"></a>2.2.2 @Inject:</h3><p>​    @Inject支持构造函数、方法和字段注解，也可能使用于静态实例成员。可注解成员可以是任意修饰符（private,package-private,protected,public）。注入顺序：构造函数、字段，然后是方法。父类的字段和方法注入优先于子类的字段和方法，同一类中的字段和方法是没有顺序的。</p>
+<ul>
+<li>需要导入javax.inject的包，和Autowired的功能一样。没有required=false的功能；但是支持@Primary</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/javax.inject/javax.inject --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.inject<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.inject<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-3-Autowired-和-Resource、-Inject-的区别"><a href="#2-3-Autowired-和-Resource、-Inject-的区别" class="headerlink" title="2.3 @Autowired 和 @Resource、@Inject 的区别"></a>2.3 @Autowired 和 @Resource、@Inject 的区别</h2><p><strong>相同点</strong></p>
+<ol>
+<li>@Autowired和@Inject基本是一样的，因为两者都是使用<strong>AutowiredAnnotationBeanPostProcessor</strong>来处理依赖注入。但是@Resource是个例外，它使用的是CommonAnnotationBeanPostProcessor来处理依赖注入。当然，两者都是BeanPostProcessor。</li>
+<li>三个注解都能实现自动装配功能</li>
+</ol>
+<p><strong>不同点</strong></p>
+<ol>
+<li><p>注解定义不同</p>
+<ul>
+<li><p>@Autowired:Spring定义的，脱离Spring框架就没有了；</p>
+</li>
+<li><p>@Resource、@Inject都是java规范，其他IOC框架也会支持。</p>
+</li>
+</ul>
+</li>
+<li><p>默认注入方式不同</p>
+<ul>
+<li>@<strong>Autowired和@Inject：</strong>  默认 autowired by type，可以通过@Qualifier 显式指定；</li>
+<li>@<strong>Resource：</strong>默认 autowired by field name，如果 autowired by field name失败，会退化为 autowired by type；可以 通过@Qualifier 显式指定 autowired by qualifier name；如果 autowired by qualifier name失败，会退化为 autowired by field name。</li>
+</ul>
+</li>
+<li><p>功能性差异</p>
+<ul>
+<li>@Resource 没有能支持@Primary功能;没有支持@Autowired（reqiured=false）功能;</li>
+<li>@Inject 虽然支持@Primary功能功能，但是不支持@Autowired（reqiured=false）功能;</li>
+<li>@Autowired支持@Primary功能，@Autowired（reqiured=false）功能；</li>
+</ul>
+</li>
+</ol>
+<h2 id="2-4-自定义组件注入Spring容器底层的一些组件"><a href="#2-4-自定义组件注入Spring容器底层的一些组件" class="headerlink" title="2.4 自定义组件注入Spring容器底层的一些组件"></a>2.4 自定义组件注入Spring容器底层的一些组件</h2><h3 id="2-4-1-xxxAware介绍"><a href="#2-4-1-xxxAware介绍" class="headerlink" title="2.4.1 xxxAware介绍"></a>2.4.1 xxxAware介绍</h3><p>自定义组件实现xxxAware接口，在创建对象的时候，会调用接口规定的方法注入相关组件；xxxxAware接口把Spring底层一些组件注入到自定义的Bean中；</p>
+<p>测试代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rocklei123.bean;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.BeansException;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.BeanNameAware;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.config.EmbeddedValueResolver;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContextAware;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.EmbeddedValueResolverAware;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.EnvironmentAware;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.env.Environment;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"><span class="keyword">import</span> org.springframework.util.StringValueResolver;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span>: Apple</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: rocklei123</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/12/15 20:46</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: 自定义组件注入Spring容器底层的一些组件</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Apple</span> <span class="keyword">implements</span> <span class="title">ApplicationContextAware</span>, <span class="title">BeanNameAware</span>, <span class="title">EnvironmentAware</span>, <span class="title">EmbeddedValueResolverAware</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ApplicationContext applicationContext;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setBeanName</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"当前Bean的名称："</span> + s);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setApplicationContext</span><span class="params">(ApplicationContext applicationContext)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"传入的IOC:"</span> + applicationContext);</span><br><span class="line">        <span class="keyword">this</span>.applicationContext = applicationContext;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEnvironment</span><span class="params">(Environment environment)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"当前person.properties文件中的昵称名："</span> + environment.getProperty(<span class="string">"person.nickName"</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEmbeddedValueResolver</span><span class="params">(StringValueResolver stringValueResolver)</span> </span>&#123;</span><br><span class="line">        String s = stringValueResolver.resolveStringValue(<span class="string">"我的操作系统类型$&#123;os.name&#125;,我的年龄#&#123;26+1&#125;"</span>);</span><br><span class="line">        System.out.println(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//配置类</span></span><br><span class="line"><span class="meta">@PropertySource</span>(value = &#123;<span class="string">"classpath:/person.properties"</span>&#125;)</span><br><span class="line"><span class="meta">@ComponentScan</span>(value = &#123;<span class="string">"com.rocklei123.bean"</span>, <span class="string">"com.rocklei123.service"</span>, <span class="string">"com.rocklei123.controller"</span>, <span class="string">"com.rocklei123.repository"</span>&#125;)</span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainConfigOfAutowired</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Primary</span></span><br><span class="line">    <span class="meta">@Bean</span>(value = <span class="string">"bookDao2"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> BookDao <span class="title">bookDao2</span><span class="params">(BookDao bookDao)</span> </span>&#123;</span><br><span class="line">        BookDao bookDao2 = <span class="keyword">new</span> BookDao();</span><br><span class="line">        bookDao2.setNameFlag(<span class="string">"2"</span>);</span><br><span class="line">        <span class="keyword">return</span> bookDao2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//测试结果</span></span><br><span class="line">当前Bean的名称：apple</span><br><span class="line">当前person.properties文件中的昵称名：小李四</span><br><span class="line">我的操作系统类型Windows <span class="number">10</span>,我的年龄<span class="number">27</span></span><br><span class="line">传入的IOC:org.springframework.context.annotation.AnnotationConfigApplicationContext@<span class="number">1e81f</span>4dc: startup date [Sat Dec <span class="number">15</span> <span class="number">20</span>:<span class="number">57</span>:<span class="number">18</span> CST <span class="number">2018</span>]; root of context hierarchy</span><br></pre></td></tr></table></figure>
+<h3 id="2-4-2-xxxAware底层原理"><a href="#2-4-2-xxxAware底层原理" class="headerlink" title="2.4.2 xxxAware底层原理"></a>2.4.2 xxxAware底层原理</h3><p> <strong>xxxAware原理：</strong>功能使用xxxProcessor，通过后置处理器功能实现；<br> 如： ApplicationContextAware==》ApplicationContextAwareProcessor；</p>
+<p>以ApplicationContextAwareProcessor为例源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.springframework.context.support;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ApplicationContextAwareProcessor</span> <span class="keyword">implements</span> <span class="title">BeanPostProcessor</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ConfigurableApplicationContext applicationContext;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> StringValueResolver embeddedValueResolver;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">postProcessBeforeInitialization</span><span class="params">(<span class="keyword">final</span> Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        AccessControlContext acc = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (System.getSecurityManager() != <span class="keyword">null</span> &amp;&amp; (bean <span class="keyword">instanceof</span> EnvironmentAware || bean <span class="keyword">instanceof</span> EmbeddedValueResolverAware || bean <span class="keyword">instanceof</span> ResourceLoaderAware || bean <span class="keyword">instanceof</span> ApplicationEventPublisherAware || bean <span class="keyword">instanceof</span> MessageSourceAware || bean <span class="keyword">instanceof</span> ApplicationContextAware)) &#123;</span><br><span class="line">            acc = <span class="keyword">this</span>.applicationContext.getBeanFactory().getAccessControlContext();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (acc != <span class="keyword">null</span>) &#123;</span><br><span class="line">            AccessController.doPrivileged(<span class="keyword">new</span> PrivilegedAction&lt;Object&gt;() &#123;</span><br><span class="line">                <span class="function"><span class="keyword">public</span> Object <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    ApplicationContextAwareProcessor.<span class="keyword">this</span>.invokeAwareInterfaces(bean);</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;, acc);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.invokeAwareInterfaces(bean);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">invokeAwareInterfaces</span><span class="params">(Object bean)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (bean <span class="keyword">instanceof</span> Aware) &#123;</span><br><span class="line">            <span class="keyword">if</span> (bean <span class="keyword">instanceof</span> EnvironmentAware) &#123;</span><br><span class="line">                ((EnvironmentAware)bean).setEnvironment(<span class="keyword">this</span>.applicationContext.getEnvironment());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (bean <span class="keyword">instanceof</span> EmbeddedValueResolverAware) &#123;</span><br><span class="line">                ((EmbeddedValueResolverAware)bean).setEmbeddedValueResolver(<span class="keyword">this</span>.embeddedValueResolver);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (bean <span class="keyword">instanceof</span> ResourceLoaderAware) &#123;</span><br><span class="line">                ((ResourceLoaderAware)bean).setResourceLoader(<span class="keyword">this</span>.applicationContext);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (bean <span class="keyword">instanceof</span> ApplicationEventPublisherAware) &#123;</span><br><span class="line">                ((ApplicationEventPublisherAware)bean).setApplicationEventPublisher(<span class="keyword">this</span>.applicationContext);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (bean <span class="keyword">instanceof</span> MessageSourceAware) &#123;</span><br><span class="line">                ((MessageSourceAware)bean).setMessageSource(<span class="keyword">this</span>.applicationContext);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (bean <span class="keyword">instanceof</span> ApplicationContextAware) &#123;</span><br><span class="line">                ((ApplicationContextAware)bean).setApplicationContext(<span class="keyword">this</span>.applicationContext);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="3-希望大家手动敲一遍代码，会收获颇丰！"><a href="#3-希望大家手动敲一遍代码，会收获颇丰！" class="headerlink" title="3 希望大家手动敲一遍代码，会收获颇丰！"></a>3 希望大家手动敲一遍代码，会收获颇丰！</h1><h1 id="4-欢迎关注米宝窝，持续更新中，谢谢！"><a href="#4-欢迎关注米宝窝，持续更新中，谢谢！" class="headerlink" title="4.欢迎关注米宝窝，持续更新中，谢谢！"></a>4.欢迎关注米宝窝，持续更新中，谢谢！</h1><p><a href="https://rocklei123.github.io/" title="https://rocklei123.github.io/" target="_blank" rel="noopener">米宝窝 https://rocklei123.github.io/ </a></p>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+    
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+        <div style="text-align:center;color: #ccc;font-size:14px;">欢迎持续关注米宝窝，定期更新谢谢！ https://rocklei123.github.io/ </div>
+                <div style="text-align:center;color: #ccc;font-size:14px;">欢迎持续关注我的CSDN https://blog.csdn.net/rocklei123 </div>
+        <div ><img src="images/rocklei123-weixin.jpg" alt="rocklei123的技术点滴" width="258" height="258"> </div>
+    
+</div>
+
+      
+    </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>熬夜写博客挺辛苦的，生怕猝死，所以每当写博客都带着听诊器，心脏一有异响，随时按Ctrl+S。</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: block;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="rocklei123 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/aipay.jpg" alt="rocklei123 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/Annotation/" rel="tag"># Annotation</a>
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/01/Spring注解驱动开发1-Bean注入相关注解/" rel="next" title="Spring注解驱动开发（一）-Bean注入相关注解">
+                <i class="fa fa-chevron-left"></i> Spring注解驱动开发（一）-Bean注入相关注解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/09/Spring注解驱动开发2-Bean的生命周期/" rel="prev" title="Spring注解驱动开发（二）-Bean的生命周期">
+                Spring注解驱动开发（二）-Bean的生命周期 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="rocklei123" />
+            
+              <p class="site-author-name" itemprop="name">rocklei123</p>
+              <p class="site-description motion-element" itemprop="description">rocklei123的点滴技术生活</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/rocklei123" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/rocklei123" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zhoulei091@126.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-属性赋值"><span class="nav-number">1.</span> <span class="nav-text">1.属性赋值</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-Value"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 @Value</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-PropertySource"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 @PropertySource</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-自动装配"><span class="nav-number">2.</span> <span class="nav-text">2.自动装配</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-Autowired、-Qualifier、-Primary"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 @Autowired、@Qualifier、@Primary</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-1-Autowired"><span class="nav-number">2.1.1.</span> <span class="nav-text">2.1.1 @Autowired</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-1-概念性总结"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">2.1.1.1 概念性总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-2-默认注入情况测试"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">2.1.1.2 默认注入情况测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-3-Autowired-required-false"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">2.1.1.3 @Autowired(required=false)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-4-Autowired-构造器，参数，方法，属性"><span class="nav-number">2.1.1.4.</span> <span class="nav-text">2.1.1.4 @Autowired:构造器，参数，方法，属性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-2-Qualifier"><span class="nav-number">2.1.2.</span> <span class="nav-text">2.1.2 @Qualifier</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-3-Primary"><span class="nav-number">2.1.3.</span> <span class="nav-text">2.1.3 @Primary</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-Resource-JSR250-和-Inject-JSR330"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 @Resource(JSR250)和@Inject(JSR330)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-1-Resource"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.2.1 @Resource:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-2-Inject"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2.2 @Inject:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-Autowired-和-Resource、-Inject-的区别"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 @Autowired 和 @Resource、@Inject 的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-自定义组件注入Spring容器底层的一些组件"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 自定义组件注入Spring容器底层的一些组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-1-xxxAware介绍"><span class="nav-number">2.4.1.</span> <span class="nav-text">2.4.1 xxxAware介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-2-xxxAware底层原理"><span class="nav-number">2.4.2.</span> <span class="nav-text">2.4.2 xxxAware底层原理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-希望大家手动敲一遍代码，会收获颇丰！"><span class="nav-number">3.</span> <span class="nav-text">3 希望大家手动敲一遍代码，会收获颇丰！</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-欢迎关注米宝窝，持续更新中，谢谢！"><span class="nav-number">4.</span> <span class="nav-text">4.欢迎关注米宝窝，持续更新中，谢谢！</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rocklei123</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cytMPyKrf';
+      var conf = '193a394926f19428e645007868bcefe0';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

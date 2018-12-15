@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java,Annotation,Spring," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rocklei123 米宝窝" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Spring容器的refresh()【创建刷新】; 1. prepareRefresh()刷新前的预处理;   1）、initPropertySources()初始化一些属性设置;子类自定义个性化的属性设置方法；   2）、getEnvironment().validateRequiredProperties();检验属性的合法等   3）、earlyApplicationEvents= new">
+<meta name="keywords" content="Java,Annotation,Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring注解驱动开发（五）-源码解析Spring容器创建过程">
+<meta property="og:url" content="http://yoursite.com/2018/12/10/Spring注解驱动开发5-源码解析Spring容器创建过程/index.html">
+<meta property="og:site_name" content="rocklei123 米宝窝">
+<meta property="og:description" content="Spring容器的refresh()【创建刷新】; 1. prepareRefresh()刷新前的预处理;   1）、initPropertySources()初始化一些属性设置;子类自定义个性化的属性设置方法；   2）、getEnvironment().validateRequiredProperties();检验属性的合法等   3）、earlyApplicationEvents= new">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-12-15T13:12:12.831Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring注解驱动开发（五）-源码解析Spring容器创建过程">
+<meta name="twitter:description" content="Spring容器的refresh()【创建刷新】; 1. prepareRefresh()刷新前的预处理;   1）、initPropertySources()初始化一些属性设置;子类自定义个性化的属性设置方法；   2）、getEnvironment().validateRequiredProperties();检验属性的合法等   3）、earlyApplicationEvents= new">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/10/Spring注解驱动开发5-源码解析Spring容器创建过程/"/>
+
+
+
+
+
+  <title>Spring注解驱动开发（五）-源码解析Spring容器创建过程 | rocklei123 米宝窝</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rocklei123 米宝窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">水滴石穿</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/10/Spring注解驱动开发5-源码解析Spring容器创建过程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rocklei123">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rocklei123 米宝窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring注解驱动开发（五）-源码解析Spring容器创建过程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-10T09:34:54+08:00">
+                2018-12-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2018/12/10/Spring注解驱动开发5-源码解析Spring容器创建过程/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2018/12/10/Spring注解驱动开发5-源码解析Spring容器创建过程/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Spring容器的refresh()【创建刷新】;</p>
+<h1 id="1-prepareRefresh-刷新前的预处理"><a href="#1-prepareRefresh-刷新前的预处理" class="headerlink" title="1. prepareRefresh()刷新前的预处理;"></a>1. prepareRefresh()刷新前的预处理;</h1><p>   1）、initPropertySources()初始化一些属性设置;子类自定义个性化的属性设置方法；<br>   2）、getEnvironment().validateRequiredProperties();检验属性的合法等<br>   3）、earlyApplicationEvents= new LinkedHashSet<applicationevent>();保存容器中的一些早期的事件；</applicationevent></p>
+<a id="more"></a>
+<h1 id="2-obtainFreshBeanFactory-获取BeanFactory；"><a href="#2-obtainFreshBeanFactory-获取BeanFactory；" class="headerlink" title="2. obtainFreshBeanFactory();获取BeanFactory；"></a>2. obtainFreshBeanFactory();获取BeanFactory；</h1><p>   1）、refreshBeanFactory();刷新【创建】BeanFactory；<br>​         创建了一个this.beanFactory = new DefaultListableBeanFactory();<br>​         设置id；<br>   2）、getBeanFactory();返回刚才GenericApplicationContext创建的BeanFactory对象；<br>   3）、将创建的BeanFactory【DefaultListableBeanFactory】返回；</p>
+<h1 id="3-prepareBeanFactory-beanFactory-BeanFactory的预准备工作（BeanFactory进行一些设置）；"><a href="#3-prepareBeanFactory-beanFactory-BeanFactory的预准备工作（BeanFactory进行一些设置）；" class="headerlink" title="3. prepareBeanFactory(beanFactory);BeanFactory的预准备工作（BeanFactory进行一些设置）；"></a>3. prepareBeanFactory(beanFactory);BeanFactory的预准备工作（BeanFactory进行一些设置）；</h1><p>   1）、设置BeanFactory的类加载器、支持表达式解析器…<br>   2）、添加部分BeanPostProcessor【ApplicationContextAwareProcessor】<br>   3）、设置忽略的自动装配的接口EnvironmentAware、EmbeddedValueResolverAware、xxx；<br>   4）、注册可以解析的自动装配；我们能直接在任何组件中自动注入：<br>​         BeanFactory、ResourceLoader、ApplicationEventPublisher、ApplicationContext<br>   5）、添加BeanPostProcessor【ApplicationListenerDetector】<br>   6）、添加编译时的AspectJ；<br>   7）、给BeanFactory中注册一些能用的组件；<br>​      environment【ConfigurableEnvironment】、<br>​      systemProperties【Map&lt;String, Object&gt;】、<br>​      systemEnvironment【Map&lt;String, Object&gt;】</p>
+<h1 id="4-postProcessBeanFactory-beanFactory-BeanFactory准备工作完成后进行的后置处理工作；"><a href="#4-postProcessBeanFactory-beanFactory-BeanFactory准备工作完成后进行的后置处理工作；" class="headerlink" title="4.postProcessBeanFactory(beanFactory);BeanFactory准备工作完成后进行的后置处理工作；"></a>4.postProcessBeanFactory(beanFactory);BeanFactory准备工作完成后进行的后置处理工作；</h1><p>   1）、子类通过重写这个方法来在BeanFactory创建并预准备完成以后做进一步的设置<br>======================以上是BeanFactory的创建及预准备工作==================================</p>
+<h1 id="5-invokeBeanFactoryPostProcessors-beanFactory-执行BeanFactoryPostProcessor的方法；"><a href="#5-invokeBeanFactoryPostProcessors-beanFactory-执行BeanFactoryPostProcessor的方法；" class="headerlink" title="5.invokeBeanFactoryPostProcessors(beanFactory);执行BeanFactoryPostProcessor的方法；"></a>5.invokeBeanFactoryPostProcessors(beanFactory);执行BeanFactoryPostProcessor的方法；</h1><p>   BeanFactoryPostProcessor：BeanFactory的后置处理器。在BeanFactory标准初始化之后执行的；<br>   两个接口：BeanFactoryPostProcessor、BeanDefinitionRegistryPostProcessor<br>   1）、执行BeanFactoryPostProcessor的方法；<br>​      先执行BeanDefinitionRegistryPostProcessor<br>​      1）、获取所有的BeanDefinitionRegistryPostProcessor；<br>​      2）、看先执行实现了PriorityOrdered优先级接口的BeanDefinitionRegistryPostProcessor、<br>​         postProcessor.postProcessBeanDefinitionRegistry(registry)<br>​      3）、在执行实现了Ordered顺序接口的BeanDefinitionRegistryPostProcessor；<br>​         postProcessor.postProcessBeanDefinitionRegistry(registry)<br>​      4）、最后执行没有实现任何优先级或者是顺序接口的BeanDefinitionRegistryPostProcessors；<br>​         postProcessor.postProcessBeanDefinitionRegistry(registry)<br>​<br>​<br>​      再执行BeanFactoryPostProcessor的方法<br>​      1）、获取所有的BeanFactoryPostProcessor<br>​      2）、看先执行实现了PriorityOrdered优先级接口的BeanFactoryPostProcessor、<br>​         postProcessor.postProcessBeanFactory()<br>​      3）、在执行实现了Ordered顺序接口的BeanFactoryPostProcessor；<br>​         postProcessor.postProcessBeanFactory()<br>​      4）、最后执行没有实现任何优先级或者是顺序接口的BeanFactoryPostProcessor；<br>​         postProcessor.postProcessBeanFactory()</p>
+<h1 id="6-registerBeanPostProcessors-beanFactory-注册BeanPostProcessor（Bean的后置处理器）【-intercept-bean-creation】"><a href="#6-registerBeanPostProcessors-beanFactory-注册BeanPostProcessor（Bean的后置处理器）【-intercept-bean-creation】" class="headerlink" title="6.registerBeanPostProcessors(beanFactory);注册BeanPostProcessor（Bean的后置处理器）【 intercept bean creation】"></a>6.registerBeanPostProcessors(beanFactory);注册BeanPostProcessor（Bean的后置处理器）【 intercept bean creation】</h1><p>​      不同接口类型的BeanPostProcessor；在Bean创建前后的执行时机是不一样的<br>​      BeanPostProcessor、<br>​      DestructionAwareBeanPostProcessor、<br>​      InstantiationAwareBeanPostProcessor、<br>​      SmartInstantiationAwareBeanPostProcessor、<br>​      MergedBeanDefinitionPostProcessor【internalPostProcessors】、<br>​<br>​      1）、获取所有的 BeanPostProcessor;后置处理器都默认可以通过PriorityOrdered、Ordered接口来执行优先级<br>​      2）、先注册PriorityOrdered优先级接口的BeanPostProcessor；<br>​         把每一个BeanPostProcessor；添加到BeanFactory中<br>​         beanFactory.addBeanPostProcessor(postProcessor);<br>​      3）、再注册Ordered接口的<br>​      4）、最后注册没有实现任何优先级接口的<br>​      5）、最终注册MergedBeanDefinitionPostProcessor；<br>​      6）、注册一个ApplicationListenerDetector；来在Bean创建完成后检查是否是ApplicationListener，如果是<br>​         applicationContext.addApplicationListener((ApplicationListener&lt;?&gt;) bean);</p>
+<h1 id="7-initMessageSource-初始化MessageSource组件（做国际化功能；消息绑定，消息解析）；"><a href="#7-initMessageSource-初始化MessageSource组件（做国际化功能；消息绑定，消息解析）；" class="headerlink" title="7.initMessageSource();初始化MessageSource组件（做国际化功能；消息绑定，消息解析）；"></a>7.initMessageSource();初始化MessageSource组件（做国际化功能；消息绑定，消息解析）；</h1><p>​      1）、获取BeanFactory<br>​      2）、看容器中是否有id为messageSource的，类型是MessageSource的组件<br>​         如果有赋值给messageSource，如果没有自己创建一个DelegatingMessageSource；<br>​            MessageSource：取出国际化配置文件中的某个key的值；能按照区域信息获取；<br>​      3）、把创建好的MessageSource注册在容器中，以后获取国际化配置文件的值的时候，可以自动注入MessageSource；<br>​         beanFactory.registerSingleton(MESSAGE_SOURCE_BEAN_NAME, this.messageSource);<br>​         MessageSource.getMessage(String code, Object[] args, String defaultMessage, Locale locale);</p>
+<h1 id="8-initApplicationEventMulticaster-初始化事件派发器；"><a href="#8-initApplicationEventMulticaster-初始化事件派发器；" class="headerlink" title="8.initApplicationEventMulticaster();初始化事件派发器；"></a>8.initApplicationEventMulticaster();初始化事件派发器；</h1><p>​      1）、获取BeanFactory<br>​      2）、从BeanFactory中获取applicationEventMulticaster的ApplicationEventMulticaster；<br>​      3）、如果上一步没有配置；创建一个SimpleApplicationEventMulticaster<br>​      4）、将创建的ApplicationEventMulticaster添加到BeanFactory中，以后其他组件直接自动注入</p>
+<h1 id="9-onRefresh-留给子容器（子类）"><a href="#9-onRefresh-留给子容器（子类）" class="headerlink" title="9.onRefresh();留给子容器（子类）"></a>9.onRefresh();留给子容器（子类）</h1><p>​      1、子类重写这个方法，在容器刷新的时候可以自定义逻辑；</p>
+<h1 id="10-registerListeners-给容器中将所有项目里面的ApplicationListener注册进来；"><a href="#10-registerListeners-给容器中将所有项目里面的ApplicationListener注册进来；" class="headerlink" title="10.registerListeners();给容器中将所有项目里面的ApplicationListener注册进来；"></a>10.registerListeners();给容器中将所有项目里面的ApplicationListener注册进来；</h1><p>​      1、从容器中拿到所有的ApplicationListener<br>​      2、将每个监听器添加到事件派发器中；<br>​         getApplicationEventMulticaster().addApplicationListenerBean(listenerBeanName);<br>​      3、派发之前步骤产生的事件；</p>
+<h1 id="11-finishBeanFactoryInitialization"><a href="#11-finishBeanFactoryInitialization" class="headerlink" title="11.finishBeanFactoryInitialization"></a>11.finishBeanFactoryInitialization</h1><p>finishBeanFactoryInitialization(beanFactory);初始化所有剩下的单实例bean；</p>
+<p>   1、beanFactory.preInstantiateSingletons();初始化后剩下的单实例bean<br>​      1）、获取容器中的所有Bean，依次进行初始化和创建对象<br>​      2）、获取Bean的定义信息；RootBeanDefinition<br>​      3）、Bean不是抽象的，是单实例的，是懒加载；<br>​         1）、判断是否是FactoryBean；是否是实现FactoryBean接口的Bean；<br>​         2）、不是工厂Bean。利用getBean(beanName);创建对象<br>​            0、getBean(beanName)； ioc.getBean();<br>​            1、doGetBean(name, null, null, false);<br>​            2、先获取缓存中保存的单实例Bean。如果能获取到说明这个Bean之前被创建过（所有创建过的单实例Bean都会被缓存起来）<br>​               从private final Map&lt;String, Object&gt; singletonObjects = new ConcurrentHashMap&lt;String, Object&gt;(256);获取的<br>​            3、缓存中获取不到，开始Bean的创建对象流程；<br>​            4、标记当前bean已经被创建<br>​            5、获取Bean的定义信息；<br>​            6、【获取当前Bean依赖的其他Bean;如果有按照getBean()把依赖的Bean先创建出来；】<br>​            7、启动单实例Bean的创建流程；<br>​               1）、createBean(beanName, mbd, args);<br>​               2）、Object bean = resolveBeforeInstantiation(beanName, mbdToUse);让BeanPostProcessor先拦截返回代理对象；<br>​                  【InstantiationAwareBeanPostProcessor】：提前执行；<br>​                  先触发：postProcessBeforeInstantiation()；<br>​                  如果有返回值：触发postProcessAfterInitialization()；<br>​               3）、如果前面的InstantiationAwareBeanPostProcessor没有返回代理对象；调用4）<br>​               4）、Object beanInstance = doCreateBean(beanName, mbdToUse, args);创建Bean<br>​                   1）、【创建Bean实例】；createBeanInstance(beanName, mbd, args);<br>​                     利用工厂方法或者对象的构造器创建出Bean实例；<br>​                   2）、applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);<br>​                     调用MergedBeanDefinitionPostProcessor的postProcessMergedBeanDefinition(mbd, beanType, beanName);<br>​                   3）、【Bean属性赋值】populateBean(beanName, mbd, instanceWrapper);<br>​                     赋值之前：<br>​                     1）、拿到InstantiationAwareBeanPostProcessor后置处理器；<br>​                        postProcessAfterInstantiation()；<br>​                     2）、拿到InstantiationAwareBeanPostProcessor后置处理器；<br>​                        postProcessPropertyValues()；<br>​                     =====赋值之前：===<br>​                     3）、应用Bean属性的值；为属性利用setter方法等进行赋值；<br>​                        applyPropertyValues(beanName, mbd, bw, pvs);<br>​                   4）、【Bean初始化】initializeBean(beanName, exposedObject, mbd);<br>​                     1）、【执行Aware接口方法】invokeAwareMethods(beanName, bean);执行xxxAware接口的方法<br>​                        BeanNameAware\BeanClassLoaderAware\BeanFactoryAware<br>​                     2）、【执行后置处理器初始化之前】applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);<br>​                        BeanPostProcessor.postProcessBeforeInitialization（）;<br>​                     3）、【执行初始化方法】invokeInitMethods(beanName, wrappedBean, mbd);<br>​                        1）、是否是InitializingBean接口的实现；执行接口规定的初始化；<br>​                        2）、是否自定义初始化方法；<br>​                     4）、【执行后置处理器初始化之后】applyBeanPostProcessorsAfterInitialization<br>​                        BeanPostProcessor.postProcessAfterInitialization()；<br>​                   5）、注册Bean的销毁方法；<br>​               5）、将创建的Bean添加到缓存中singletonObjects；<br>​            ioc容器就是这些Map；很多的Map里面保存了单实例Bean，环境信息。。。。；<br>​      所有Bean都利用getBean创建完成以后；<br>​         检查所有的Bean是否是SmartInitializingSingleton接口的；如果是；就执行afterSingletonsInstantiated()；</p>
+<h1 id="12-finishRefresh-完成BeanFactory的初始化创建工作；IOC容器就创建完成；"><a href="#12-finishRefresh-完成BeanFactory的初始化创建工作；IOC容器就创建完成；" class="headerlink" title="12.finishRefresh();完成BeanFactory的初始化创建工作；IOC容器就创建完成；"></a>12.finishRefresh();完成BeanFactory的初始化创建工作；IOC容器就创建完成；</h1><p>​      1）、initLifecycleProcessor();初始化和生命周期有关的后置处理器；LifecycleProcessor<br>​         默认从容器中找是否有lifecycleProcessor的组件【LifecycleProcessor】；如果没有new DefaultLifecycleProcessor();<br>​         加入到容器；<br>​<br>​         写一个LifecycleProcessor的实现类，可以在BeanFactory<br>​            void onRefresh();<br>​            void onClose();<br>​      2）、    getLifecycleProcessor().onRefresh();<br>​         拿到前面定义的生命周期处理器（BeanFactory）；回调onRefresh()；<br>​      3）、publishEvent(new ContextRefreshedEvent(this));发布容器刷新完成事件；<br>​      4）、liveBeansView.registerApplicationContext(this);</p>
+<h1 id="13-总结"><a href="#13-总结" class="headerlink" title="13. 总结"></a>13. 总结</h1><p>   1）、Spring容器在启动的时候，先会保存所有注册进来的Bean的定义信息；<br>​      1）、xml注册bean；<bean><br>​      2）、注解注册Bean；@Service、@Component、@Bean、xxx<br>   2）、Spring容器会合适的时机创建这些Bean<br>​      1）、用到这个bean的时候；利用getBean创建bean；创建好以后保存在容器中；<br>​      2）、统一创建剩下所有的bean的时候；finishBeanFactoryInitialization()；<br>   3）、后置处理器；BeanPostProcessor<br>​      1）、每一个bean创建完成，都会使用各种后置处理器进行处理；来增强bean的功能；<br>​         AutowiredAnnotationBeanPostProcessor:处理自动注入<br>​         AnnotationAwareAspectJAutoProxyCreator:来做AOP功能；<br>​         xxx….<br>​         增强的功能注解：<br>​         AsyncAnnotationBeanPostProcessor<br>​         ….<br>   4）、事件驱动模型；<br>​      ApplicationListener；事件监听；<br>​      ApplicationEventMulticaster；事件派发：</bean></p>
+<p>​</p>
+<h1 id="15-欢迎关注米宝窝，持续更新中，谢谢！"><a href="#15-欢迎关注米宝窝，持续更新中，谢谢！" class="headerlink" title="15. 欢迎关注米宝窝，持续更新中，谢谢！"></a>15. 欢迎关注米宝窝，持续更新中，谢谢！</h1><p><a href="https://rocklei123.github.io/" title="https://rocklei123.github.io/" target="_blank" rel="noopener">米宝窝 https://rocklei123.github.io/ </a></p>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+    
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+        <div style="text-align:center;color: #ccc;font-size:14px;">欢迎持续关注米宝窝，定期更新谢谢！ https://rocklei123.github.io/ </div>
+                <div style="text-align:center;color: #ccc;font-size:14px;">欢迎持续关注我的CSDN https://blog.csdn.net/rocklei123 </div>
+        <div ><img src="images/rocklei123-weixin.jpg" alt="rocklei123的技术点滴" width="258" height="258"> </div>
+    
+</div>
+
+      
+    </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>熬夜写博客挺辛苦的，生怕猝死，所以每当写博客都带着听诊器，心脏一有异响，随时按Ctrl+S。</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: block;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="rocklei123 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/aipay.jpg" alt="rocklei123 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/Annotation/" rel="tag"># Annotation</a>
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/09/Spring注解驱动开发2-Bean的生命周期/" rel="next" title="Spring注解驱动开发（二）-Bean的生命周期">
+                <i class="fa fa-chevron-left"></i> Spring注解驱动开发（二）-Bean的生命周期
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="rocklei123" />
+            
+              <p class="site-author-name" itemprop="name">rocklei123</p>
+              <p class="site-description motion-element" itemprop="description">rocklei123的点滴技术生活</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/rocklei123" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/rocklei123" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zhoulei091@126.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-prepareRefresh-刷新前的预处理"><span class="nav-number">1.</span> <span class="nav-text">1. prepareRefresh()刷新前的预处理;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-obtainFreshBeanFactory-获取BeanFactory；"><span class="nav-number">2.</span> <span class="nav-text">2. obtainFreshBeanFactory();获取BeanFactory；</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-prepareBeanFactory-beanFactory-BeanFactory的预准备工作（BeanFactory进行一些设置）；"><span class="nav-number">3.</span> <span class="nav-text">3. prepareBeanFactory(beanFactory);BeanFactory的预准备工作（BeanFactory进行一些设置）；</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-postProcessBeanFactory-beanFactory-BeanFactory准备工作完成后进行的后置处理工作；"><span class="nav-number">4.</span> <span class="nav-text">4.postProcessBeanFactory(beanFactory);BeanFactory准备工作完成后进行的后置处理工作；</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-invokeBeanFactoryPostProcessors-beanFactory-执行BeanFactoryPostProcessor的方法；"><span class="nav-number">5.</span> <span class="nav-text">5.invokeBeanFactoryPostProcessors(beanFactory);执行BeanFactoryPostProcessor的方法；</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-registerBeanPostProcessors-beanFactory-注册BeanPostProcessor（Bean的后置处理器）【-intercept-bean-creation】"><span class="nav-number">6.</span> <span class="nav-text">6.registerBeanPostProcessors(beanFactory);注册BeanPostProcessor（Bean的后置处理器）【 intercept bean creation】</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-initMessageSource-初始化MessageSource组件（做国际化功能；消息绑定，消息解析）；"><span class="nav-number">7.</span> <span class="nav-text">7.initMessageSource();初始化MessageSource组件（做国际化功能；消息绑定，消息解析）；</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-initApplicationEventMulticaster-初始化事件派发器；"><span class="nav-number">8.</span> <span class="nav-text">8.initApplicationEventMulticaster();初始化事件派发器；</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-onRefresh-留给子容器（子类）"><span class="nav-number">9.</span> <span class="nav-text">9.onRefresh();留给子容器（子类）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-registerListeners-给容器中将所有项目里面的ApplicationListener注册进来；"><span class="nav-number">10.</span> <span class="nav-text">10.registerListeners();给容器中将所有项目里面的ApplicationListener注册进来；</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-finishBeanFactoryInitialization"><span class="nav-number">11.</span> <span class="nav-text">11.finishBeanFactoryInitialization</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12-finishRefresh-完成BeanFactory的初始化创建工作；IOC容器就创建完成；"><span class="nav-number">12.</span> <span class="nav-text">12.finishRefresh();完成BeanFactory的初始化创建工作；IOC容器就创建完成；</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#13-总结"><span class="nav-number">13.</span> <span class="nav-text">13. 总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#15-欢迎关注米宝窝，持续更新中，谢谢！"><span class="nav-number">14.</span> <span class="nav-text">15. 欢迎关注米宝窝，持续更新中，谢谢！</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rocklei123</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cytMPyKrf';
+      var conf = '193a394926f19428e645007868bcefe0';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
