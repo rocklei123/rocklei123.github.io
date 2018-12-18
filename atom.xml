@@ -73,9 +73,9 @@
     
       <category term="Java" scheme="http://yoursite.com/tags/Java/"/>
     
-      <category term="Annotation" scheme="http://yoursite.com/tags/Annotation/"/>
-    
       <category term="Spring" scheme="http://yoursite.com/tags/Spring/"/>
+    
+      <category term="Annotation" scheme="http://yoursite.com/tags/Annotation/"/>
     
       <category term="AOP" scheme="http://yoursite.com/tags/AOP/"/>
     
@@ -102,9 +102,9 @@
     
       <category term="Java" scheme="http://yoursite.com/tags/Java/"/>
     
-      <category term="Annotation" scheme="http://yoursite.com/tags/Annotation/"/>
-    
       <category term="Spring" scheme="http://yoursite.com/tags/Spring/"/>
+    
+      <category term="Annotation" scheme="http://yoursite.com/tags/Annotation/"/>
     
   </entry>
   
@@ -129,9 +129,9 @@
     
       <category term="Java" scheme="http://yoursite.com/tags/Java/"/>
     
-      <category term="Annotation" scheme="http://yoursite.com/tags/Annotation/"/>
-    
       <category term="Spring" scheme="http://yoursite.com/tags/Spring/"/>
+    
+      <category term="Annotation" scheme="http://yoursite.com/tags/Annotation/"/>
     
   </entry>
   
@@ -160,9 +160,9 @@
     
       <category term="Java" scheme="http://yoursite.com/tags/Java/"/>
     
-      <category term="Annotation" scheme="http://yoursite.com/tags/Annotation/"/>
-    
       <category term="Spring" scheme="http://yoursite.com/tags/Spring/"/>
+    
+      <category term="Annotation" scheme="http://yoursite.com/tags/Annotation/"/>
     
   </entry>
   
@@ -213,9 +213,9 @@
     
       <category term="Java" scheme="http://yoursite.com/tags/Java/"/>
     
-      <category term="Annotation" scheme="http://yoursite.com/tags/Annotation/"/>
-    
       <category term="Spring" scheme="http://yoursite.com/tags/Spring/"/>
+    
+      <category term="Annotation" scheme="http://yoursite.com/tags/Annotation/"/>
     
   </entry>
   
@@ -552,9 +552,9 @@
       <category term="Spring" scheme="http://yoursite.com/categories/Spring/"/>
     
     
-      <category term="Spring" scheme="http://yoursite.com/tags/Spring/"/>
-    
       <category term="Spring AOP" scheme="http://yoursite.com/tags/Spring-AOP/"/>
+    
+      <category term="Spring" scheme="http://yoursite.com/tags/Spring/"/>
     
   </entry>
   
