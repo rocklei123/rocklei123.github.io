@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Java,Spring,Annotation,AOP," />
+  <meta name="keywords" content="Java,Annotation,Spring,AOP," />
 
 
 
@@ -82,7 +82,7 @@
 
 
 <meta name="description" content="Spring AOP 基础 AOP：【动态代理】      指在程序运行期间动态的将某段代码切入到指定方法指定位置进行运行的编程方式； 实现Spring AOP三部曲：  将业务逻辑组件和切面类都加入到容器中；告诉Spring哪个是切面类（@Aspect）  在切面类上的每一个通知方法上标注通知注解，告诉Spring何时何地运行（切入点表达式） 123456通知方法：前置通知(@Before)：l">
-<meta name="keywords" content="Java,Spring,Annotation,AOP">
+<meta name="keywords" content="Java,Annotation,Spring,AOP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring注解驱动开发（四）-源码解析AOP原理">
 <meta property="og:url" content="http://yoursite.com/2018/12/16/Spring注解驱动开发4-源码解析AOP原理/index.html">
@@ -95,7 +95,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/12/16/Spring注解驱动开发4-源码解析AOP原理/1544969617607.png">
 <meta property="og:image" content="http://yoursite.com/2018/12/16/Spring注解驱动开发4-源码解析AOP原理/1544970821277.png">
 <meta property="og:image" content="http://yoursite.com/2018/12/16/Spring注解驱动开发4-源码解析AOP原理/1544974697813.png">
-<meta property="og:updated_time" content="2018-12-26T11:51:22.294Z">
+<meta property="og:updated_time" content="2018-12-26T16:32:06.244Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring注解驱动开发（四）-源码解析AOP原理">
 <meta name="twitter:description" content="Spring AOP 基础 AOP：【动态代理】      指在程序运行期间动态的将某段代码切入到指定方法指定位置进行运行的编程方式； 实现Spring AOP三部曲：  将业务逻辑组件和切面类都加入到容器中；告诉Spring哪个是切面类（@Aspect）  在切面类上的每一个通知方法上标注通知注解，告诉Spring何时何地运行（切入点表达式） 123456通知方法：前置通知(@Before)：l">
@@ -487,8 +487,7 @@
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Next, register the BeanPostProcessors that implement Ordered.</span></span><br><span class="line">List&lt;BeanPostProcessor&gt; orderedPostProcessors = <span class="keyword">new</span> ArrayList&lt;BeanPostProcessor&gt;();</span><br><span class="line"><span class="keyword">for</span> (String ppName : orderedPostProcessorNames) &#123;</span><br><span class="line">    BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);</span><br><span class="line">    orderedPostProcessors.add(pp);</span><br><span class="line">    <span class="keyword">if</span> (pp <span class="keyword">instanceof</span> MergedBeanDefinitionPostProcessor) &#123;</span><br><span class="line">        internalPostProcessors.add(pp);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">sortPostProcessors(orderedPostProcessors, beanFactory);</span><br><span class="line">registerBeanPostProcessors(beanFactory, orderedPostProcessors);</span><br><span class="line"></span><br><span class="line"><span class="comment">//其中AbstractAutoProxyCreator 实现了Order接口，就是通过此时注册的</span></span><br><span class="line">AbstractAutoProxyCreator extends ProxyProcessorSupport </span><br><span class="line">ProxyProcessorSupport extends ProxyConfig implements Ordered</span><br></pre></td></tr></table></figure>
 <ul>
-<li><p>（a） getBean</p>
-<ul>
+<li><ul>
 <li><p>（a） BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractBeanFactory</span> <span class="keyword">extends</span> <span class="title">FactoryBeanRegistrySupport</span> <span class="keyword">implements</span> <span class="title">ConfigurableBeanFactory</span> </span>&#123;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">getBean</span><span class="params">(String name, Class&lt;T&gt; requiredType)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> doGetBean(name, requiredType, <span class="keyword">null</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 </li>
@@ -574,16 +573,11 @@
 </li>
 <li><p>2）、createBean（）;创建bean；<br>AnnotationAwareAspectJAutoProxyCreator <strong>会在任何bean创建之前先尝试返回bean的实例</strong></p>
 <ul>
-<li><p>1）、resolveBeforeInstantiation(beanName, mbdToUse);解析BeforeInstantiation希望后置处理器在此能返回一个代理对象；如果能返回代理对象就使用，如果不能就继续执行第二步doCreateBean()</p>
+<li><p>1）、resolveBeforeInstantiation(beanName, mbdToUse);解析BeforeInstantiation希望后置处理器在此能返回一个代理对象；后置处理器先尝试返回对象；如果能返回代理对象就使用，如果不能就继续执行第二步doCreateBean().</p>
 <ul>
-<li>后置处理器先尝试返回对象；</li>
+<li>拿到所有后置处理器，如果是InstantiationAwareBeanPostProcessor;就执行postProcessBeforeInstantiation</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bean = applyBeanPostProcessorsBeforeInstantiation（）：</span><br><span class="line">if (bean != null) &#123;</span><br><span class="line">	 bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>拿到所有后置处理器，如果是InstantiationAwareBeanPostProcessor;就执行postProcessBeforeInstantiation</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> </span><br></pre></td></tr></table></figure>
-</li>
-</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bean = applyBeanPostProcessorsBeforeInstantiation（）：</span><br><span class="line"><span class="keyword">if</span> (bean != <span class="keyword">null</span>) &#123;</span><br><span class="line">	 bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>2）、doCreateBean(beanName, mbdToUse, args);真正的去创建一个bean实例；和3.6流程一样；</p>
 </li>
@@ -747,9 +741,9 @@
           
             <a href="/tags/Java/" rel="tag"># Java</a>
           
-            <a href="/tags/Spring/" rel="tag"># Spring</a>
-          
             <a href="/tags/Annotation/" rel="tag"># Annotation</a>
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
           
             <a href="/tags/AOP/" rel="tag"># AOP</a>
           
@@ -852,7 +846,7 @@
                 alt="rocklei123" />
             
               <p class="site-author-name" itemprop="name">rocklei123</p>
-              <p class="site-description motion-element" itemprop="description">rocklei123的点滴技术生活</p>
+              <p class="site-description motion-element" itemprop="description">欢迎您扫一扫上面的微信公众号，订阅我的博客！</p>
           </div>
 
           <nav class="site-state motion-element">
@@ -862,7 +856,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -873,7 +867,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -884,7 +878,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">34</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -966,7 +960,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

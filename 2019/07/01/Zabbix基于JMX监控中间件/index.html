@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Zabbix,JMX," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rocklei123 米宝窝" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="本主题为通过zabbix监控中间件。 Zabbix 基于JMX agent(zabbix-java-gateway) 获取JVM MBean 信息。 Zabbix Agent安装注意：如果您希望监控目标主机的操作系统相关指标，如CPU、内存、文件系统等信息，那么需要在目标主机安装 zabbix agent。 rpm包安装方式1rpm -ivh zabbix-agent-4.0.0-1.1rc2.e">
+<meta name="keywords" content="Zabbix,JMX">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zabbix基于JMX监控中间件">
+<meta property="og:url" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/index.html">
+<meta property="og:site_name" content="rocklei123 米宝窝">
+<meta property="og:description" content="本主题为通过zabbix监控中间件。 Zabbix 基于JMX agent(zabbix-java-gateway) 获取JVM MBean 信息。 Zabbix Agent安装注意：如果您希望监控目标主机的操作系统相关指标，如CPU、内存、文件系统等信息，那么需要在目标主机安装 zabbix agent。 rpm包安装方式1rpm -ivh zabbix-agent-4.0.0-1.1rc2.e">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/1547015840014.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/Zabbix%E5%9F%BA%E4%BA%8EJMX%E7%9B%91%E6%8E%A7%E4%B8%AD%E9%97%B4%E4%BB%B6/1547016063506.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/1547015878482.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/1547016244429.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/1551322667467.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/1551322730164.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/1551773907058.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/1551323034173.png">
+<meta property="og:updated_time" content="2019-07-02T09:41:14.475Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Zabbix基于JMX监控中间件">
+<meta name="twitter:description" content="本主题为通过zabbix监控中间件。 Zabbix 基于JMX agent(zabbix-java-gateway) 获取JVM MBean 信息。 Zabbix Agent安装注意：如果您希望监控目标主机的操作系统相关指标，如CPU、内存、文件系统等信息，那么需要在目标主机安装 zabbix agent。 rpm包安装方式1rpm -ivh zabbix-agent-4.0.0-1.1rc2.e">
+<meta name="twitter:image" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/1547015840014.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/"/>
+
+
+
+
+
+  <title>Zabbix基于JMX监控中间件 | rocklei123 米宝窝</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rocklei123 米宝窝</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">水滴石穿</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rocklei123">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rocklei123 米宝窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Zabbix基于JMX监控中间件</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-01T09:34:54+08:00">
+                2019-07-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Zabbix/" itemprop="url" rel="index">
+                    <span itemprop="name">Zabbix</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2019/07/01/Zabbix基于JMX监控中间件/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2019/07/01/Zabbix基于JMX监控中间件/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本主题为通过zabbix监控中间件。</p>
+<p>Zabbix 基于JMX agent(zabbix-java-gateway) 获取JVM MBean 信息。</p>
+<h1 id="Zabbix-Agent安装"><a href="#Zabbix-Agent安装" class="headerlink" title="Zabbix Agent安装"></a>Zabbix Agent安装</h1><p><strong>注意：</strong>如果您希望监控目标主机的操作系统相关指标，如CPU、内存、文件系统等信息，那么需要在目标主机安装 zabbix agent。</p>
+<h2 id="rpm包安装方式"><a href="#rpm包安装方式" class="headerlink" title="rpm包安装方式"></a>rpm包安装方式</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh zabbix-agent-4.0.0-1.1rc2.el7.x86_64</span><br></pre></td></tr></table></figure>
+<h2 id="源码包安装后打tar包介质–解压安装agent"><a href="#源码包安装后打tar包介质–解压安装agent" class="headerlink" title="源码包安装后打tar包介质–解压安装agent"></a>源码包安装后打tar包介质–解压安装agent</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local</span><br><span class="line">tar -xvf zabbix_agent.tar.gz</span><br></pre></td></tr></table></figure>
+<h1 id="Zabbix-Agent配置"><a href="#Zabbix-Agent配置" class="headerlink" title="Zabbix Agent配置"></a>Zabbix Agent配置</h1><h2 id="rpm安装配置"><a href="#rpm安装配置" class="headerlink" title="rpm安装配置"></a>rpm安装配置</h2><p>rpm安装方式配置文件路径为/etc/zabbix/zabbix_agentd.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LogFile=/tmp/zabbix_agentd.log  #日志文件路径</span><br><span class="line">Server=192.168.100.1            #zabbix server 服务端地址</span><br><span class="line">ServerActive=192.168.100.1      #zabbix server 服务端地址</span><br><span class="line">Hostname=192.168.100.104        #被监控端主机ip</span><br></pre></td></tr></table></figure>
+<h2 id="源码包安装后打tar包介质–配置"><a href="#源码包安装后打tar包介质–配置" class="headerlink" title="源码包安装后打tar包介质–配置"></a>源码包安装后打tar包介质–配置</h2><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>源码包安装后打tar包介质-安装方式配置文件路径在解压目录，如:/usr/local/zabbix_agent/etc/zabbix_agentd.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LogFile=/tmp/zabbix_agentd.log  #日志文件路径</span><br><span class="line">Server=192.168.100.1            #zabbix server 服务端地址</span><br><span class="line">ServerActive=192.168.100.1      #zabbix server 服务端地址</span><br><span class="line">Hostname=192.168.100.104        #被监控端主机ip</span><br></pre></td></tr></table></figure>
+<h3 id="添加为服务与启停服务脚本"><a href="#添加为服务与启停服务脚本" class="headerlink" title="添加为服务与启停服务脚本"></a>添加为服务与启停服务脚本</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/init.d/ </span><br><span class="line">vi zabbix_agentd</span><br></pre></td></tr></table></figure>
+<p>脚本内容为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/sh</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> chkconfig: 2345 10 90 </span><br><span class="line"><span class="meta">#</span> description: myservice ....</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Zabbix</span><br><span class="line"><span class="meta">#</span> Copyright (C) 2001-2018 Zabbix SIA</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span> This program is free software; you can redistribute it and/or modify</span><br><span class="line"><span class="meta">#</span> it under the terms of the GNU General Public License as published by</span><br><span class="line"><span class="meta">#</span> the Free Software Foundation; either version 2 of the License, or</span><br><span class="line"><span class="meta">#</span> (at your option) any later version.</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span> This program is distributed in the hope that it will be useful,</span><br><span class="line"><span class="meta">#</span> but WITHOUT ANY WARRANTY; without even the implied warranty of</span><br><span class="line"><span class="meta">#</span> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span><br><span class="line"><span class="meta">#</span> GNU General Public License for more details.</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span> You should have received a copy of the GNU General Public License</span><br><span class="line"><span class="meta">#</span> along with this program; if not, write to the Free Software</span><br><span class="line"><span class="meta">#</span> Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Start/Stop the Zabbix agent daemon.</span><br><span class="line"><span class="meta">#</span> Place a startup script in /sbin/init.d, and link to it from /sbin/rc[023].d </span><br><span class="line">SERVICE="Zabbix agent"</span><br><span class="line">DAEMON=/usr/local/zabbix_agent/sbin/zabbix_agentd  </span><br><span class="line">PIDFILE=/tmp/zabbix_agentd.pid</span><br><span class="line"></span><br><span class="line">case $1 in</span><br><span class="line">  'start')</span><br><span class="line">    if [ -x $&#123;DAEMON&#125; ]</span><br><span class="line">    then</span><br><span class="line">      $DAEMON</span><br><span class="line">      # Error checking here would be good...</span><br><span class="line">      echo "$&#123;SERVICE&#125; started."</span><br><span class="line">    else</span><br><span class="line">      echo "Can't find file $&#123;DAEMON&#125;."</span><br><span class="line">      echo "$&#123;SERVICE&#125; NOT started."</span><br><span class="line">    fi</span><br><span class="line">  ;;</span><br><span class="line">  'stop')</span><br><span class="line">    if [ -s $&#123;PIDFILE&#125; ]</span><br><span class="line">    then</span><br><span class="line">      if kill `cat $&#123;PIDFILE&#125;` &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">      then</span><br><span class="line">        echo "$&#123;SERVICE&#125; terminated."</span><br><span class="line">        rm -f $&#123;PIDFILE&#125;</span><br><span class="line">      fi</span><br><span class="line">    fi</span><br><span class="line">  ;;</span><br><span class="line">  'restart')</span><br><span class="line">    $0 stop</span><br><span class="line">    sleep 10</span><br><span class="line">    $0 start</span><br><span class="line">  ;;</span><br><span class="line">  *)</span><br><span class="line">    echo "Usage: $0 start|stop|restart"</span><br><span class="line">    ;;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+<p>添加命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chmod u+x zabbix_agentd </span><br><span class="line">chkconfig --add zabbix_agentd</span><br><span class="line">chkconfig zabbix_agentd on</span><br></pre></td></tr></table></figure>
+<p>启停命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/zabbix_agentd start</span><br><span class="line">/etc/init.d/zabbix_agentd stop</span><br><span class="line">/etc/init.d/zabbix_agentd restart</span><br></pre></td></tr></table></figure>
+<h1 id="Zabbix-服务端配置"><a href="#Zabbix-服务端配置" class="headerlink" title="Zabbix 服务端配置"></a>Zabbix 服务端配置</h1><p>请确保zabbix server已经配置java gateway,如果您已经配置，可略过此步骤。</p>
+<h2 id="配置文件配置"><a href="#配置文件配置" class="headerlink" title="配置文件配置"></a>配置文件配置</h2><h3 id="配置zabbix-java-gateway-conf"><a href="#配置zabbix-java-gateway-conf" class="headerlink" title="配置zabbix_java_gateway.conf"></a>配置zabbix_java_gateway.conf</h3><p>vi /etc/zabbix/zabbix_java_gateway.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">LISTEN_IP=&quot;0.0.0.0&quot;</span><br><span class="line">LISTEN_PORT=10052</span><br><span class="line">PID_FILE=&quot;/var/run/zabbix/zabbix_java.pid&quot;</span><br><span class="line">START_POLLERS=5</span><br><span class="line">TIMEOUT=3</span><br></pre></td></tr></table></figure>
+<p>配置完成后就可以启动zabbix-server 和 zabbix-java-gateway</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start zabbix-server.service</span><br><span class="line">systemctl start zabbix-java-gateway.service</span><br></pre></td></tr></table></figure>
+<h3 id="配置zabbix-zabbix-server-conf"><a href="#配置zabbix-zabbix-server-conf" class="headerlink" title="配置zabbix/zabbix_server.conf"></a>配置zabbix/zabbix_server.conf</h3><p>修改zabbix-server的配置，编辑/etc/zabbix/zabbix_server.conf ，修改下面几个参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">JavaGateway的服务器IP地址，一般与zabbix server同一台主机，可直接写zabbix  server地址</span><br><span class="line">JavaGateway=XXX.XXX.XXX.XXX</span><br><span class="line">JavaGateway的服务端口</span><br><span class="line">JavaGatewayPort=10052</span><br><span class="line">从javaGateway采集数据的进程数</span><br><span class="line">StartJavaPollers=5</span><br></pre></td></tr></table></figure>
+<p>配置文件修改后，重启zabbix-server：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart zabbix-server.service</span><br></pre></td></tr></table></figure>
+<h1 id="被监控端JVM开启JMX"><a href="#被监控端JVM开启JMX" class="headerlink" title="被监控端JVM开启JMX"></a>被监控端JVM开启JMX</h1><p>使用JMX前需要先开启JMX，默认是关闭的，在启动JAVA程序时,如何开始请参考官方文档<br><a href="https://docs.oracle.com/javase/1.5.0/docs/guide/management/agent.html" target="_blank" rel="noopener">https://docs.oracle.com/javase/1.5.0/docs/guide/management/agent.html</a></p>
+<p>下面介绍几种常用中间件JMX开启方式：</p>
+<h2 id="Tomcat"><a href="#Tomcat" class="headerlink" title="Tomcat"></a>Tomcat</h2><h3 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h3><p>Tomcat 编辑TOMCAT_HOME/bin/catalina.sh 在开头加入如下几行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CATALINA_OPTS="$&#123;CATALINA_OPTS&#125; -Djava.rmi.server.hostname=JMX_HOST" # 修改 JMX_HOST</span><br><span class="line">CATALINA_OPTS="$&#123;CATALINA_OPTS&#125; -Djavax.management.builder.initial=" </span><br><span class="line">CATALINA_OPTS="$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote=true" </span><br><span class="line">CATALINA_OPTS="$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote.port=JMX_PORT" # 修改JMS PORT</span><br><span class="line">CATALINA_OPTS="$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote.ssl=false" </span><br><span class="line">CATALINA_OPTS="$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote.authenticate=false"</span><br></pre></td></tr></table></figure>
+<p>注意：JMX_HOST为tomcat的主机名或IP地址，JMX_PORT为JMX端口，通常使用12345，然后重启tomcat，JMX就开启了。</p>
+<h3 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">set CATALINA_OPTS=<span class="string">"$&#123;CATALINA_OPTS&#125; -Djava.rmi.server.hostname=127.0.0.1"</span></span><br><span class="line">set CATALINA_OPTS=<span class="string">"$&#123;CATALINA_OPTS&#125; -Djavax.management.builder.initial="</span> </span><br><span class="line">set CATALINA_OPTS=<span class="string">"$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote=true"</span> </span><br><span class="line">set CATALINA_OPTS=<span class="string">"$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote.port=12345"</span></span><br><span class="line">set CATALINA_OPTS=<span class="string">"$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote.ssl=false"</span></span><br><span class="line">set CATALINA_OPTS=<span class="string">"$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote.authenticate=false"</span></span><br></pre></td></tr></table></figure>
+<h2 id="Weblogic"><a href="#Weblogic" class="headerlink" title="Weblogic"></a>Weblogic</h2><p>Weblogic 编辑WL_DOMAIN_HOME/bin/setDomainEnv.cmd，在文件结尾加入下面几行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Djava.rmi.server.hostname=JMX_HOST"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Djavax.management.builder.initial=weblogic.management.jmx.mbeanserver.WLSMBeanServerBuilder"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote=true"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote.port=JMX_PORT"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote.ssl=false"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote.authenticate=false"</span><br></pre></td></tr></table></figure>
+<p>本地环境配置示例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote=true" </span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Djava.rmi.server.hostname=192.168.100.1"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote.port=12345"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote.ssl=false"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote.authenticate=false"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Djavax.management.builder.initial=weblogic.management.jmx.mbeanserver.WLSMBeanServerBuilder"</span><br></pre></td></tr></table></figure>
+<h2 id="IBM-WebSphere"><a href="#IBM-WebSphere" class="headerlink" title="IBM WebSphere"></a>IBM WebSphere</h2><p>进入WebSphere Administrative Console open Servers → Server Types → WebSphere application servers → WAS_SERVER_NAME → Java and Process Management → Process definition → Java Virtual Machine.</p>
+<p>在“Generic JVM arguments”增加下面环境变量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Djavax.management.builder.initial=</span><br></pre></td></tr></table></figure>
+<p>然后再进入 WebSphere Administrative Console, open Servers → Server Types → WebSphere application servers → WAS_SERVER_NAME → Java and Process Management → Process definition → Java Virtual Machine → Custom properties.</p>
+<p>增加下面几个环境变量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Name: java.rmi.server.hostname</span><br><span class="line">Value: JMX_HOST</span><br><span class="line">Name: javax.management.builder.initial</span><br><span class="line">Value: none</span><br><span class="line">Name: com.sun.management.jmxremote</span><br><span class="line">Value: true</span><br><span class="line">Name: com.sun.management.jmxremote.port</span><br><span class="line">Value: JMX_PORT</span><br><span class="line">Name: com.sun.management.jmxremote.ssl</span><br><span class="line">Value: false</span><br><span class="line">Name: com.sun.management.jmxremote.authenticate</span><br><span class="line">Value: false</span><br></pre></td></tr></table></figure>
+<p>应用更改，重启应用就开启了。</p>
+<h2 id="Oracle-GlassFish"><a href="#Oracle-GlassFish" class="headerlink" title="Oracle GlassFish"></a>Oracle GlassFish</h2><p>进入GlassFish Console, open GAS_CONFIG → JVM Settings → JVM Options.<br>加入下面的环境变量到“JVM options”:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Value: -Djava.rmi.server.hostname=JMX_HOST</span><br><span class="line">Value: -Dcom.sun.management.jmxremote=true</span><br><span class="line">Value: -Dcom.sun.management.jmxremote.port=JMX_PORT</span><br><span class="line">Value: -Dcom.sun.management.jmxremote.ssl=false</span><br><span class="line">Value: -Dcom.sun.management.jmxremote.authenticate=false</span><br></pre></td></tr></table></figure>
+<p>重启就开启了。</p>
+<h1 id="JMX相关参数注意事项"><a href="#JMX相关参数注意事项" class="headerlink" title="JMX相关参数注意事项"></a>JMX相关参数注意事项</h1><p>-Djava.rmi.server.hostname=JMX_HOST</p>
+<p>在多网卡主机上，启动weblogic,建议增加-Djava.rmi.server.hostname=JMX_HOST参数，-Djava.rmi.server.hostname= <strong>被监控端Weblogic使用的网卡IP</strong>。否则使用jconsole或JRMC、jvisual工具连接时，会报出RMI(java.net.ConnectException: Connection refused: connect错误。</p>
+<h1 id="测试和查看JMX的配置和状态信息"><a href="#测试和查看JMX的配置和状态信息" class="headerlink" title="测试和查看JMX的配置和状态信息"></a>测试和查看JMX的配置和状态信息</h1><h2 id="基于jmxcmd-jar命令行方式测试"><a href="#基于jmxcmd-jar命令行方式测试" class="headerlink" title="基于jmxcmd.jar命令行方式测试"></a>基于jmxcmd.jar命令行方式测试</h2><p>命令行参数建议使用jmxcmd.jar，下载地址如下：</p>
+<p><a href="https://sourceforge.net/projects/jmxcmd/" target="_blank" rel="noopener">https://sourceforge.net/projects/jmxcmd/</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[tomcat@localhost tmp]$ java -jar jmxcmd.jar - 192.168.100.1:8098 &gt; weblogic_mebean.txt</span><br><span class="line">查看所有mbean</span><br><span class="line"></span><br><span class="line">[tomcat@localhost tmp]$ java -jar jmxcmd.jar - 192.168.100.1:8098  java.lang:type=Memory NonHeapMemoryUsage</span><br><span class="line">01/09/2019 10:46:18 +0800 de.layereight.jmxcmd.Client NonHeapMemoryUsage: </span><br><span class="line">committed: 271056896</span><br><span class="line">init: 270991360</span><br><span class="line">max: 587202560</span><br><span class="line">used: 92159504</span><br><span class="line">查看非堆内存</span><br><span class="line">[tomcat@localhost tmp]$ </span><br><span class="line">[tomcat@localhost tmp]$ java -jar jmxcmd.jar - 192.168.100.1:8098  com.bea:Name=ThreadPoolRuntime,ServerRuntime=srv_13_22_7003,Type=ThreadPoolRuntime QueueLength</span><br><span class="line">01/09/2019 10:28:10 +0800 de.layereight.jmxcmd.Client QueueLength: 0</span><br><span class="line">[tomcat@localhost tmp]$ </span><br><span class="line">查看srv_13_22_7003 的线程池队列长度</span><br><span class="line">[tomcat@localhost tmp]$ java -jar jmxcmd.jar - 192.168.100.1:8098  com.bea:Name=ThreadPoolRuntime,ServerRuntime=srv_13_22_7003,Type=ThreadPoolRuntime HoggingThreadCount</span><br><span class="line">01/09/2019 10:42:36 +0800 de.layereight.jmxcmd.Client HoggingThreadCount: 0</span><br><span class="line">[tomcat@localhost tmp]$  </span><br><span class="line">查看srv_13_22_7003 的线程池Hogging线程数</span><br></pre></td></tr></table></figure>
+<h2 id="基于Jconsole测试"><a href="#基于Jconsole测试" class="headerlink" title="基于Jconsole测试"></a>基于Jconsole测试</h2><p><img src="/2019/07/01/Zabbix基于JMX监控中间件/1547015840014.png" alt="1547015840014"></p>
+<p><strong>Jconsole查看</strong></p>
+<p><img src="/2019/07/01/Zabbix基于JMX监控中间件/Zabbix%E5%9F%BA%E4%BA%8EJMX%E7%9B%91%E6%8E%A7%E4%B8%AD%E9%97%B4%E4%BB%B6/1547016063506.png" alt="1547016063506"></p>
+<h2 id="基于JRMC测试"><a href="#基于JRMC测试" class="headerlink" title="基于JRMC测试"></a>基于JRMC测试</h2><p><img src="/2019/07/01/Zabbix基于JMX监控中间件/1547015878482.png" alt="1547015878482"></p>
+<p><strong>JRMC查看</strong></p>
+<p><img src="/2019/07/01/Zabbix基于JMX监控中间件/1547016244429.png" alt="1547016244429"></p>
+<h1 id="Mbean"><a href="#Mbean" class="headerlink" title="Mbean"></a>Mbean</h1><p>Weblogic Mbean在线文档：WebLogic Server® MBean Reference</p>
+<p><a href="https://docs.oracle.com/middleware/11119/wls/WLMBR/core/index.html" target="_blank" rel="noopener">https://docs.oracle.com/middleware/11119/wls/WLMBR/core/index.html</a></p>
+<p>Tomcat Mbean在线文档</p>
+<p><a href="http://tomcat.apache.org/tomcat-7.0-doc/monitoring.html" target="_blank" rel="noopener">http://tomcat.apache.org/tomcat-7.0-doc/monitoring.html</a></p>
+<h1 id="同一主机上监控多个Java进程Key健冲突问题"><a href="#同一主机上监控多个Java进程Key健冲突问题" class="headerlink" title="同一主机上监控多个Java进程Key健冲突问题"></a>同一主机上监控多个Java进程Key健冲突问题</h1><p>生产环境中我们经常使用同一台主机来搭建多个Tomcat或Weblogic节点对外提供服务，可是在监控主机时会碰到这样的问题，在被监控主机上使用模板，只能监控其中一个，如果想监控多个实例，我们只能通过添加多个模板来实现。这里提供两种解决方案：</p>
+<h2 id="对每个JVM进程当做一台主机"><a href="#对每个JVM进程当做一台主机" class="headerlink" title="对每个JVM进程当做一台主机"></a>对每个JVM进程当做一台主机</h2><p>在zabbix 中建立两台主机，jmx接口不同。</p>
+<p>缺点，主机监控数据</p>
+<p><strong>tomcat1</strong>:</p>
+<p><img src="/2019/07/01/Zabbix基于JMX监控中间件/1551322667467.png" alt="1551322667467"></p>
+<p><strong>tomcat2</strong>:</p>
+<p><img src="/2019/07/01/Zabbix基于JMX监控中间件/1551322730164.png" alt="1551322730164"></p>
+<h2 id="使用空格防止Key健冲突"><a href="#使用空格防止Key健冲突" class="headerlink" title="使用空格防止Key健冲突"></a>使用空格防止Key健冲突</h2><p>在同一主机上，zabbix不允键值重复，但是监控的项目是一样的，不可能键值写的不重复，经过几番搜索，找到方法如下：</p>
+<p>只要在箭头处添加1个空格就可以，也可以是多个。（注意位置不要错，在逗到后面）</p>
+<p><img src="/2019/07/01/Zabbix基于JMX监控中间件/1551773907058.png" alt="1551773907058"></p>
+<p><strong>错误方式：</strong></p>
+<p><img src="/2019/07/01/Zabbix基于JMX监控中间件/1551323034173.png" alt="1551323034173"></p>
+<h1 id="欢迎关注米宝窝，持续更新中，谢谢！"><a href="#欢迎关注米宝窝，持续更新中，谢谢！" class="headerlink" title="欢迎关注米宝窝，持续更新中，谢谢！"></a>欢迎关注米宝窝，持续更新中，谢谢！</h1><p>[米宝窝 <a href="https://rocklei123.github.io/" target="_blank" rel="noopener">https://rocklei123.github.io/</a> ](</p>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+    
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+        <div style="text-align:center;color: #ccc;font-size:14px;">欢迎持续关注米宝窝，定期更新谢谢！ https://rocklei123.github.io/ </div>
+                <div style="text-align:center;color: #ccc;font-size:14px;">欢迎持续关注我的CSDN https://blog.csdn.net/rocklei123 </div>
+        <div ><img src="images/rocklei123-weixin.jpg" alt="rocklei123的技术点滴" width="258" height="258"> </div>
+    
+</div>
+
+      
+    </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>熬夜写博客挺辛苦的，生怕猝死，所以每当写博客都带着听诊器，心脏一有异响，随时按Ctrl+S。</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: block;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="rocklei123 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/aipay.jpg" alt="rocklei123 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Zabbix/" rel="tag"># Zabbix</a>
+          
+            <a href="/tags/JMX/" rel="tag"># JMX</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/10/WebSphere Application Server 调优/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/" rel="prev" title="zabbix基于snmp协议监控weblogic">
+                zabbix基于snmp协议监控weblogic <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="rocklei123" />
+            
+              <p class="site-author-name" itemprop="name">rocklei123</p>
+              <p class="site-description motion-element" itemprop="description">欢迎您扫一扫上面的微信公众号，订阅我的博客！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/rocklei123" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/rocklei123" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zhoulei091@126.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Zabbix-Agent安装"><span class="nav-number">1.</span> <span class="nav-text">Zabbix Agent安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#rpm包安装方式"><span class="nav-number">1.1.</span> <span class="nav-text">rpm包安装方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源码包安装后打tar包介质–解压安装agent"><span class="nav-number">1.2.</span> <span class="nav-text">源码包安装后打tar包介质–解压安装agent</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Zabbix-Agent配置"><span class="nav-number">2.</span> <span class="nav-text">Zabbix Agent配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#rpm安装配置"><span class="nav-number">2.1.</span> <span class="nav-text">rpm安装配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源码包安装后打tar包介质–配置"><span class="nav-number">2.2.</span> <span class="nav-text">源码包安装后打tar包介质–配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">2.2.1.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加为服务与启停服务脚本"><span class="nav-number">2.2.2.</span> <span class="nav-text">添加为服务与启停服务脚本</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Zabbix-服务端配置"><span class="nav-number">3.</span> <span class="nav-text">Zabbix 服务端配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置文件配置"><span class="nav-number">3.1.</span> <span class="nav-text">配置文件配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置zabbix-java-gateway-conf"><span class="nav-number">3.1.1.</span> <span class="nav-text">配置zabbix_java_gateway.conf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置zabbix-zabbix-server-conf"><span class="nav-number">3.1.2.</span> <span class="nav-text">配置zabbix/zabbix_server.conf</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#被监控端JVM开启JMX"><span class="nav-number">4.</span> <span class="nav-text">被监控端JVM开启JMX</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat"><span class="nav-number">4.1.</span> <span class="nav-text">Tomcat</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux"><span class="nav-number">4.1.1.</span> <span class="nav-text">Linux</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows"><span class="nav-number">4.1.2.</span> <span class="nav-text">Windows</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Weblogic"><span class="nav-number">4.2.</span> <span class="nav-text">Weblogic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IBM-WebSphere"><span class="nav-number">4.3.</span> <span class="nav-text">IBM WebSphere</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Oracle-GlassFish"><span class="nav-number">4.4.</span> <span class="nav-text">Oracle GlassFish</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JMX相关参数注意事项"><span class="nav-number">5.</span> <span class="nav-text">JMX相关参数注意事项</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试和查看JMX的配置和状态信息"><span class="nav-number">6.</span> <span class="nav-text">测试和查看JMX的配置和状态信息</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于jmxcmd-jar命令行方式测试"><span class="nav-number">6.1.</span> <span class="nav-text">基于jmxcmd.jar命令行方式测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于Jconsole测试"><span class="nav-number">6.2.</span> <span class="nav-text">基于Jconsole测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于JRMC测试"><span class="nav-number">6.3.</span> <span class="nav-text">基于JRMC测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mbean"><span class="nav-number">7.</span> <span class="nav-text">Mbean</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#同一主机上监控多个Java进程Key健冲突问题"><span class="nav-number">8.</span> <span class="nav-text">同一主机上监控多个Java进程Key健冲突问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#对每个JVM进程当做一台主机"><span class="nav-number">8.1.</span> <span class="nav-text">对每个JVM进程当做一台主机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用空格防止Key健冲突"><span class="nav-number">8.2.</span> <span class="nav-text">使用空格防止Key健冲突</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#欢迎关注米宝窝，持续更新中，谢谢！"><span class="nav-number">9.</span> <span class="nav-text">欢迎关注米宝窝，持续更新中，谢谢！</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rocklei123</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cytMPyKrf';
+      var conf = '193a394926f19428e645007868bcefe0';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+  
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
