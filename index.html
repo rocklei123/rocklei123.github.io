@@ -319,253 +319,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rocklei123">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="rocklei123 米宝窝">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/" itemprop="url">zabbix基于snmp协议监控weblogic</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-01T09:34:54+08:00">
-                2019-07-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Zabbix/" itemprop="url" rel="index">
-                    <span itemprop="name">Zabbix</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-comment-o"></i>
-              </span>
-              
-                <a href="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/#SOHUCS" itemprop="discussionUrl">
-                  <span id="url::http://yoursite.com/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/" class="cy_cmt_count" data-xid="2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/" itemprop="commentsCount" ></span>
-                </a>
-              
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本主题为通过zabbix监控中间件（基于snmp协议）。</p>
-<h1 id="zabbix相关介绍"><a href="#zabbix相关介绍" class="headerlink" title="zabbix相关介绍"></a>zabbix相关介绍</h1><p>​    本文档讲述的是关于zabbix基于snmp协议监控weblogic相关实现。</p>
-<p>​    这里首先我们要知道要使用zabbix进行监控，至少需要他的两个部分来实现组成。</p>
-<p>​    第一部分是在服务端需要部署的zabbix_server，这个程序是部署在LAMP的相关环境下的，后续会有相关文档进行对于zabbix_server安装的说明，这里就不多做赘述了。</p>
-<p>​    第二部分是在客户端需要部署的zabbix_agent，这个程序是不需要相关的运行环境，只需要在客户端进行相关的配置，以及安装就可以了。</p>
-<h1 id="zabbix-agent端的部署"><a href="#zabbix-agent端的部署" class="headerlink" title="zabbix_agent端的部署"></a>zabbix_agent端的部署</h1><p>​    首先登录到被监控端Linux 服务器上，安装zabbix agent  ，过程不在本文档赘述（本人环境使用rpm包安装）。安装位置在 /etc/zabbix/zabbix_agentd.conf。编辑 /etc/zabbix/zabbix_agentd.conf配置如下几项：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PidFile=/var/run/zabbix/zabbix_agentd.pid</span><br><span class="line">LogFile=/var/log/zabbix/zabbix_agentd.log  日志位置</span><br><span class="line">Server=127.0.0.1         服务器端IP</span><br><span class="line">ListenPort=10050</span><br><span class="line">ServerActive=127.0.0.1   服务器端IP</span><br><span class="line">Hostname=127.0.0.1 (监控目标端主机名称)  这里配置的是主机名称，这个名称必须与zabbix_server配置的主机名称是一致的。</span><br></pre></td></tr></table></figure>
-<p>查看状态、停止、启动相关命令</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">源码包安装的agent启动：</span><br><span class="line">./zabbix_agentd -c /wetc/zabbix/conf/zabbix_agentd.conf</span><br><span class="line"></span><br><span class="line">rpm包安装的agent：</span><br><span class="line">Centos6 或者redhat6 </span><br><span class="line">chkconfig --list 查看服务名称</span><br><span class="line"> service zabbix-agent   status</span><br><span class="line"> service zabbix-agent   stop</span><br><span class="line"> service zabbix-agent   start</span><br><span class="line">CentOs7 或者Redhat7 </span><br><span class="line">systemctl stop  zabbix-agent.service </span><br><span class="line">systemctl start  zabbix-agent.service </span><br><span class="line">systemctl status  zabbix-agent.service</span><br></pre></td></tr></table></figure>
-<p>之后我们可以查看相关的日志文件，也就是zabbix_agentd.log文件中的内容，来查看程序的启动情况。</p>
-<p>/var/log/zabbix/zabbix_agentd.log </p>
-<p><img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/1547004802350.png" alt="1547004802350"></p>
-<p><strong>可能出现的问题</strong></p>
-<p>当我们启动agent时，可能日志中会报出如下错误：</p>
-<p><img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/1547004894106.png" alt="1547004894106"></p>
-<p>这是因为在server端没有配置相应名称的hostname所导致的。</p>
-<h1 id="被监控端Weblogic设置"><a href="#被监控端Weblogic设置" class="headerlink" title="被监控端Weblogic设置"></a>被监控端Weblogic设置</h1><p>我们监控服务器时，需要经过相关的SNMP协议来对服务器进行监控，这里我们需要在控制台上进行相关的配置。</p>
-<p>首先我们登录相关的控制台：</p>
-<p>会在页面中看到如下内容，点击新建</p>
-<p><img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/wpsA32C.tmp.png" alt="img"> </p>
-<p>这里面输入需要创建的SNMP相关的名称，这里请遵循相应的命名规则来进行命名。</p>
-<p><img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/wpsA33D.tmp.png" alt="img"> </p>
-<p>之后点入新创建的SNMP进行相关内容的配置</p>
-<p><img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/wpsA34D.tmp.png" alt="img"> </p>
-<p>这里先输入 SNMP UDP端口 这里我输入的为8098，后输入主要AgentX端口 同样为8098这里的端口号，请遵循创建时的相应规则。陷阱版本选择V1<img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/1547005117125.png" alt="1547005117125"></p>
-<p>将ServerSNMPAgent部署到目标节点上。选择启用后，进行保存，并点击标签中的目标项。</p>
-<p>目标项中选择SNMP协议相对应的端点，来进行目标的指向，当所有的节点SNMP均配置完成后，于控制台的配置基本完成。</p>
-<p><img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/1547007446759.png" alt="1547007446759"></p>
-<p><img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/1547007466634.png" alt="1547007466634"></p>
-<h1 id="测试访问联通性"><a href="#测试访问联通性" class="headerlink" title="测试访问联通性"></a>测试访问联通性</h1><h2 id="确保Weblogic监听SNMP"><a href="#确保Weblogic监听SNMP" class="headerlink" title="确保Weblogic监听SNMP"></a>确保Weblogic监听SNMP</h2><p>以上配置完成后，需要重启Weblogic节点，查看Weblogic节点启动日志，会出现如下信息，表示Weblogic配置完成，并且已经监听SNMP端口。</p>
-<p><img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/1547007579228.png" alt="1547007579228"></p>
-<h2 id="测试工具测试"><a href="#测试工具测试" class="headerlink" title="测试工具测试"></a>测试工具测试</h2><h3 id="安装测试工具snmpwalk"><a href="#安装测试工具snmpwalk" class="headerlink" title="安装测试工具snmpwalk"></a>安装测试工具snmpwalk</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install net-snmp-utils</span><br></pre></td></tr></table></figure>
-<h3 id="测试srv-13-22-7003-节点-ExecuteThreadTotalCount"><a href="#测试srv-13-22-7003-节点-ExecuteThreadTotalCount" class="headerlink" title="测试srv_13_22_7003 节点 ExecuteThreadTotalCount"></a>测试srv_13_22_7003 节点 ExecuteThreadTotalCount</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snmpwalk -v 1 -c public 210.72.13.22:8098  1.3.6.1.4.1.140.625.367.1.25.16.35.6.159.237.53.118.39.151.17.79.45.166.52.193.171.147</span><br></pre></td></tr></table></figure>
-<p>测试srv_13_22_7003 节点 ExecuteThreadTotalCount，如果执行成功出现如下信息表示<strong>Weblogic SNMP 配置成功：</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SNMPv2-SMI::enterprises.140.625.367.1.25.16.35.6.159.237.53.118.39.151.17.79.45.166.52.193.171.147 = INTEGER: 6</span><br></pre></td></tr></table></figure>
-<h1 id="zabbix-server页面相关配置"><a href="#zabbix-server页面相关配置" class="headerlink" title="zabbix_server页面相关配置"></a>zabbix_server页面相关配置</h1><h2 id="主机的创建"><a href="#主机的创建" class="headerlink" title="主机的创建"></a>主机的创建</h2><p>基本的准备工作完成之后，我们需要登录zabbix_server控制台进行主机监控项的配置</p>
-<ul>
-<li><p>进入登录页面点击Configuration –&gt; Hosts –&gt; Create host进行主机的创建。</p>
-</li>
-<li><p>输入Host name ,这里再次强调Host name的内容需要与<strong>agent端配置文件</strong>中的Host name内容一致</p>
-</li>
-<li><p>Agent interface中输入需要监控的服务器IP地址，并输入相应的监控端口，这里的端口与zabbix_agentd.conf中配置的一致，这里我并有进行配置，只是用了默认的10050，如果有需要可以修改文件中的变量Listen Port进行相关配置。</p>
-</li>
-</ul>
-<p><img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/1547009340217.png" alt="1547009340217"></p>
-<ul>
-<li>点击Add，基本的主机便建立完成了</li>
-</ul>
-<p>返回到Hosts页面 发现新建的主机 之后点进去进行相关的配置操作。</p>
-<h2 id="SNMP配置"><a href="#SNMP配置" class="headerlink" title="SNMP配置"></a>SNMP配置</h2><p>这里进行的SNMP配置与控制台的SNMP配置相对应，ip为被监控主机地址，而端口则为控制台所配置的UDP端口。</p>
-<p>例如：第一个UDP端口为8098，所以这里相对应的端口号也为8098。</p>
-<h2 id="监控项的配置"><a href="#监控项的配置" class="headerlink" title="监控项的配置"></a>监控项的配置</h2><p><strong>于相应主机栏中，选择items,点击进入</strong></p>
-<p><img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/1547009559782.png" alt="1547009559782"></p>
-<p><strong>Name：</strong>首先输入Name,这里的Name为需要监控的内容名称，可以自己决定取名，但最好遵循相应的规则，这里我选择监控队列数，因为监控的是第一台服务器的第一个节点，所以这里的name我命名为7003-QueueLength</p>
-<p><strong>Type</strong>选择SNMPv1 agent 这里的类型和控制台所配置的陷阱版本是相对应的。</p>
-<p><strong>key 和SNMP OID</strong> 相同，通过MIB 浏览器来获得：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">queueLength  1.3.6.1.4.1.140.625.367.1.35.16.35.6.159.237.53.118.39.151.17.79.45.166.52.193.171.147</span><br></pre></td></tr></table></figure>
-<p>OID 信息可以通过如下命令输出到文件中查询</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snmpwalk -v 1 -c public 210.72.13.22:8098 1.3.6.1.4.1.140.625 &gt; weblogic_oid.txt</span><br></pre></td></tr></table></figure>
-<p><strong>在进入监控项页面点击创建监控项，并填入相关内容：</strong></p>
-<p><img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/1547009134835.png" alt="1547009134835"></p>
-<h2 id="OID的获取"><a href="#OID的获取" class="headerlink" title="OID的获取"></a>OID的获取</h2><h3 id="WebLogic-所有-OID-信息查询"><a href="#WebLogic-所有-OID-信息查询" class="headerlink" title="WebLogic 所有 OID 信息查询"></a>WebLogic 所有 OID 信息查询</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snmpwalk -v 1 -c public 210.72.13.22:8098 1.3.6.1.4.1.140.625 &gt; weblogic_oid.txt</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>WebLogic SNMP Management Guide请参考</p>
-<p><a href="https://docs.oracle.com/cd/E13222_01/wls/docs90/snmpman/snmpagent.html" target="_blank" rel="noopener">https://docs.oracle.com/cd/E13222_01/wls/docs90/snmpman/snmpagent.html</a></p>
-</li>
-<li><p>在线版本WebLogic Server® 9.0 MIB Reference</p>
-<p><a href="https://docs.oracle.com/cd/E13222_01/wls/docs90/snmp/index.html" target="_blank" rel="noopener">https://docs.oracle.com/cd/E13222_01/wls/docs90/snmp/index.html</a></p>
-</li>
-<li><p>离线版本WebLogic Server® 9.0 MIB Reference</p>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost lib]# ls -l *.asn1</span><br><span class="line">-rwxr-x--- 1 tomcat tomcat 1879180 Aug 23 14:11 BEA-WEBLOGIC-MIB.asn1</span><br><span class="line">[root@localhost lib]# </span><br><span class="line">[root@localhost lib]# pwd</span><br><span class="line">/home/tomcat/Oracle/Middleware/wlserver_10.3/server/lib</span><br><span class="line">[root@localhost lib]#</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>离线版查看工具：MIB Browser</p>
-<p><a href="http://ireasoning.com/downloadmibbrowserfree.php" target="_blank" rel="noopener">http://ireasoning.com/downloadmibbrowserfree.php</a></p>
-</li>
-</ul>
-<h2 id="离线MIB-Browser的使用"><a href="#离线MIB-Browser的使用" class="headerlink" title="离线MIB Browser的使用"></a>离线MIB Browser的使用</h2><p>运行MIB Browser setup.exe</p>
-<p>在安装时按正常顺序安装就可以了，安装好后双击进入MIB Browser</p>
-<p><img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/wps7DDE.tmp.png" alt="img"> </p>
-<p>点击File –&gt; Load MIBs 加载BEA-WEBLOGIC-MIB.asn1文件，即可开始使用。</p>
-<p>在图中Address位置，输入服务器的ip地址和UDP端口，点击Advanced,连接到相关地址。</p>
-<p>查找相关的关键字，例如这里查找QueueLength</p>
-<p>选中查找到的内容</p>
-<p><img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/wps6571.tmp.png" alt="img"> </p>
-<p>会于页面左边显示相应的内容，此时我们就获得了相应的OID了</p>
-<h2 id="验证Zabbix与目标主机SNMP连通性"><a href="#验证Zabbix与目标主机SNMP连通性" class="headerlink" title="验证Zabbix与目标主机SNMP连通性"></a>验证Zabbix与目标主机SNMP连通性</h2><p>zabbix控制台-&gt;目标主机-&gt;监控项 显示已启用为正常</p>
-<p><img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/1547010092558.png" alt="1547010092558"></p>
-<p>如果被监控主机SNMP选项出现红色，表示该连接有问题，建议查看具体的日志：</p>
-<p><img src="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/1547010485171.png" alt="1547010485171"></p>
-<h1 id="欢迎关注米宝窝，持续更新中，谢谢！"><a href="#欢迎关注米宝窝，持续更新中，谢谢！" class="headerlink" title="欢迎关注米宝窝，持续更新中，谢谢！"></a>欢迎关注米宝窝，持续更新中，谢谢！</h1><p>[米宝窝 <a href="https://rocklei123.github.io/" target="_blank" rel="noopener">https://rocklei123.github.io/</a> ](</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    <div>
-    
-    </div>
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -669,82 +422,15 @@
 
       
         
-          
-            <p>本主题为通过zabbix监控中间件。</p>
+          <p>本主题为通过zabbix监控中间件。</p>
 <p>Zabbix 基于JMX agent(zabbix-java-gateway) 获取JVM MBean 信息。</p>
-<h1 id="Zabbix-Agent安装"><a href="#Zabbix-Agent安装" class="headerlink" title="Zabbix Agent安装"></a>Zabbix Agent安装</h1><p><strong>注意：</strong>如果您希望监控目标主机的操作系统相关指标，如CPU、内存、文件系统等信息，那么需要在目标主机安装 zabbix agent。</p>
-<h2 id="rpm包安装方式"><a href="#rpm包安装方式" class="headerlink" title="rpm包安装方式"></a>rpm包安装方式</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh zabbix-agent-4.0.0-1.1rc2.el7.x86_64</span><br></pre></td></tr></table></figure>
-<h2 id="源码包安装后打tar包介质–解压安装agent"><a href="#源码包安装后打tar包介质–解压安装agent" class="headerlink" title="源码包安装后打tar包介质–解压安装agent"></a>源码包安装后打tar包介质–解压安装agent</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local</span><br><span class="line">tar -xvf zabbix_agent.tar.gz</span><br></pre></td></tr></table></figure>
-<h1 id="Zabbix-Agent配置"><a href="#Zabbix-Agent配置" class="headerlink" title="Zabbix Agent配置"></a>Zabbix Agent配置</h1><h2 id="rpm安装配置"><a href="#rpm安装配置" class="headerlink" title="rpm安装配置"></a>rpm安装配置</h2><p>rpm安装方式配置文件路径为/etc/zabbix/zabbix_agentd.conf</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LogFile=/tmp/zabbix_agentd.log  #日志文件路径</span><br><span class="line">Server=192.168.100.1            #zabbix server 服务端地址</span><br><span class="line">ServerActive=192.168.100.1      #zabbix server 服务端地址</span><br><span class="line">Hostname=192.168.100.104        #被监控端主机ip</span><br></pre></td></tr></table></figure>
-<h2 id="源码包安装后打tar包介质–配置"><a href="#源码包安装后打tar包介质–配置" class="headerlink" title="源码包安装后打tar包介质–配置"></a>源码包安装后打tar包介质–配置</h2><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>源码包安装后打tar包介质-安装方式配置文件路径在解压目录，如:/usr/local/zabbix_agent/etc/zabbix_agentd.conf</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LogFile=/tmp/zabbix_agentd.log  #日志文件路径</span><br><span class="line">Server=192.168.100.1            #zabbix server 服务端地址</span><br><span class="line">ServerActive=192.168.100.1      #zabbix server 服务端地址</span><br><span class="line">Hostname=192.168.100.104        #被监控端主机ip</span><br></pre></td></tr></table></figure>
-<h3 id="添加为服务与启停服务脚本"><a href="#添加为服务与启停服务脚本" class="headerlink" title="添加为服务与启停服务脚本"></a>添加为服务与启停服务脚本</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/init.d/ </span><br><span class="line">vi zabbix_agentd</span><br></pre></td></tr></table></figure>
-<p>脚本内容为：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/sh</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> chkconfig: 2345 10 90 </span><br><span class="line"><span class="meta">#</span> description: myservice ....</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Zabbix</span><br><span class="line"><span class="meta">#</span> Copyright (C) 2001-2018 Zabbix SIA</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span> This program is free software; you can redistribute it and/or modify</span><br><span class="line"><span class="meta">#</span> it under the terms of the GNU General Public License as published by</span><br><span class="line"><span class="meta">#</span> the Free Software Foundation; either version 2 of the License, or</span><br><span class="line"><span class="meta">#</span> (at your option) any later version.</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span> This program is distributed in the hope that it will be useful,</span><br><span class="line"><span class="meta">#</span> but WITHOUT ANY WARRANTY; without even the implied warranty of</span><br><span class="line"><span class="meta">#</span> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span><br><span class="line"><span class="meta">#</span> GNU General Public License for more details.</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span> You should have received a copy of the GNU General Public License</span><br><span class="line"><span class="meta">#</span> along with this program; if not, write to the Free Software</span><br><span class="line"><span class="meta">#</span> Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Start/Stop the Zabbix agent daemon.</span><br><span class="line"><span class="meta">#</span> Place a startup script in /sbin/init.d, and link to it from /sbin/rc[023].d </span><br><span class="line">SERVICE="Zabbix agent"</span><br><span class="line">DAEMON=/usr/local/zabbix_agent/sbin/zabbix_agentd  </span><br><span class="line">PIDFILE=/tmp/zabbix_agentd.pid</span><br><span class="line"></span><br><span class="line">case $1 in</span><br><span class="line">  'start')</span><br><span class="line">    if [ -x $&#123;DAEMON&#125; ]</span><br><span class="line">    then</span><br><span class="line">      $DAEMON</span><br><span class="line">      # Error checking here would be good...</span><br><span class="line">      echo "$&#123;SERVICE&#125; started."</span><br><span class="line">    else</span><br><span class="line">      echo "Can't find file $&#123;DAEMON&#125;."</span><br><span class="line">      echo "$&#123;SERVICE&#125; NOT started."</span><br><span class="line">    fi</span><br><span class="line">  ;;</span><br><span class="line">  'stop')</span><br><span class="line">    if [ -s $&#123;PIDFILE&#125; ]</span><br><span class="line">    then</span><br><span class="line">      if kill `cat $&#123;PIDFILE&#125;` &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">      then</span><br><span class="line">        echo "$&#123;SERVICE&#125; terminated."</span><br><span class="line">        rm -f $&#123;PIDFILE&#125;</span><br><span class="line">      fi</span><br><span class="line">    fi</span><br><span class="line">  ;;</span><br><span class="line">  'restart')</span><br><span class="line">    $0 stop</span><br><span class="line">    sleep 10</span><br><span class="line">    $0 start</span><br><span class="line">  ;;</span><br><span class="line">  *)</span><br><span class="line">    echo "Usage: $0 start|stop|restart"</span><br><span class="line">    ;;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
-<p>添加命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chmod u+x zabbix_agentd </span><br><span class="line">chkconfig --add zabbix_agentd</span><br><span class="line">chkconfig zabbix_agentd on</span><br></pre></td></tr></table></figure>
-<p>启停命令</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/zabbix_agentd start</span><br><span class="line">/etc/init.d/zabbix_agentd stop</span><br><span class="line">/etc/init.d/zabbix_agentd restart</span><br></pre></td></tr></table></figure>
-<h1 id="Zabbix-服务端配置"><a href="#Zabbix-服务端配置" class="headerlink" title="Zabbix 服务端配置"></a>Zabbix 服务端配置</h1><p>请确保zabbix server已经配置java gateway,如果您已经配置，可略过此步骤。</p>
-<h2 id="配置文件配置"><a href="#配置文件配置" class="headerlink" title="配置文件配置"></a>配置文件配置</h2><h3 id="配置zabbix-java-gateway-conf"><a href="#配置zabbix-java-gateway-conf" class="headerlink" title="配置zabbix_java_gateway.conf"></a>配置zabbix_java_gateway.conf</h3><p>vi /etc/zabbix/zabbix_java_gateway.conf</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">LISTEN_IP=&quot;0.0.0.0&quot;</span><br><span class="line">LISTEN_PORT=10052</span><br><span class="line">PID_FILE=&quot;/var/run/zabbix/zabbix_java.pid&quot;</span><br><span class="line">START_POLLERS=5</span><br><span class="line">TIMEOUT=3</span><br></pre></td></tr></table></figure>
-<p>配置完成后就可以启动zabbix-server 和 zabbix-java-gateway</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start zabbix-server.service</span><br><span class="line">systemctl start zabbix-java-gateway.service</span><br></pre></td></tr></table></figure>
-<h3 id="配置zabbix-zabbix-server-conf"><a href="#配置zabbix-zabbix-server-conf" class="headerlink" title="配置zabbix/zabbix_server.conf"></a>配置zabbix/zabbix_server.conf</h3><p>修改zabbix-server的配置，编辑/etc/zabbix/zabbix_server.conf ，修改下面几个参数：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">JavaGateway的服务器IP地址，一般与zabbix server同一台主机，可直接写zabbix  server地址</span><br><span class="line">JavaGateway=XXX.XXX.XXX.XXX</span><br><span class="line">JavaGateway的服务端口</span><br><span class="line">JavaGatewayPort=10052</span><br><span class="line">从javaGateway采集数据的进程数</span><br><span class="line">StartJavaPollers=5</span><br></pre></td></tr></table></figure>
-<p>配置文件修改后，重启zabbix-server：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart zabbix-server.service</span><br></pre></td></tr></table></figure>
-<h1 id="被监控端JVM开启JMX"><a href="#被监控端JVM开启JMX" class="headerlink" title="被监控端JVM开启JMX"></a>被监控端JVM开启JMX</h1><p>使用JMX前需要先开启JMX，默认是关闭的，在启动JAVA程序时,如何开始请参考官方文档<br><a href="https://docs.oracle.com/javase/1.5.0/docs/guide/management/agent.html" target="_blank" rel="noopener">https://docs.oracle.com/javase/1.5.0/docs/guide/management/agent.html</a></p>
-<p>下面介绍几种常用中间件JMX开启方式：</p>
-<h2 id="Tomcat"><a href="#Tomcat" class="headerlink" title="Tomcat"></a>Tomcat</h2><h3 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h3><p>Tomcat 编辑TOMCAT_HOME/bin/catalina.sh 在开头加入如下几行</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CATALINA_OPTS="$&#123;CATALINA_OPTS&#125; -Djava.rmi.server.hostname=JMX_HOST" # 修改 JMX_HOST</span><br><span class="line">CATALINA_OPTS="$&#123;CATALINA_OPTS&#125; -Djavax.management.builder.initial=" </span><br><span class="line">CATALINA_OPTS="$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote=true" </span><br><span class="line">CATALINA_OPTS="$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote.port=JMX_PORT" # 修改JMS PORT</span><br><span class="line">CATALINA_OPTS="$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote.ssl=false" </span><br><span class="line">CATALINA_OPTS="$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote.authenticate=false"</span><br></pre></td></tr></table></figure>
-<p>注意：JMX_HOST为tomcat的主机名或IP地址，JMX_PORT为JMX端口，通常使用12345，然后重启tomcat，JMX就开启了。</p>
-<h3 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">set CATALINA_OPTS=<span class="string">"$&#123;CATALINA_OPTS&#125; -Djava.rmi.server.hostname=127.0.0.1"</span></span><br><span class="line">set CATALINA_OPTS=<span class="string">"$&#123;CATALINA_OPTS&#125; -Djavax.management.builder.initial="</span> </span><br><span class="line">set CATALINA_OPTS=<span class="string">"$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote=true"</span> </span><br><span class="line">set CATALINA_OPTS=<span class="string">"$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote.port=12345"</span></span><br><span class="line">set CATALINA_OPTS=<span class="string">"$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote.ssl=false"</span></span><br><span class="line">set CATALINA_OPTS=<span class="string">"$&#123;CATALINA_OPTS&#125; -Dcom.sun.management.jmxremote.authenticate=false"</span></span><br></pre></td></tr></table></figure>
-<h2 id="Weblogic"><a href="#Weblogic" class="headerlink" title="Weblogic"></a>Weblogic</h2><p>Weblogic 编辑WL_DOMAIN_HOME/bin/setDomainEnv.cmd，在文件结尾加入下面几行</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Djava.rmi.server.hostname=JMX_HOST"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Djavax.management.builder.initial=weblogic.management.jmx.mbeanserver.WLSMBeanServerBuilder"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote=true"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote.port=JMX_PORT"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote.ssl=false"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote.authenticate=false"</span><br></pre></td></tr></table></figure>
-<p>本地环境配置示例：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote=true" </span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Djava.rmi.server.hostname=192.168.100.1"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote.port=12345"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote.ssl=false"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Dcom.sun.management.jmxremote.authenticate=false"</span><br><span class="line">JAVA_OPTIONS="$&#123;JAVA_OPTIONS&#125; -Djavax.management.builder.initial=weblogic.management.jmx.mbeanserver.WLSMBeanServerBuilder"</span><br></pre></td></tr></table></figure>
-<h2 id="IBM-WebSphere"><a href="#IBM-WebSphere" class="headerlink" title="IBM WebSphere"></a>IBM WebSphere</h2><p>进入WebSphere Administrative Console open Servers → Server Types → WebSphere application servers → WAS_SERVER_NAME → Java and Process Management → Process definition → Java Virtual Machine.</p>
-<p>在“Generic JVM arguments”增加下面环境变量：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Djavax.management.builder.initial=</span><br></pre></td></tr></table></figure>
-<p>然后再进入 WebSphere Administrative Console, open Servers → Server Types → WebSphere application servers → WAS_SERVER_NAME → Java and Process Management → Process definition → Java Virtual Machine → Custom properties.</p>
-<p>增加下面几个环境变量：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Name: java.rmi.server.hostname</span><br><span class="line">Value: JMX_HOST</span><br><span class="line">Name: javax.management.builder.initial</span><br><span class="line">Value: none</span><br><span class="line">Name: com.sun.management.jmxremote</span><br><span class="line">Value: true</span><br><span class="line">Name: com.sun.management.jmxremote.port</span><br><span class="line">Value: JMX_PORT</span><br><span class="line">Name: com.sun.management.jmxremote.ssl</span><br><span class="line">Value: false</span><br><span class="line">Name: com.sun.management.jmxremote.authenticate</span><br><span class="line">Value: false</span><br></pre></td></tr></table></figure>
-<p>应用更改，重启应用就开启了。</p>
-<h2 id="Oracle-GlassFish"><a href="#Oracle-GlassFish" class="headerlink" title="Oracle GlassFish"></a>Oracle GlassFish</h2><p>进入GlassFish Console, open GAS_CONFIG → JVM Settings → JVM Options.<br>加入下面的环境变量到“JVM options”:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Value: -Djava.rmi.server.hostname=JMX_HOST</span><br><span class="line">Value: -Dcom.sun.management.jmxremote=true</span><br><span class="line">Value: -Dcom.sun.management.jmxremote.port=JMX_PORT</span><br><span class="line">Value: -Dcom.sun.management.jmxremote.ssl=false</span><br><span class="line">Value: -Dcom.sun.management.jmxremote.authenticate=false</span><br></pre></td></tr></table></figure>
-<p>重启就开启了。</p>
-<h1 id="JMX相关参数注意事项"><a href="#JMX相关参数注意事项" class="headerlink" title="JMX相关参数注意事项"></a>JMX相关参数注意事项</h1><p>-Djava.rmi.server.hostname=JMX_HOST</p>
-<p>在多网卡主机上，启动weblogic,建议增加-Djava.rmi.server.hostname=JMX_HOST参数，-Djava.rmi.server.hostname= <strong>被监控端Weblogic使用的网卡IP</strong>。否则使用jconsole或JRMC、jvisual工具连接时，会报出RMI(java.net.ConnectException: Connection refused: connect错误。</p>
-<h1 id="测试和查看JMX的配置和状态信息"><a href="#测试和查看JMX的配置和状态信息" class="headerlink" title="测试和查看JMX的配置和状态信息"></a>测试和查看JMX的配置和状态信息</h1><h2 id="基于jmxcmd-jar命令行方式测试"><a href="#基于jmxcmd-jar命令行方式测试" class="headerlink" title="基于jmxcmd.jar命令行方式测试"></a>基于jmxcmd.jar命令行方式测试</h2><p>命令行参数建议使用jmxcmd.jar，下载地址如下：</p>
-<p><a href="https://sourceforge.net/projects/jmxcmd/" target="_blank" rel="noopener">https://sourceforge.net/projects/jmxcmd/</a></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[tomcat@localhost tmp]$ java -jar jmxcmd.jar - 192.168.100.1:8098 &gt; weblogic_mebean.txt</span><br><span class="line">查看所有mbean</span><br><span class="line"></span><br><span class="line">[tomcat@localhost tmp]$ java -jar jmxcmd.jar - 192.168.100.1:8098  java.lang:type=Memory NonHeapMemoryUsage</span><br><span class="line">01/09/2019 10:46:18 +0800 de.layereight.jmxcmd.Client NonHeapMemoryUsage: </span><br><span class="line">committed: 271056896</span><br><span class="line">init: 270991360</span><br><span class="line">max: 587202560</span><br><span class="line">used: 92159504</span><br><span class="line">查看非堆内存</span><br><span class="line">[tomcat@localhost tmp]$ </span><br><span class="line">[tomcat@localhost tmp]$ java -jar jmxcmd.jar - 192.168.100.1:8098  com.bea:Name=ThreadPoolRuntime,ServerRuntime=srv_13_22_7003,Type=ThreadPoolRuntime QueueLength</span><br><span class="line">01/09/2019 10:28:10 +0800 de.layereight.jmxcmd.Client QueueLength: 0</span><br><span class="line">[tomcat@localhost tmp]$ </span><br><span class="line">查看srv_13_22_7003 的线程池队列长度</span><br><span class="line">[tomcat@localhost tmp]$ java -jar jmxcmd.jar - 192.168.100.1:8098  com.bea:Name=ThreadPoolRuntime,ServerRuntime=srv_13_22_7003,Type=ThreadPoolRuntime HoggingThreadCount</span><br><span class="line">01/09/2019 10:42:36 +0800 de.layereight.jmxcmd.Client HoggingThreadCount: 0</span><br><span class="line">[tomcat@localhost tmp]$  </span><br><span class="line">查看srv_13_22_7003 的线程池Hogging线程数</span><br></pre></td></tr></table></figure>
-<h2 id="基于Jconsole测试"><a href="#基于Jconsole测试" class="headerlink" title="基于Jconsole测试"></a>基于Jconsole测试</h2><p><img src="/2019/07/01/Zabbix基于JMX监控中间件/1547015840014.png" alt="1547015840014"></p>
-<p><strong>Jconsole查看</strong></p>
-<p><img src="/2019/07/01/Zabbix基于JMX监控中间件/Zabbix%E5%9F%BA%E4%BA%8EJMX%E7%9B%91%E6%8E%A7%E4%B8%AD%E9%97%B4%E4%BB%B6/1547016063506.png" alt="1547016063506"></p>
-<h2 id="基于JRMC测试"><a href="#基于JRMC测试" class="headerlink" title="基于JRMC测试"></a>基于JRMC测试</h2><p><img src="/2019/07/01/Zabbix基于JMX监控中间件/1547015878482.png" alt="1547015878482"></p>
-<p><strong>JRMC查看</strong></p>
-<p><img src="/2019/07/01/Zabbix基于JMX监控中间件/1547016244429.png" alt="1547016244429"></p>
-<h1 id="Mbean"><a href="#Mbean" class="headerlink" title="Mbean"></a>Mbean</h1><p>Weblogic Mbean在线文档：WebLogic Server® MBean Reference</p>
-<p><a href="https://docs.oracle.com/middleware/11119/wls/WLMBR/core/index.html" target="_blank" rel="noopener">https://docs.oracle.com/middleware/11119/wls/WLMBR/core/index.html</a></p>
-<p>Tomcat Mbean在线文档</p>
-<p><a href="http://tomcat.apache.org/tomcat-7.0-doc/monitoring.html" target="_blank" rel="noopener">http://tomcat.apache.org/tomcat-7.0-doc/monitoring.html</a></p>
-<h1 id="同一主机上监控多个Java进程Key健冲突问题"><a href="#同一主机上监控多个Java进程Key健冲突问题" class="headerlink" title="同一主机上监控多个Java进程Key健冲突问题"></a>同一主机上监控多个Java进程Key健冲突问题</h1><p>生产环境中我们经常使用同一台主机来搭建多个Tomcat或Weblogic节点对外提供服务，可是在监控主机时会碰到这样的问题，在被监控主机上使用模板，只能监控其中一个，如果想监控多个实例，我们只能通过添加多个模板来实现。这里提供两种解决方案：</p>
-<h2 id="对每个JVM进程当做一台主机"><a href="#对每个JVM进程当做一台主机" class="headerlink" title="对每个JVM进程当做一台主机"></a>对每个JVM进程当做一台主机</h2><p>在zabbix 中建立两台主机，jmx接口不同。</p>
-<p>缺点，主机监控数据</p>
-<p><strong>tomcat1</strong>:</p>
-<p><img src="/2019/07/01/Zabbix基于JMX监控中间件/1551322667467.png" alt="1551322667467"></p>
-<p><strong>tomcat2</strong>:</p>
-<p><img src="/2019/07/01/Zabbix基于JMX监控中间件/1551322730164.png" alt="1551322730164"></p>
-<h2 id="使用空格防止Key健冲突"><a href="#使用空格防止Key健冲突" class="headerlink" title="使用空格防止Key健冲突"></a>使用空格防止Key健冲突</h2><p>在同一主机上，zabbix不允键值重复，但是监控的项目是一样的，不可能键值写的不重复，经过几番搜索，找到方法如下：</p>
-<p>只要在箭头处添加1个空格就可以，也可以是多个。（注意位置不要错，在逗到后面）</p>
-<p><img src="/2019/07/01/Zabbix基于JMX监控中间件/1551773907058.png" alt="1551773907058"></p>
-<p><strong>错误方式：</strong></p>
-<p><img src="/2019/07/01/Zabbix基于JMX监控中间件/1551323034173.png" alt="1551323034173"></p>
-<h1 id="欢迎关注米宝窝，持续更新中，谢谢！"><a href="#欢迎关注米宝窝，持续更新中，谢谢！" class="headerlink" title="欢迎关注米宝窝，持续更新中，谢谢！"></a>欢迎关注米宝窝，持续更新中，谢谢！</h1><p>[米宝窝 <a href="https://rocklei123.github.io/" target="_blank" rel="noopener">https://rocklei123.github.io/</a> ](</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/07/01/Zabbix基于JMX监控中间件/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -794,7 +480,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/10/WebSphere Application Server 调优/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rocklei123">
@@ -813,7 +499,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/10/WebSphere Application Server 调优/" itemprop="url">未命名</a></h1>
+                <a class="post-title-link" href="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/" itemprop="url">zabbix基于snmp协议监控weblogic</a></h1>
         
 
         <div class="post-meta">
@@ -825,8 +511,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-10T14:34:27+08:00">
-                2019-01-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-01T09:34:54+08:00">
+                2019-07-01
               </time>
             
 
@@ -835,6 +521,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Zabbix/" itemprop="url" rel="index">
+                    <span itemprop="name">Zabbix</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -845,8 +553,8 @@
                 <i class="fa fa-comment-o"></i>
               </span>
               
-                <a href="/2019/01/10/WebSphere Application Server 调优/#SOHUCS" itemprop="discussionUrl">
-                  <span id="url::http://yoursite.com/2019/01/10/WebSphere Application Server 调优/" class="cy_cmt_count" data-xid="2019/01/10/WebSphere Application Server 调优/" itemprop="commentsCount" ></span>
+                <a href="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/#SOHUCS" itemprop="discussionUrl">
+                  <span id="url::http://yoursite.com/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/" class="cy_cmt_count" data-xid="2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/" itemprop="commentsCount" ></span>
                 </a>
               
             
@@ -875,791 +583,175 @@
 
       
         
-          
-            <h1 id="WebSphere-Application-Server-调优（base-on-Was-8-5-5）"><a href="#WebSphere-Application-Server-调优（base-on-Was-8-5-5）" class="headerlink" title="WebSphere Application Server 调优（base on Was 8.5.5）"></a>WebSphere Application Server 调优（base on Was 8.5.5）</h1><p>作者：周磊，rocklei123.北京                                                             2019.1.10</p>
-<h1 id="WebSphere-性能优化概述"><a href="#WebSphere-性能优化概述" class="headerlink" title="WebSphere 性能优化概述"></a>WebSphere 性能优化概述</h1><h2 id="性能问题发生在-WAS-和操作系统的各个环节中"><a href="#性能问题发生在-WAS-和操作系统的各个环节中" class="headerlink" title="性能问题发生在 WAS 和操作系统的各个环节中"></a>性能问题发生在 WAS 和操作系统的各个环节中</h2><p>性能问题可能发生于系统的各个环节中，当性能问题出来后很难马上就定位性能的瓶颈在哪里，即使找到了性能瓶颈，在进行调优的时候也要考虑系统整体环境，从上下文中分析，确定调优的策略；系统中一个或者多个“短板”的存在，就能让系统无法达到设计时的目标，无法达到预期的性能提升。</p>
-<p><img src="https://www.ibm.com/developerworks/cn/websphere/library/techarticles/1106_zhuxl_websphereenhancement/images/image01.jpg" alt="å¾ 1. æ§è½é®é¢åçå¨ WAS åæä½ç³&quot;ç&quot;çåä¸ªç¯èä¸­"></p>
-<h2 id="调优前需要知道的"><a href="#调优前需要知道的" class="headerlink" title="调优前需要知道的"></a>调优前需要知道的</h2><ul>
-<li><p>调优是一个持续的过程</p>
-</li>
-<li><p>调优需要有工具和数据的支撑</p>
-<ul>
-<li>漏斗原则</li>
-<li>绘制吞吐率曲线</li>
-</ul>
-</li>
-<li><p>WAS 性能调优没有捷径和魔术，因为每一个应用都有自己独特的特性和资源需求，而且他们使用 WAS 的资源也有各种不同的方式，每一套调优的参数和策略仅适用于当前的系统环境，在实际的系统环境中不能简单的将一种调优策略原封不动的移植到另外一个系统环境中，这样往往得不到预期的调优目的，还可能照成更多的性能瓶颈。</p>
-</li>
-</ul>
-<h2 id="WAS-性能差的几种表现及解决方法"><a href="#WAS-性能差的几种表现及解决方法" class="headerlink" title="WAS 性能差的几种表现及解决方法"></a>WAS 性能差的几种表现及解决方法</h2><p>系统性能差一般有以下两种非常明显的表现形式</p>
-<ul>
-<li><p>第一种是 CPU 使用不高，用户感觉交易响应时间很长；</p>
-<ul>
-<li>可以断定是由于系统的某一小部分造成了瓶颈，导致了所有的请求都在等待。</li>
-</ul>
-</li>
-<li><p>第二种是 CPU 使用很高，用户感觉交易响应时间很长。</p>
-<ul>
-<li>比较复杂。可能的根源之一是硬件资源不够。根源之二是应用系统中产生了多个大对象。根源之三是程序算法有问题。</li>
-</ul>
-</li>
-</ul>
-<h2 id="推荐WebSphere-官方调优文档"><a href="#推荐WebSphere-官方调优文档" class="headerlink" title="推荐WebSphere 官方调优文档"></a>推荐WebSphere 官方调优文档</h2><p>WebSphere Application Server 调优：建议官方查看调整完整概要文件</p>
-<p><a href="https://www.ibm.com/support/knowledgecenter/zh/SSEQTP_8.5.5/com.ibm.websphere.base.doc/ae/tfullp_tun.html" target="_blank" rel="noopener">https://www.ibm.com/support/knowledgecenter/zh/SSEQTP_8.5.5/com.ibm.websphere.base.doc/ae/tfullp_tun.html</a></p>
-<h1 id="检查硬件配置和设置"><a href="#检查硬件配置和设置" class="headerlink" title="检查硬件配置和设置"></a>检查硬件配置和设置</h1><ol>
-<li>优化磁盘速度</li>
-<li>提高处理器速度和增大处理器高速缓存</li>
-<li>增大系统内存</li>
-<li>使网卡和网络交换机以全双工方式工作</li>
-</ol>
-<h1 id="调整操作系统"><a href="#调整操作系统" class="headerlink" title="调整操作系统"></a>调整操作系统</h1><ul>
-<li>调整 Windows 系统</li>
-<li>调整 Linux 系统</li>
-<li>调整 AIX 系统</li>
-<li>调整 Solaris 系统</li>
-<li>调整 HP 系统</li>
-</ul>
-<h2 id="调整-Linux-系统"><a href="#调整-Linux-系统" class="headerlink" title="调整 Linux 系统"></a>调整 Linux 系统</h2><p>根据调整需求，配置下列设置和变量：</p>
-<ul>
-<li><p>更改 TCP 参数</p>
-<ul>
-<li><p><strong>描述：</strong> Linux 提供了许多可调 TCP 参数，其缺省值对于 WebSphere Application Server 来说可能就足够了。在某些例外情况下，可能必须调整这些参数。例如，您可能会减少特定状态（例如，TIME_WAIT）下套接字的数目、修改 TCP 保持活动操作或者修改其他功能。</p>
-</li>
-<li><p>如何查看或设置：</p>
-<p>请查阅 Linux 分发中“man tcp”下提供的详细信息。</p>
-</li>
-</ul>
-</li>
-<li><p>Linux 文件描述符 (ulimit)</p>
-<ul>
-<li><strong>描述：</strong>指定支持打开的文件数。通常，缺省设置适合于大多数应用程序。 如果将此参数值设置得太小，那么可能会显示文件打开错误、内存分配故障或连接建立错误。</li>
-<li><strong>如何查看或设置：</strong>请参阅有关 <strong>ulimit</strong> 命令的 UNIX 参考页面以了解不同 shell 的语法。对于 KornShell shell (ksh) 程序，要将 <strong>ulimit</strong> 命令设置为 8000，请发出 <strong>ulimit -n 8000</strong> 命令。使用 <strong>ulimit -a</strong> 命令来显示所有系统资源限制的当前值。</li>
-<li><strong>缺省值：</strong>对于 SUSE Linux Enterprise Server 9 (SLES 9)，缺省值是 1024。</li>
-<li><strong>建议值：</strong>8000</li>
-</ul>
-</li>
-<li><p>连接储备</p>
-<ul>
-<li><p>描述：</p>
-<p>当由于入局连接请求比率过高而导致连接故障时，请更改下列参数：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo 3000 &gt; /proc/sys/net/core/netdev_max_backlog</span><br><span class="line">echo 3000 &gt; /proc/sys/net/core/somaxconn</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p>TCP_KEEPALIVE_INTERVAL</p>
-<ul>
-<li><p><strong>描述：</strong>确定两次 isAlive 时间间隔探测之间的等待时间。</p>
-</li>
-<li><p>如何查看或设置：</p>
-<p>发出以下命令来设置此值：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 15 &gt; /proc/sys/net/ipv4/tcp_keepalive_intvl</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>缺省值：</strong>75 秒</p>
-</li>
-<li><p><strong>建议值：</strong>15 秒</p>
-</li>
-</ul>
-</li>
-<li><p>TCP_KEEPALIVE_PROBES</p>
-<ul>
-<li><p><strong>描述：</strong>确定超时前的探测次数。</p>
-</li>
-<li><p>如何查看或设置：</p>
-<p>发出以下命令来设置此值：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 5  &gt; /proc/sys/net/ipv4/tcp_keepalive_probes</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>缺省值：</strong>9 秒</p>
-</li>
-<li><p><strong>建议值：</strong>5 秒</p>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="调整-AIX-系统"><a href="#调整-AIX-系统" class="headerlink" title="调整 AIX 系统"></a>调整 AIX 系统</h2><p>根据需要，更改下列配置设置或变量：</p>
-<ul>
-<li><p>TCP_TIMEWAIT</p>
-<ul>
-<li><p><strong>描述：</strong>指定时间（以 15 秒为时间间隔），TCP/IP 必须经过该时间之后才能释放已关闭的连接并复用其资源。例如，如果对此属性指定值 1，那么 TCP/IP 必须经过 15 秒之后才能释放已关闭的连接并复用其资源。</p>
-</li>
-<li><p>关闭与释放之间的这段时间称为 TIME_WAIT 状态或者两倍最大段生存期 (2MSL) 状态。此时间期间，重新打开到客户机和服务器的连接的成本少于建立新连接。通过减少此条目的值，TCP/IP 可以更快地释放关闭的连接，并为新连接提供更多资源。如果运行中的应用程序要求快速释放连接或创建新连接，或者由于许多连接处于 TIME_WAIT 状态而导致吞吐量较低，请调整此参数。</p>
-</li>
-<li><p>如何查看或设置：</p>
-<p>发出以下命令以将 TCP_TIMEWAIT 状态设置为 1（15 秒）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/sbin/no –o tcp_timewait =1</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p>安装了 DB2® 的 AIX 操作系统</p>
-<ul>
-<li><strong>描述：</strong>如果将 DB2 日志文件与物理数据库文件分开存储，那么可以提高性能。您还可以将日志和数据库文件从包含日志文件系统 (JFS) 服务的驱动器中分离出来。AIX 使用特定的卷组和文件系统来进行 JFS 记录。</li>
-<li><strong>如何查看或设置：</strong>使用 AIX filemon 实用程序来查看所有文件系统输入和输出，并在战略上选择 DB2 日志文件的文件系统。根据 DB2 日志记录信息来设置 DB2 日志位置。</li>
-<li><strong>缺省值：</strong>DB2 日志文件的缺省位置通常是存储数据库表的磁盘驱动器。</li>
-<li><strong>建议值：</strong>将日志文件移动到不用于存储 DB2 数据并且具有最低输入或输出活动量的磁盘。</li>
-</ul>
-</li>
-<li><p>AIX 文件描述符 (ulimit)</p>
-<ul>
-<li><p><strong>描述：</strong>对用户帐户指定资源使用的各种限制。ulimit -a 命令显示所有 ulimit 限制，其中包括允许打开的文件数。打开文件设置的缺省数目 (2000) 通常足以供大多数应用程序使用。如果对此参数设置的值太小，在打开文件或建立连接时就可能会出错。由于此值限制服务器进程可打开的文件描述符数，因此如果值太小，就会导致性能欠佳。</p>
-</li>
-<li><p>如何查看或设置：</p>
-<p>执行以下步骤将打开文件限制值更改为 10,000 个文件：</p>
-<ol>
-<li><p>打开命令窗口。</p>
-</li>
-<li><p>编辑/etc/security/limits文件。将以下行添加到运行WebSphere Application Server进程的用户帐户：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nofiles =  10000 </span><br><span class="line">nofiles_hard = 10000</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>保存所作的更改。</p>
-</li>
-<li><p>重新启动 AIX 系统。</p>
-</li>
-<li><p>要验证结果，请在命令行上输入 ulimit -a 命令。</p>
-</li>
-</ol>
-</li>
-<li><p><strong>缺省值：</strong>对于 AIX 操作系统，缺省设置是 2000。</p>
-</li>
-<li><p>建议值：</p>
-<p>该值取决于应用程序并专门应用于应用程序数据和应用程序堆栈。</p>
-<p>增加 ulimit 文件描述符限制值可提高性能。根据应用程序的不同，可能需要增加其他限制的值。对数据或堆栈 ulimit 的任何更改应该确保数据+堆栈 &lt; 256MB（仅限于 32 位 WebSphere Application Server）。</p>
-<p>对于数据，建议您将 ulimit 更改为“无限制”。</p>
-</li>
-</ul>
-</li>
-<li><p>AIX ARP 表存储区大小</p>
-<ul>
-<li><p>如何查看或设置：</p>
-<p>netstat -p arp</p>
-<p>将显示已发送的 ARP 包数和已从 ARP 表中清除的 ARP 条目数。如果要清除的条目数较大，请增大 ARP 表大小。使用arp -a来显示 ARP 表散列分布。设置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">no -r -o arptab_size=10</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>缺省值：</strong>14400 个半秒（2 小时）。</p>
-</li>
-<li><p><strong>建议值：</strong>600 个半秒（5 分钟）。</p>
-</li>
-</ul>
-</li>
-<li><p>TCP_KEEPINTVL</p>
-<ul>
-<li><p><strong>描述：</strong>指定为了验证连接而发送的各个包之间的时间间隔。</p>
-</li>
-<li><p>如何查看或设置：</p>
-<p>使用以下命令来将此值设置为5秒：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">no -o tcp_keepintvl=10</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>缺省值：</strong>150（1/2 秒）</p>
-</li>
-<li><p><strong>建议值：</strong>10（1/2 秒）</p>
-</li>
-</ul>
-</li>
-<li><p>TCP_KEEPINIT</p>
-<ul>
-<li><p><strong>描述：</strong>指定 TCP 连接的初始超时值。</p>
-</li>
-<li><p>如何查看或设置：使用以下命令来将此值设置为20秒：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">no -o tcp_keepinit=40</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>缺省值：</strong>150（1/2 秒）</p>
-</li>
-<li><p><strong>建议值：</strong>40（1/2 秒）</p>
-</li>
-</ul>
-</li>
-<li><p>为 Java 虚拟机堆分配大页 (16 MB)</p>
-<p>某些应用程序要求使用非常大的堆以提高性能。通过使用 CPU 和操作系统提供的大页支持，可以降低 CPU 管理大型堆的开销。以下步骤以大页 (16 MB) 形式分配 4 GB 的 RAM：</p>
-<ol>
-<li><p>作为 root 用户，运行下列命令以保留 4 GB 的大页：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vmo  -r  -o  lgpg_regions=256  -o lgpg_size=16777216  </span><br><span class="line">bosboot  -ad  /dev/ipldevice  </span><br><span class="line">reboot   -q</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>在重新引导后，运行以下命令以便在 AIX 操作系统上启用大页支持：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmo -p -o  v_pinshm=1</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>作为 root 用户，为用户添加下列能力：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chuser  capabilities=CAP_BYPASS_RAC_VMM,CAP_PROPAGATE  $USER</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>将-Xlp Java 选项添加至 Java 命令。</p>
-<ol>
-<li>单击服务器 &gt; 服务器类型 &gt; WebSphere 应用程序服务器 &gt; server_name。</li>
-<li>在服务器基础结构下，单击 Java 和进程管理 &gt; 进程定义 &gt; Java 虚拟机。</li>
-<li>在通用 JVM 参数字段中，添加 -Xlp。</li>
-</ol>
-</li>
-<li><p>添加EXTSHM 定制属性并设置为OFF。</p>
-<ol>
-<li>单击服务器 &gt; 服务器类型 &gt; WebSphere 应用程序服务器 &gt; server_name。</li>
-<li>在服务器基础结构下，单击 Java 和进程管理 &gt; 进程定义 &gt; 环境条目 &gt; 新建。</li>
-<li>在名称字段中，输入 EXTSHM。</li>
-<li>在值字段中，输入 OFF。</li>
-</ol>
-</li>
-<li><p>使用以下命令验证所使用的大页支持：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmstat  -l  1</span><br></pre></td></tr></table></figure>
-<p>Note当应用程序运行时，“alp”列包含非零值。</p>
-</li>
-</ol>
-<p>启用大页可能会出现严重后果。有关大页的更多详细信息，请参阅有关 AIX 大页的信息。</p>
-<p>如果不想使用大页选项，也可以选择中等页面选项。中等页面大小选项在性能收益方面类似或接近于大页面。但是，它并不涉及为特定用户或进程保留物理内存的问题。有关更多信息，请阅读“调整 Java 虚拟机”信息。</p>
-</li>
-<li><p>其他 AIX 信息</p>
-<p>考虑本文档未阐述的其他 AIX 操作系统设置。您还可以调整下列设置：</p>
-<ul>
-<li>适配器发送和接收队列</li>
-<li>TCP/IP 套接字缓冲区</li>
-<li>IP 协议 mbuf 池性能</li>
-<li>更新文件描述符</li>
-<li>更新调度程序</li>
-</ul>
-<p>有关 AIX 操作系统的更多信息，请参阅性能：学习资源信息。</p>
-</li>
-</ul>
-<h2 id="调整HP-Unix-系统"><a href="#调整HP-Unix-系统" class="headerlink" title="调整HP Unix 系统"></a>调整HP Unix 系统</h2><p><a href="https://www.ibm.com/support/knowledgecenter/zh/SSEQTP_8.5.5/com.ibm.websphere.base.doc/ae/tprf_tunehp.html" target="_blank" rel="noopener">https://www.ibm.com/support/knowledgecenter/zh/SSEQTP_8.5.5/com.ibm.websphere.base.doc/ae/tprf_tunehp.html</a></p>
-<p><strong>为什么要调整 TCP/IP 缓冲区</strong></p>
-<p>WebSphere® Application Server 广泛地使用了 TCP/IP 套接字通信机制。对于 TCP/IP 套接字连接，发送和接收缓冲区大小定义了接收窗口。接收窗口指定在发送被中断前可以发送而不会被接收的数据量。如果发送太多数据，就会使缓冲区过载并中断传输。数据传输中断控制机制称为流量控制。如果 TCP/IP 缓冲区的接收窗口太小，接收窗口缓冲区就会频繁地过载，流量控制机制就会停止数据传输，直到接收缓冲区被清空为止。</p>
-<h2 id="调整操作系统总结"><a href="#调整操作系统总结" class="headerlink" title="调整操作系统总结"></a>调整操作系统总结</h2><table>
-<thead>
-<tr>
-<th>对象名</th>
-<th>属性名</th>
-<th>建议值</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>操作系统参数</td>
-<td>tcp_keepidle</td>
-<td>600</td>
-</tr>
-<tr>
-<td></td>
-<td>tcp_keepintvl</td>
-<td>10</td>
-</tr>
-<tr>
-<td></td>
-<td>tcp_keepinit</td>
-<td>40</td>
-</tr>
-<tr>
-<td></td>
-<td>Soft FILE Size</td>
-<td>-1</td>
-</tr>
-<tr>
-<td></td>
-<td>Soft CPU Time</td>
-<td>-1</td>
-</tr>
-<tr>
-<td></td>
-<td>Soft STACK Size</td>
-<td>-1</td>
-</tr>
-<tr>
-<td></td>
-<td>Soft CORE File Size</td>
-<td>-1</td>
-</tr>
-<tr>
-<td></td>
-<td>Hard FILE Size</td>
-<td>-1</td>
-</tr>
-<tr>
-<td></td>
-<td>Hard CPU Time</td>
-<td>-1</td>
-</tr>
-<tr>
-<td></td>
-<td>Hard STACK Size</td>
-<td>-1</td>
-</tr>
-<tr>
-<td></td>
-<td>Hard CORE File Size</td>
-<td>-1</td>
-</tr>
-</tbody>
-</table>
-<h1 id="调整-JVM"><a href="#调整-JVM" class="headerlink" title="调整 JVM"></a>调整 JVM</h1><h2 id="版本查看"><a href="#版本查看" class="headerlink" title="版本查看"></a>版本查看</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java –fullversion</span><br></pre></td></tr></table></figure>
-<h2 id="选择稳定的JVM"><a href="#选择稳定的JVM" class="headerlink" title="选择稳定的JVM"></a>选择稳定的JVM</h2><ul>
-<li><p>选择稳定的JDK：<br>刚刚GA的版本不稳定，比如1.5.0_00 1.6.0_00<br>刚增加新特性的版本不稳定，比如1.7.0_80  1.8.0_74<br>安装JDK之前，先看厂商的Release Notes</p>
-</li>
-<li><p>根据平台和应用，选择合适厂商的JDK：<br>HP-UX只能选择HP JDK，AIX只能选择IBM JDK<br>Windows、Linux可以选择SUN JDK和JRockit<br>Solaris平台，最好使用SUN JDK<br>开源JDK，目前生产环境中用的极少 </p>
-</li>
-</ul>
-<h2 id="调整-IBM-Java-虚拟机"><a href="#调整-IBM-Java-虚拟机" class="headerlink" title="调整 IBM Java 虚拟机"></a>调整 IBM Java 虚拟机</h2><h3 id="IBM-JVM-内存结构"><a href="#IBM-JVM-内存结构" class="headerlink" title="IBM JVM 内存结构"></a>IBM JVM 内存结构</h3><p><img src="/2019/01/10/WebSphere Application Server 调优/1547038435814.png" alt="1547038435814"></p>
-<h3 id="IBM-GC算法"><a href="#IBM-GC算法" class="headerlink" title="IBM GC算法"></a>IBM GC算法</h3><p>虽然每个策略都有独特优点，但对于 WebSphere Application Server V8.0 及更高版本，gencon 是缺省垃圾回收策略。应用程序服务器的先前版本指定 optthruput 作为缺省垃圾回收策略。</p>
-<table>
-<thead>
-<tr>
-<th>策略</th>
-<th>选项</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>针对吞吐量进行优化</td>
-<td>-Xgcpolicy:optthruput（可选）</td>
-<td>默认策略（WAS8以前版本）。提供高吞吐量，但垃圾回收暂停时间较长。在垃圾回收期间，将停止所有应用程序线程，以便进行标记、清理并根据需要进行压缩。gencon 策略对于大部分应用程序而言已经够用了。</td>
-</tr>
-<tr>
-<td>针对停顿时间进行优化</td>
-<td>-Xgcpolicy:optavgpause</td>
-<td>策略通过在应用程序运行期间执行垃圾回收的标记和清理阶段来缩短垃圾回收暂停时间。此策略会对整体吞吐量产生轻微的性能影响。</td>
-</tr>
-<tr>
-<td>分代并发</td>
-<td>-Xgcpolicy:gencon</td>
-<td>默认策略（WAS8以后版本）此策略与分代垃圾回收器配合使用。分代模式尝试实现高吞吐量并同时缩短垃圾回收暂停时间。为了实现此目标，将堆分为新区域和旧区域。长生命周期对象将被提升到旧空间，而短生命周期对象将在新空间中被迅速地作为垃圾回收。gencon 策略能使许多应用程序受益匪浅。但是，它并不适合所有应用程序，并且通常难以调整。</td>
-</tr>
-<tr>
-<td>子池</td>
-<td>-Xgcpolicy:subpool</td>
-<td>策略可以提高多处理器系统（通常使用 8 个以上处理器）的性能。此策略仅适用于 IBM System i® System p® 和 System z® 处理器。subpool 策略与 gencon 策略类似，只是它将堆划分为子池以提高对象分配可伸缩性。</td>
-</tr>
-</tbody>
-</table>
-<p>将 <strong>gcpolicy</strong> 设置为 gencon 会禁用并发标记。除非应用程序响应时间不规律（这表示可能存在暂停时间问题），否则，使用 gencon 策略应可获得最佳的吞吐量结果。</p>
-<p>将 <strong>gcpolicy</strong> 设置为 optavgpause 会使用缺省值来启用并发标记。此设置将减少由正常垃圾回收所引起的应用程序响应时间不规律情况。但是，此选项可能会降低整体吞吐量。</p>
-<h3 id="切换到其他-GC-策略的原因-IBM"><a href="#切换到其他-GC-策略的原因-IBM" class="headerlink" title="切换到其他 GC 策略的原因-IBM"></a>切换到其他 GC 策略的原因-IBM</h3><table>
-<thead>
-<tr>
-<th>GC收集器</th>
-<th style="text-align:left">切换到其他 GC 策略的原因-IBM</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>optavgpause</td>
-<td style="text-align:left">我的应用程序无法忍受那么长的 GC 停顿时间。如果 GC 停顿时间能够减少的话，性能降低一些也可以接受。 我的应用程序正在一个 64 位平台上运行并使用非常大的堆 —— 超过 3 或 4GB。 我的应用程序是一个 GUI 应用程序，我很关注用户响应时间。</td>
-</tr>
-<tr>
-<td>gencon</td>
-<td style="text-align:left">我的应用程序分配了许多短期存活的对象。 堆空间出现碎片化。 我的应用程序是基于事务的（也就是说，在事务提交之后，事务中的对象就不再存活了）。</td>
-</tr>
-<tr>
-<td>subpool</td>
-<td style="text-align:left">在大型多处理器计算机上，我遇到了可伸缩性问题。</td>
-</tr>
-</tbody>
-</table>
-<h3 id="除此之外之外建议增加参数"><a href="#除此之外之外建议增加参数" class="headerlink" title="除此之外之外建议增加参数"></a>除此之外之外建议增加参数</h3><p>IBM JDK<br>-verbose:gc -Xverbosegclog:&lt;path_GC_log_file_name&gt;<br>-verbose:gc -Xverbosegclog:gc.log<br>-verbose:gc -Xverbosegclog:/tmp/gc.log</p>
-<h3 id="中国银行标准环境建议参数"><a href="#中国银行标准环境建议参数" class="headerlink" title="中国银行标准环境建议参数"></a>中国银行标准环境建议参数</h3><h4 id="配置应用程序服务器-Server-JVM参数"><a href="#配置应用程序服务器-Server-JVM参数" class="headerlink" title="配置应用程序服务器(Server)JVM参数"></a>配置应用程序服务器(Server)JVM参数</h4><p>进入管理控制台-&gt;应用程序服务器-&gt;<em>server_name</em>-&gt;java和进程管理-&gt;进程定义-&gt;java虚拟机，对server进行如下设置：</p>
-<h5 id="64位WAS"><a href="#64位WAS" class="headerlink" title="64位WAS"></a>64位WAS</h5><ul>
-<li><strong>报表类、批量操作等需要占用大量内存的系统如下设置：</strong></li>
-</ul>
-<p>打开详细垃圾回收；</p>
-<p>JVM具体设置的参数为：初始堆1024，最大堆6144；</p>
-<p>JVM通用参数：</p>
-<p>-Xgcpolicy:gencon -Xmns256m -Xmnx1536m -Djava.net.preferIPv4Stack=true –<strong>配置应用程序服务器(Server)JVM参数</strong></p>
-<p>进入管理控制台-&gt;应用程序服务器-&gt;<em>server_name</em>-&gt;java和进程管理-&gt;进程定义-&gt;java虚拟机，对server进行如下设置：</p>
-<p><strong>1、64位WAS</strong> </p>
-<p><strong>报表类、批量操作等需要占用大量内存的系统如下设置：</strong></p>
-<p>打开详细垃圾回收；</p>
-<p>JVM具体设置的参数为：初始堆1024，最大堆6144；</p>
-<p>JVM通用参数：</p>
-<p>-Xgcpolicy:gencon -Xmns256m -Xmnx1536m -Djava.net.preferIPv4Stack=true –Xdisableexplicitgc -Xgc:preferredHeapBase=0x100000000</p>
-<p>点击确定和保存之后，重启WAS Server生效。</p>
-<p><strong>非报表类、批量操作，对内存无特殊要求的系统如下设置：</strong></p>
-<p>打开详细垃圾回收；</p>
-<p>JVM具体设置的参数为：初始堆1024，最大堆3072；</p>
-<p>JVM通用参数：</p>
-<p>-Xgcpolicy:gencon -Xmns256m -Xmnx768m -Djava.net.preferIPv4Stack=true -Xdisableexplicitgc</p>
-<p>点击确定和保存之后，重启WAS Server生效。</p>
-<p><strong>测试环境</strong></p>
-<p>打开详细垃圾回收；</p>
-<p>JVM具体设置的参数为：初始堆512，最大堆1024；（如有特殊需求可自定义）</p>
-<p>JVM通用参数：</p>
-<p>-Xgcpolicy:gencon -Xmns256m -Xmnx768m -Djava.net.preferIPv4Stack=true –Xdisableexplicitgc</p>
-<p>点击确定和保存之后，重启WAS Server生效。</p>
-<p><strong>2、32位WAS</strong> </p>
-<p>打开详细垃圾回收；</p>
-<p>JVM具体设置的参数为：初始堆512，最大堆1536； </p>
-<p>JVM通用参数：</p>
-<p>-Xgcpolicy:gencon -Xmns128m -Xmnx384m -Djava.net.preferIPv4Stack=true -Xdisableexplicitgc    </p>
-<p>点击确定和保存之后，重启WAS Server生效。-Xgc:preferredHeapBase=0x100000000</p>
-<p>点击确定和保存之后，重启WAS Server生效。</p>
-<ul>
-<li><strong>非报表类、批量操作，对内存无特殊要求的系统如下设置：</strong></li>
-</ul>
-<p>打开详细垃圾回收；</p>
-<p>JVM具体设置的参数为：初始堆1024，最大堆3072；</p>
-<p>JVM通用参数：</p>
-<p>-Xgcpolicy:gencon -Xmns256m -Xmnx768m -Djava.net.preferIPv4Stack=true -Xdisableexplicitgc</p>
-<p>点击确定和保存之后，重启WAS Server生效。</p>
-<ul>
-<li><strong>测试环境</strong></li>
-</ul>
-<p>打开详细垃圾回收；</p>
-<p>JVM具体设置的参数为：初始堆512，最大堆1024；（如有特殊需求可自定义）</p>
-<p>JVM通用参数：</p>
-<p>-Xgcpolicy:gencon -Xmns256m -Xmnx768m -Djava.net.preferIPv4Stack=true –Xdisableexplicitgc</p>
-<p>点击确定和保存之后，重启WAS Server生效。</p>
-<h5 id="32位WAS"><a href="#32位WAS" class="headerlink" title="32位WAS"></a>32位WAS</h5><p>打开详细垃圾回收；</p>
-<p>JVM具体设置的参数为：初始堆512，最大堆1536； </p>
-<p>JVM通用参数：</p>
-<p>-Xgcpolicy:gencon -Xmns128m -Xmnx384m -Djava.net.preferIPv4Stack=true -Xdisableexplicitgc    </p>
-<p>点击确定和保存之后，重启WAS Server生效。</p>
-<h3 id="IBM-JDK-调优更多信息建议参考"><a href="#IBM-JDK-调优更多信息建议参考" class="headerlink" title="IBM JDK 调优更多信息建议参考"></a>IBM JDK 调优更多信息建议参考</h3><p><a href="https://www.ibm.com/support/knowledgecenter/zh/SSEQTP_8.5.5/com.ibm.websphere.base.doc/ae/tprf_tunejvm_v61.html" target="_blank" rel="noopener">https://www.ibm.com/support/knowledgecenter/zh/SSEQTP_8.5.5/com.ibm.websphere.base.doc/ae/tprf_tunejvm_v61.html</a></p>
-<h2 id="调整-HotSpot-Java-虚拟机（Solaris-和-HP-UX）"><a href="#调整-HotSpot-Java-虚拟机（Solaris-和-HP-UX）" class="headerlink" title="调整 HotSpot Java 虚拟机（Solaris 和 HP-UX）"></a>调整 HotSpot Java 虚拟机（Solaris 和 HP-UX）</h2><h3 id="HotSpot-JVM-内存结构"><a href="#HotSpot-JVM-内存结构" class="headerlink" title="HotSpot JVM 内存结构"></a>HotSpot JVM 内存结构</h3><p><img src="/2019/01/10/WebSphere Application Server 调优/1547039702466.png" alt="1547039702466"></p>
-<h3 id="HotSpot-JVM-GC"><a href="#HotSpot-JVM-GC" class="headerlink" title="HotSpot  JVM GC"></a>HotSpot  JVM GC</h3><p>根据回收器，简单分为：</p>
-<ul>
-<li>串行  –XX:+UseSerialGC<br>Out of Box算法，年轻代串行复制，年老代串行标记整理，主要用于桌面应用</li>
-<li>并行  –XX:+UseParallelGC<br>​     年轻代暂停应用程序，多个垃圾收集线程并行的复制收集，年老代暂停应用程序，与串行收集器一样，单垃圾收集线程标记整理。JDK 6.0启用该算法后，默认启用了-XX:+UseParallelOldGC，性能大为提高</li>
-<li>并发(Concurrent Low Pause Collector) –XX:+UseConcMarkSweepGC<br>​     启用该参数，默认启用了-XX:+UseParNewGC；简单的说，并发是指用户线程与垃圾收集线程并发，程序在继续运行，而垃圾收集程序运行于其他CPU上。</li>
-<li>Garbage First (G1) Garbage Collector<br>​     -XX:MaxGCPauseMillis=200  -XX:+UseG1GC<br>​      JDK7u04  以后引入， heap&gt;6G建议使用。 实际生产环境中还很少使用</li>
-</ul>
-<h3 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a>CMS收集器</h3><ul>
-<li>即使G1出来几年了，生产环境很多的JVM实例还是采用ParNew+CMS的组合</li>
-<li>不只是CMS，就是G1，以及JDK11的ZGC都没有做到完全的并发。就目前笔者了解到的所有GC中，只有Azul的C4是完全并发的。</li>
-</ul>
-<p><strong>CMS收集器工作过程</strong></p>
-<p><img src="/2019/01/10/WebSphere Application Server 调优/1547038780024.png" alt="1547038780024"></p>
-<p><strong>CMS收集器主要参数</strong></p>
-<ul>
-<li><p>-XX:CMSInitiatingOccupancyFraction=80（默认是92%）</p>
-</li>
-<li><p>-XX:+UseCMSInitiatingOccupancyOnly 表示只有在达到阈值才会进行回收。</p>
-</li>
-<li><p>-XX:CMSWaitDuration=5000 轮询的时间控制（默认是2秒钟）。<br>内存碎片问题，从而埋下发生FullGC导致长时间STW的隐患。</p>
-</li>
-<li><p>-XX:+UseCMSCompactAtFullCollection （默认值就是true）</p>
-</li>
-<li><p>-XX:CMSFullGCsBeforeCompaction=0在上一次CMS并发GC执行过后，到底还要再执行多少次full GC才会做压缩。（默认值是0）</p>
-</li>
-<li><p>-XX:CMSInitiatingPermOccupancyFraction：当永久区占用率达到这一百分比时，启动CMS回收</p>
-</li>
-</ul>
-<p><strong>CMS GC要决定是否在full GC时做压缩，会依赖几个条件。其中，</strong><br>第一种条件，UseCMSCompactAtFullCollection 与 CMSFullGCsBeforeCompaction 是搭配使用的；前者目前默认就是true了，也就是关键在后者上。<br>第二种条件是用户调用了System.gc()，而且DisableExplicitGC没有开启。<br>第三种条件是young gen报告接下来如果做增量收集会失败；简单来说也就是young gen预计old gen没有足够空间来容纳下次young GC晋升的对象。</p>
-<h3 id="考虑下列调整参数："><a href="#考虑下列调整参数：" class="headerlink" title="考虑下列调整参数："></a>考虑下列调整参数：</h3><ul>
-<li>-XX:MaxPermSize（永久区域）</li>
-<li>-Xmx（最大 Java 堆大小）</li>
-<li>-XX:+DisableExplicitGC （禁用显式垃圾回收以消除任何不必要或不合时宜的主要垃圾回收循环）</li>
-<li>调整区域大小以优化垃圾回收操作。</li>
-</ul>
-<h3 id="Sun-JDK常用参数"><a href="#Sun-JDK常用参数" class="headerlink" title="Sun JDK常用参数"></a>Sun JDK常用参数</h3><p>-XX:+UseSerialGC：在新生代和老年代使用串行收集器<br>-XX:+UseParNewGC：在新生代使用并行收集器<br>-XX:+UseParallelGC ：新生代使用并行回收收集器（ 使用Parallel收集器+ 老年代串行）<br>-XX:+UseParallelOldGC：使用Parallel收集器+ 老年代并行<br>-XX:ParallelGCThreads：设置用于垃圾回收的线程数<br>-XX:+UseConcMarkSweepGC:设置并发收集器<br>-XX:ParallelCMSThreads：设定CMS的线程数量<br>-Xms:初始堆大小<br>-Xmx:最大堆大小<br>-XX:SurvivorRatio：设置eden区大小和survivior区大小的比例<br>-XX:NewRatio:新生代和老年代的比<br>-XX:NewSize=n:设置年轻代大小</p>
-<h3 id="除此之外建议参数"><a href="#除此之外建议参数" class="headerlink" title="除此之外建议参数"></a>除此之外建议参数</h3><p>Sun JDK<br>-verbose:gc -Xloggc:gc.log<br>-verbosegc -XX:+PrintGCDetails -Xloggc:ms1gc.log<br>-verbosegc -XX:+PrintGCDetails -Xloggc:/tmp/ms1gc.log<br>-XX:+HeapDumpOnOutOfMemoryError<br>-XX:HeapDumpPath=${目录}</p>
-<h3 id="中国银行标准环境参数"><a href="#中国银行标准环境参数" class="headerlink" title="中国银行标准环境参数"></a>中国银行标准环境参数</h3><h4 id="配置应用程序服务器-Server-JVM参数-1"><a href="#配置应用程序服务器-Server-JVM参数-1" class="headerlink" title="配置应用程序服务器(Server)JVM参数"></a>配置应用程序服务器(Server)JVM参数</h4><p>进入管理控制台-&gt;应用程序服务器-&gt;<em>server_name</em>-&gt;java和进程管理-&gt;进程定义-&gt;java虚拟机，对server进行如下设置：打开详细垃圾回收，JVM堆调整为1024～3072。</p>
-<h4 id="建议在HP系统的WAS中添加如下通用JVM参数："><a href="#建议在HP系统的WAS中添加如下通用JVM参数：" class="headerlink" title="建议在HP系统的WAS中添加如下通用JVM参数："></a>建议在HP系统的WAS中添加如下通用JVM参数：</h4><p>-XX:MaxPermSize=768m -Xverbosegc:file=Xverbosegc.out -XX:+HeapDump -XX:+HeapDumpOnOutOfMemoryError -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintHeapAtGC -server</p>
-<p>可以防止永久代空间不足，输出更详细的垃圾回收日志，以及在内存溢出和执行kill -3时生成heapdump。其中-XX:MaxPermSize=768m 指定永久代为heap最大堆的1/4，即最大堆为3G时，设为768m，如果最大堆为6G，则设1536m。点击确定和保存之后，重启WAS Server生效。</p>
-<h1 id="Websphere-JVM-日志优化"><a href="#Websphere-JVM-日志优化" class="headerlink" title="Websphere JVM 日志优化"></a>Websphere JVM 日志优化</h1><p>JVM日志设置：将SystemOut.log和SystemErr.log设置成为每天循环写入的格式，循环30天，具体可参考下图：</p>
-<p><img src="/2019/01/10/WebSphere Application Server 调优/1547042330610.png" alt="1547042330610"></p>
-<h1 id="WebSphere-系统队列介绍和调优"><a href="#WebSphere-系统队列介绍和调优" class="headerlink" title="WebSphere 系统队列介绍和调优"></a>WebSphere 系统队列介绍和调优</h1><h2 id="WebSphere-排队网络"><a href="#WebSphere-排队网络" class="headerlink" title="WebSphere 排队网络"></a>WebSphere 排队网络</h2><p>当客户端发出一个请求时，该请求会从网络端开始依次进入 WehSphere 服务器的各个组件，这些请求会在各个组件中进行排队等候使用服务器资源或者等待进入下一个组件进一步被服务器处理请求，每个组件里的请求组成请求队列，而组件依次排列，就够成了 WebSphere 排队网络。正如下图所示，该排队网络包括互联网、Web 服务器、Web 容器、EJB 容器以及数据库端的连接池队列等等。WebSphere 队列里的各个组件是互相资源依赖的，对请求的平均服务时间依赖于服务器队列中每个组件在同一时间的最大并发数。</p>
-<p><img src="/2019/01/10/WebSphere Application Server 调优/WebSphere%20Application%20Server%20%E8%B0%83%E4%BC%98/1547096742625.png" alt="1547096742625"></p>
-<h2 id="保守队列和开放队列"><a href="#保守队列和开放队列" class="headerlink" title="保守队列和开放队列"></a>保守队列和开放队列</h2><ul>
-<li><p>开发队列</p>
-<ul>
-<li>EJB 容器则继承了对象请求代理（ORB）的队列特性，属于开放队列。</li>
-</ul>
-</li>
-<li><p>保守队列中的用户请求有两种状态</p>
-<ul>
-<li>激活状态</li>
-<li>等待状态。</li>
-</ul>
-</li>
-</ul>
-<p>在 WebSphere 服务器的队列网络中，Web 服务器、Web 容器以及数据库连接池都属于保守队列。EJB 容器则继承了对象请求代理（ORB）的队列特性，属于开放队列。</p>
-<h2 id="WebSphere-中的队列调优漏斗原则"><a href="#WebSphere-中的队列调优漏斗原则" class="headerlink" title="WebSphere 中的队列调优漏斗原则"></a>WebSphere 中的队列调优漏斗原则</h2><p>WAS 调优的第一原则就是漏斗原则。一般来说，让客户不能及时得到处理的请求在网络中等待，比让它们在 WebSphere 服务器中等待要好。下图的设置使得只有即将被服务器接受处理的请求才能进入 WAS 的排队网络，这样更能提高服务器的稳定性，而不至于当大量请求突然进入 WAS 时引起资源耗尽的情况。</p>
-<p><img src="/2019/01/10/WebSphere Application Server 调优/WebSphere%20Application%20Server%20%E8%B0%83%E4%BC%98/1547097090736.png" alt="1547097090736"></p>
-<p>在上图的例子中，我们可以看出，在 WebSphere 排队网络中，从上到下队列中处理请求的并发数越来越小。当 200 客户端请求到达 Web 服务器的时候，因为 Web 服务器设置了自己的最大并发数是 75，所以剩下的 125 个客户请求只能暂留在网络中进行排队等待被 Web 服务器处理；当这 75 个请求经过 Web 服务器被处理后，其中 25 个仍在停留在 Web 服务器中排队，而剩下的 50 个请求则进去 Web 容器被进一步处理；直到最后有 25 个请求到达最后的数据库端，这时请求被处理完毕。在这个系统中，每一个组件都在充分的工作，没有因为等待请求到来而造成的资源浪费，因为在任何一个时刻，每个队列里都有少量请求在等待着被下一个组件处理。因为大量的请求被阻止在 WebSphere 服务器的外面（网络），所以 WebSphere 的各个组件不会因为大量请求同时到来而引起资源耗尽，这样的设置增加了系统的稳定性。</p>
-<h2 id="绘制吞吐率曲线"><a href="#绘制吞吐率曲线" class="headerlink" title="绘制吞吐率曲线"></a>绘制吞吐率曲线</h2><p>我们需要画出系统在运行时的吞吐率曲线，要完成曲线，需要准备一个测试用例，然后将系统运行起来，我们的目的是要将系统的潜能发挥到最大，即系统运行达到一个资源利用的饱和点。系统运行达到饱和点最有代表性新的特征就是 CPU 的利用率接近 100%。</p>
-<ul>
-<li><p>所有的队列并发数都设置为一个较大的值，而且各个队列的值也设成是相等的</p>
-</li>
-<li><p>在每一次的测试后，增加用户并发数，迭代测试（1,5,10,25,50,100,150,200…）</p>
-</li>
-<li><p>记录下每次系统的吞吐率和响应时间，就得到了类似于下图的吞吐率曲线。</p>
-</li>
-</ul>
-<p><img src="/2019/01/10/WebSphere Application Server 调优/WebSphere%20Application%20Server%20%E8%B0%83%E4%BC%98/1547097534061.png" alt="1547097534061"></p>
-<h2 id="根据应用的实际情况来调整队列"><a href="#根据应用的实际情况来调整队列" class="headerlink" title="根据应用的实际情况来调整队列"></a>根据应用的实际情况来调整队列</h2><p>仅仅根据上面的准则来调优 WAS 是远远不够的，我们还应根据应用的使用环境和访问模型来调整各个队列的大小。并不是所有的请求都会从上一个队列进入到下一个队列中，比如，有些请求可能在经过 Web 服务器处理后就返回给客户端了，因为这些用户仅仅是想请求一些静态的页面内容，这时我们可以将 Web 服务器的队列值设的大一些，我们上面将 Web 服务器设成 75 就是这样的考虑；又比如，如果在一个应用中，大部分的请求都需要进行复杂而耗时的数据库操作，这时我们就应该考虑同时加大数据库连接池和 Web 容器的队列值大小。所以，在我们实际的调优中，必须结合具体的应用来确定合适的值，并在不断调整的过程中，监控 CPU 和内存的使用，避免系统资源耗尽的情况出现。</p>
-<h2 id="WebSphere-池资源调优的最佳实践"><a href="#WebSphere-池资源调优的最佳实践" class="headerlink" title="WebSphere 池资源调优的最佳实践"></a>WebSphere 池资源调优的最佳实践</h2><h3 id="ORB-调优"><a href="#ORB-调优" class="headerlink" title="ORB 调优"></a>ORB 调优</h3><p><strong>Websphere 架构</strong></p>
-<p><img src="/2019/01/10/WebSphere Application Server 调优/1547099913542.png" alt="1547099913542"></p>
-<p><strong>WAS EJB容器</strong></p>
-<p><img src="/2019/01/10/WebSphere Application Server 调优/1547099823133.png" alt="1547099823133"></p>
-<p>可以使用 WAS 管理控制台进行 ORB 线程池的配置，位于 Application servers &gt; AppServer name &gt; Thread pools &gt; ORB.thread.pool</p>
-<ul>
-<li><p>第一种场景中，servlet 主要做一些持续时间非常短的远程调用，servlet 可以重用已经存在的 ORB 线程。在这种情况下，ORB 线程池可以设的比较小，例如只要设置为 Web 容易最大并发量的一半就行；</p>
-</li>
-<li><p>第二种场景中，持续时间比较长的 EJB 调用将会长期的占用 ORB 连接，因此该连接被重用的机会很小，所以在这种场景中，最好将 ORB 线程池的大小与 Web 容器的最大并发量设置成相等，或者更大。</p>
-</li>
-</ul>
-<p><img src="/2019/01/10/WebSphere Application Server 调优/1547100192761.png" alt="1547100192761"></p>
-<h3 id="Web-容器线程池"><a href="#Web-容器线程池" class="headerlink" title="Web 容器线程池"></a>Web 容器线程池</h3><p><strong>WebContainer线程池</strong></p>
-<p><strong>中国银行标准环境调优</strong>： 调整WebContainer线程池最小大小和最大大小分别为100、100。确认后保存。</p>
-<p><strong>调优准则</strong>：一般来说，每个服务器 CPU，5 至 10 个线程将会提供最佳吞吐量。</p>
-<p><strong>调优参考：</strong>另外我们也可以利用 WAS 自带的 TPV 来帮助我们设置 Web 容器线程池。对系统做一个压力测试，保持一定的负载，观测 TPV 中的 <code>PercentMaxed</code> 和 <code>ActiveCount</code>的值。</p>
-<ul>
-<li>PercentMaxed 表示所有线程被使用的平均百分比，如果该值较大，那么就应该增大线程池的值</li>
-<li>ActiveCount 表示被激活的线程个数，如果该值远小于当前线程池的大小，那么可以考虑减小线程池的值。`</li>
-</ul>
-<h3 id="数据库连接池"><a href="#数据库连接池" class="headerlink" title="数据库连接池"></a>数据库连接池</h3><p>见下文《JDBC数据库连接池优化》</p>
-<h1 id="调整传输通道服务"><a href="#调整传输通道服务" class="headerlink" title="调整传输通道服务"></a>调整传输通道服务</h1><p><strong>此小结非重点内容，请着重关注中国银行标准环境设置建议总结</strong></p>
-<p>传输通道服务管理 HTTP 和 JMS 请求的客户机连接和 I/O 处理。这些 I/O 服务基于 Java™ 提供的非分块 I/O（NIO）功能。</p>
-<p>通过更改一个或多个与传输链相关联的传输通道的缺省设置值，可以提高该通道的性能。</p>
-<p><img src="https://www.ibm.com/support/knowledgecenter/zh/SSEQTP_8.5.5/com.ibm.websphere.base.doc/ae/images/trun_cfstuning.gif" alt="åä¸ååä¸­æ ¸å¿ç&quot;ä¹é´çéä¿¡"></p>
-<ul>
-<li><p>调整 TCP 传输通道设置。</p>
-<ol>
-<li>减小指定的最大打开连接数属性值。 此参数控制可供服务器使用的最大连接数。如果让此参数保留为缺省值 20000（它是最大连接数），那么可能会导致停止的 Web 站点处于失败状态，因为产品会继续接受连接，因而会增加连接及相关联的工作的积压。应将缺省值更改为一个小很多的值（例如 500），然后应执行其他调整和测试，以确定应为特定 Web 站点或应用程序部署指定的最佳值。</li>
-<li>如果关闭客户机连接前未能及时地将数据写回到客户机，那么，请更改“不活动超时”参数值。此参数控制可供服务器使用的最大连接数。接收到新连接后，TCP 传输通道先等待足够的数据到达，然后再将该连接分派给 TCP 传输通道上特定于协议的通道。如果在对“不活动超时”参数指定的时间段内未接收到足够的数据，TCP 传输通道就会关闭该连接。此参数的缺省值是 60 秒。此值适合于大多数应用程序。如果工作负载涉及许多连接，并且所有这些连并非都能够在 60 秒内接受服务，那么应该增大对此参数指定的值。</li>
-</ol>
-</li>
-</ul>
-<h2 id="中国银行标准环境设置建议总结"><a href="#中国银行标准环境设置建议总结" class="headerlink" title="中国银行标准环境设置建议总结"></a>中国银行标准环境设置建议总结</h2><p><strong>Maximum open connections</strong></p>
-<p>将该标准定为1500，但由于该值与server数量和webserver的数量密切相关，所以具体的值还需要根据实际的server数量和webserver数量来调整：</p>
-<p>在管理控制台中，单击服务器 &gt; 应用程序服务器 &gt; server_name。然后在 Web 容器设置下，单击Web 容器传输链-&gt; WCInboundDefault &gt; TCP inbound channel (TCP_2),</p>
-<p>将Maximum open connections 的值由20000修改为1500。</p>
-<p><img src="/2019/01/10/WebSphere Application Server 调优/1547100911024.png" alt="1547100911024"></p>
-<h1 id="调整-Web-服务器"><a href="#调整-Web-服务器" class="headerlink" title="调整 Web 服务器"></a>调整 Web 服务器</h1><h3 id="通过用性"><a href="#通过用性" class="headerlink" title="通过用性"></a>通过用性</h3><p><strong>整 IBM® HTTP Server 2.0.47.1、Apache 2.0.48、IBM HTTP Server 6.0 和 IBM HTTP Server 6.1。</strong></p>
-<p>监视 CPU 利用率并检查 IBM HTTP Server 的 error_log 和 http_plugin.log 文件可以帮助您诊断 Web 服务器性能问题。</p>
-<h3 id="打开IBM-HTTP-Server-监视功能"><a href="#打开IBM-HTTP-Server-监视功能" class="headerlink" title="打开IBM HTTP Server 监视功能"></a>打开IBM HTTP Server 监视功能</h3><p>也可以将 IBM HTTP Server 配置为显示状态页面：</p>
-<ul>
-<li><p>编辑 IBM HTTP Server 的 httpd.conf 文件，从此文件的下列各行中除去注释字符 (#)：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#LoadModule status_module, modules/ApacheModuleStatus.dll,</span><br><span class="line">#&lt;Location/server-status&gt;</span><br><span class="line">#SetHandler server-status</span><br><span class="line">#&lt;/Location&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>保存更改并重新启动 IBM HTTP Server。</p>
-</li>
-<li><p>在 Web 浏览器中，访问 <a href="http://your_host/server-status。或者，单击重新装入以更新状态。" target="_blank" rel="noopener">http://your_host/server-status。或者，单击重新装入以更新状态。</a></p>
-</li>
-<li><p>（可选）如果浏览器支持刷新，那么转至 <a href="http://your_host/server-status?refresh=5" target="_blank" rel="noopener">http://your_host/server-status?refresh=5</a> 以便每 5 秒钟刷新一次。</p>
-</li>
-</ul>
-<p>所有这些 Web 服务器都将分配一个线程来处理每个客户机连接。通过确保有足够的线程可用于最大数目的并发客户机连接，有助于确保在此层面不存在瓶颈。可以通过更改 Web 服务器系统上的 httpd.conf 文件来调整这些 Web 服务器的设置。</p>
-<p>您可以检查 IBM HTTP Server 的 error_log 文件，以了解是否有任何警告指出已达到最大客户机数 (MaxClients)。有几个参数可用于确定 Web 服务器支持的最大客户机数，具体取决于特定的操作系统平台。请参阅 <a href="http://httpd.apache.org/docs-2.0/mod/mpm_common.html#maxclients" target="_blank" rel="noopener">http://httpd.apache.org/docs-2.0/mod/mpm_common.html#maxclients</a> 以获取 MaxClients 参数的描述。</p>
-<h3 id="响应“连接被拒绝”错误消息"><a href="#响应“连接被拒绝”错误消息" class="headerlink" title="响应“连接被拒绝”错误消息"></a>响应“连接被拒绝”错误消息</h3><ul>
-<li>ListenBacklog 参数向操作系统指示所允许的最大暂挂连接数。虽然 IBM HTTP Server 的缺省值是 511</li>
-</ul>
-<ul>
-<li>StartServers 参数指示最初要启动的 IBM HTTP Server 进程数。通过预先启动这些 IBM HTTP Server 线程/进程，可以减少用户必须等待新进程启动的机率。您应该将此参数设置为等于 MinSpareServers 参数值，以便立即启动此客户机负载所需的最小 IBM HTTP Server 进程数。</li>
-</ul>
-<h3 id="防止在用户数出现变化时频繁地创建和破坏客户机线程-进程"><a href="#防止在用户数出现变化时频繁地创建和破坏客户机线程-进程" class="headerlink" title="防止在用户数出现变化时频繁地创建和破坏客户机线程/进程"></a>防止在用户数出现变化时频繁地创建和破坏客户机线程/进程</h3><p> 您可以使用 MinSpareServers 和 MaxSpareServers 来指定可以处于空闲状态的服务器（客户机线程/进程）的最小数目和最大数目。为了防止在用户数出现变化时频繁地创建和破坏客户机线程/进程，请将此范围设置成足够大，以包括最大并发用户数。</p>
-<p>中国银行标准环境建议值</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th style="text-align:left">参数建议值</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IHS参数</td>
-<td style="text-align:left">ServerLimit 16<br>ThreadLimit 100<br>StartServers 16<br>MaxClients 1600<br>MinSpareThreads 160<br>MaxSpareThreads 1600<br>ThreadsPerChild 100<br>MaxRequestsPerChild 0</td>
-</tr>
-</tbody>
-</table>
-<h1 id="JDBC数据源连接池优化"><a href="#JDBC数据源连接池优化" class="headerlink" title="JDBC数据源连接池优化"></a>JDBC数据源连接池优化</h1><h2 id="连接池大小调优"><a href="#连接池大小调优" class="headerlink" title="连接池大小调优"></a>连接池大小调优</h2><h3 id="调整方法"><a href="#调整方法" class="headerlink" title="调整方法"></a>调整方法</h3><p>进入管理控制台 &gt; 资源 &gt; 数据源 &gt; ${datasource_name} &gt; 连接池属性 :</p>
-<p>设置最小/最大连接数为：10/80. </p>
-<p><img src="/2019/01/10/WebSphere Application Server 调优/1547042466625.png" alt="1547042466625"></p>
-<h3 id="调整依据"><a href="#调整依据" class="headerlink" title="调整依据"></a>调整依据</h3><table>
-<thead>
-<tr>
-<th>监测值名称</th>
-<th>描述</th>
-<th>调优策略</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PooSize</td>
-<td>连接池的大小</td>
-<td>PooSize 会随着新连接的建立而增加，会随着连接的销毁而减少；应该为连接池设立一个最大值。</td>
-</tr>
-<tr>
-<td>PercentUsed</td>
-<td>连接池线程被使用的百分比</td>
-<td>如果该值长时间都很小，那么你应该调小 PooSize，反之应该增大。</td>
-</tr>
-<tr>
-<td>WaitingThreadCount</td>
-<td>单位时间内正在等待建立数据库连接的线程的个数</td>
-<td>系统最佳的性能体现在该值总是保持在很小的数目，如果该值偏大，则需要对系统进行调优</td>
-</tr>
-<tr>
-<td>PercentMaxed</td>
-<td>数据库所有连接都被使用的时间所占的百分比</td>
-<td>确保这个值不会长时间的达到 100%，如果是那样，那么你该考虑增大 PooSize 值</td>
-</tr>
-</tbody>
-</table>
-<h2 id="数据源语句缓存"><a href="#数据源语句缓存" class="headerlink" title="数据源语句缓存"></a>数据源语句缓存</h2><p><img src="/2019/01/10/WebSphere Application Server 调优/1547093886516.png" alt="1547093886516"></p>
-<h1 id="调整-Web-应用程序"><a href="#调整-Web-应用程序" class="headerlink" title="调整 Web 应用程序"></a>调整 Web 应用程序</h1><ul>
-<li>调整 URL 高速缓存</li>
-<li>调整会话</li>
-</ul>
-<h2 id="调整-URL-高速缓存"><a href="#调整-URL-高速缓存" class="headerlink" title="调整 URL 高速缓存"></a>调整 URL 高速缓存</h2><p>URL 调用高速缓存用来存放关于将请求 URL 映射至 Servlet 资源的信息。此高速缓存基于 Web 容器，而且供所有 Web 容器线程共享。将为每个可用于处理请求的 Web 容器线程创建所请求大小的高速缓存。调用高速缓存的缺省大小为 500。如果当前正在使用 500 个以上的唯一 URL（每个 JavaServer Page 都是一个唯一的 URL），那么应该增大调用高速缓存的大小。</p>
-<p>高速缓存越大，使用的 Java 堆内存量就越大，因此还可能需要增大最大 Java 堆大小。例如，如果<br>每个高速缓存条目需要 2 KB，最大线程大小设为 25，并且 URL 调用高速缓存大小是 100，那么需<br>要 5MB 的 Java 堆。</p>
-<p><strong>调整过程 Procedure</strong><br>在管理控制台中，单击服务器 &gt; 服务器类型 &gt; WebSphere 应用程序服务器，然后选择要调整的<br>应用程序服务器。<br>单击 Java 和进程管理。<br>在“其他属性”下单击进程定义。<br>在“其他属性”下面，单击 Java 虚拟机。<br>在“其他属性”下面，单击定制属性。<br>在“名称”字段中指定 invocationCacheSize，并在“值”字段中指定高速缓存的大小。 调用高速缓存<br>的缺省大小为 500 条目。因为调用高速缓存不再基于线程，所以由用户指定的调用高速缓存大小<br>乘以 10，以提供与前发行版相似的功能。例如，如果指定调用高速缓存大小为 50，那么 Web<br>容器将创建大小为 500 的高速缓存。<br>单击应用，然后单击保存以保存更改。<br>停止并重新启动应用程序服务器。</p>
-<h2 id="调整会话"><a href="#调整会话" class="headerlink" title="调整会话"></a>调整会话</h2><ul>
-<li><p>Session 会话超时</p>
-<p>完成后使用 javax.servlet.http.HttpSession.invalidate() 释放 HttpSession 对象。HttpSession 对象<br>在 Web 容器中存活到：</p>
-<ul>
-<li>应用程序使用 javax.servlet.http.HttpSession.invalidate 方法明确地、程序化地释放它；频繁、<br>程序化的无效是应用程序注销功能的一部分。</li>
-<li>WebSphere Application Server 在已分配的 HttpSession 到期时（缺省 = 1800 秒或 30 分<br>钟）将其销毁。</li>
-</ul>
-</li>
-<li><p>当开发要在 HTTP 会话中存储的新对象时，实现 java.io.Serializable 接口</p>
-<p>如果类未实现Serializable 接口，那么 JVM 无法将该类的状态保持到数据库或另一个 JVM 中。可序列化类的所<br>有子类型都是可序列化的。以下是此变量的示例：<br> public class MyObject implements java.io.Serializable {…}</p>
-</li>
-<li><p>会话亲缘关系</p>
-<p>使用会话亲缘关系，用户将为第一个请求在 server1上启动；然后，对于每个后续的请求，用户将被导向回 server1</p>
-</li>
-</ul>
-<h1 id="应用程序优化及APM工具"><a href="#应用程序优化及APM工具" class="headerlink" title="应用程序优化及APM工具"></a>应用程序优化及APM工具</h1><h2 id="应用程序代码优化"><a href="#应用程序代码优化" class="headerlink" title="应用程序代码优化"></a>应用程序代码优化</h2><p>开发人员控制</p>
-<h2 id="性能调优工具"><a href="#性能调优工具" class="headerlink" title="性能调优工具"></a>性能调优工具</h2><h3 id="APM工具"><a href="#APM工具" class="headerlink" title="APM工具"></a>APM工具</h3><ul>
-<li>国外</li>
-</ul>
-<p><strong>Dynatrace、NewRelic、AppDynamics、CA、Compuware</strong>、Riverbed、IBM、Dell、Microsoft、Splunk、HP、Orcale、BMC Software、Netscout、amics、Ruxit、zoho</p>
-<ul>
-<li>国内</li>
-</ul>
-<p>云智慧、OneAPM、彩讯、博睿、上海天旦、听云</p>
-<ul>
-<li><p>开源</p>
-<p>pinpoint、zipkin、cat、skywalking</p>
-</li>
-</ul>
-<p><img src="/2019/01/10/WebSphere Application Server 调优/1547095180490.png" alt="1547095180490"></p>
-<h3 id="IBM-官方推荐工具PTT"><a href="#IBM-官方推荐工具PTT" class="headerlink" title="IBM 官方推荐工具PTT"></a>IBM 官方推荐工具PTT</h3><p><a href="http://www.ibm.com/developerworks/cn/websphere/downloads/peformtuning.html" target="_blank" rel="noopener">WebSphere Application Server Perfroamcne Tuning Toolkit </a></p>
-<p>WebSphere Application Server Performance Tuning Toolkit（简称 PTT）是一款轻量级的基于 eclipse 的客户端软件。启动后的界面如下图 1 所示， 其中，Hosts view 用于创建到 Dmgr（网络部署版）或者 Server(Base 版 ) 的 Soap 连接，连接后系统的<strong>拓扑结构</strong>会显示在 Topology view 里，Main Area 主要用来显示<strong>监控信息</strong>，包括主监控面板，每个 Server 的图形化监控页面和详细数据信息等。Tuning Parameters View 和 Scripts View 主要用于性能调优。Tuning Parameters View 用于察看和修改每个<strong>服务器的性能参数</strong>，比如 JVM 的最大堆大小、垃圾回收策略，各种容器和线程池的大小，HTTP 连接相关设置等。Tuning Parameters View 可以方便得调整 Server 级别的性能参数，尤其是批量调整，但对于很多比较复杂的调优参数，比如 DB 和 JMS 连接池等，则需要通过远程执行 Wsadmin 脚本来优化。</p>
-<h4 id="拓扑"><a href="#拓扑" class="headerlink" title="拓扑"></a>拓扑</h4><p><img src="/2019/01/10/WebSphere Application Server 调优/1547095642027.png" alt="1547095642027"></p>
-<h4 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控</h4><p><img src="/2019/01/10/WebSphere Application Server 调优/1547095740204.png" alt="1547095740204"></p>
-<p><img src="/2019/01/10/WebSphere Application Server 调优/1547095757651.png" alt="1547095757651"></p>
-<h4 id="规则引擎与警告"><a href="#规则引擎与警告" class="headerlink" title="规则引擎与警告"></a>规则引擎与警告</h4><p>预定义规则如下：</p>
-<ul>
-<li>如果 Java Heap 使用超过 85%，抛出一个运行时警告。</li>
-<li>如果线程池使用超过 90%，抛出一个线程池警告。</li>
-<li>如果平均 CPU 使用率超过 90%，抛出一个运行时警告。</li>
-<li>如果有 servlet 错误发生，抛出一个 servlet 警告。</li>
-<li>如果有 JDBC 连接超时，抛出一个连接警告。</li>
-<li>如果出现超过 1000 个 prepared statement 被废弃，抛出一个连接警告。</li>
-<li>如果有线程等待连接，抛出一个连接警告。</li>
-<li>如果发生 JCA 连接错误，抛出一个 JCA 警告。</li>
-<li>如果已经无法容纳新的 session，抛出一个 session 警告。</li>
-<li>如果有 Thread hung 发生，抛出一个线程池警告。</li>
-<li>如果有交易回滚发生，抛出一个交易警告。</li>
-<li>如果有交易超时发生，抛出一个交易警告。</li>
-<li>如果有代理请求失败，抛出一个代理警告。</li>
-<li>如果检测到 servlet 性能下降，抛出一个 servlet 警告。</li>
-<li>如果检测到 JDBC 性能问题，抛出一个 警告。</li>
-</ul>
-<h4 id="在线调整参数"><a href="#在线调整参数" class="headerlink" title="在线调整参数"></a>在线调整参数</h4><h4 id="生成-Dump-文件和启用-Trace"><a href="#生成-Dump-文件和启用-Trace" class="headerlink" title="生成 Dump 文件和启用 Trace"></a>生成 Dump 文件和启用 Trace</h4><h4 id="报表模块"><a href="#报表模块" class="headerlink" title="报表模块"></a>报表模块</h4><p><img src="/2019/01/10/WebSphere Application Server 调优/1547096309712.png" alt="1547096309712"></p>
-<p>更多PTT工具学习建议查看</p>
-<ul>
-<li><a href="http://www.ibm.com/developerworks/cn/websphere/library/techarticles/1207_suipf_ptt/1207_suipf_ptt.html?ca=drs-" target="_blank" rel="noopener">WebSphere 应用服务器性能调优工具，第 1 部分: 概述</a></li>
-<li><a href="http://www.ibm.com/developerworks/cn/websphere/library/techarticles/1207_wangy_ptt2/1207_wangy_ptt2.html?ca=drs-" target="_blank" rel="noopener">WebSphere 应用服务器性能调优工具，第 2 部分: 性能监控</a></li>
-<li><a href="http://www.ibm.com/developerworks/cn/websphere/library/techarticles/1208_zhangt_ptt3/1208_zhangt_ptt3.html?ca=drs-" target="_blank" rel="noopener">WebSphere 应用服务器性能调优工具，第 3 部分: 性能调优</a></li>
-</ul>
-<h1 id="所有调优总结"><a href="#所有调优总结" class="headerlink" title="所有调优总结"></a>所有调优总结</h1><table>
-<thead>
-<tr>
-<th>对象名</th>
-<th>属性名</th>
-<th>建议值</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>操作系统参数</td>
-<td>tcp_keepidle</td>
-<td>600</td>
-</tr>
-<tr>
-<td>tcp_keepintvl</td>
-<td>10</td>
-<td></td>
-</tr>
-<tr>
-<td>tcp_keepinit</td>
-<td>40</td>
-<td></td>
-</tr>
-<tr>
-<td>Soft FILE Size</td>
-<td>-1</td>
-<td></td>
-</tr>
-<tr>
-<td>Soft CPU Time</td>
-<td>-1</td>
-<td></td>
-</tr>
-<tr>
-<td>Soft STACK Size</td>
-<td>-1</td>
-<td></td>
-</tr>
-<tr>
-<td>Soft CORE File Size</td>
-<td>-1</td>
-<td></td>
-</tr>
-<tr>
-<td>Hard FILE Size</td>
-<td>-1</td>
-<td></td>
-</tr>
-<tr>
-<td>Hard CPU Time</td>
-<td>-1</td>
-<td></td>
-</tr>
-<tr>
-<td>Hard STACK Size</td>
-<td>-1</td>
-<td></td>
-</tr>
-<tr>
-<td>Hard CORE File Size</td>
-<td>-1</td>
-<td></td>
-</tr>
-<tr>
-<td>WAS参数</td>
-<td>JVM堆设置</td>
-<td>1024~3072</td>
-</tr>
-<tr>
-<td>JVM日志</td>
-<td>24h*30</td>
-<td></td>
-</tr>
-<tr>
-<td>WebContainer线程池</td>
-<td>100~100</td>
-<td></td>
-</tr>
-<tr>
-<td>通用JVM参数</td>
-<td>-Xmns256m -Xmnx768m-Djava.net.preferIPv4Stack=true</td>
-<td></td>
-</tr>
-<tr>
-<td>JDBC连接池大小</td>
-<td>10/80</td>
-<td></td>
-</tr>
-<tr>
-<td>Dmgr超时参数</td>
-<td>invalidationTimeout=”180”</td>
-<td></td>
-</tr>
-<tr>
-<td>IHS参数</td>
-<td>ServerLimit 16ThreadLimit 100StartServers 16MaxClients 1600MinSpareThreads 160MaxSpareThreads 1600ThreadsPerChild 100MaxRequestsPerChild 0</td>
-</tr>
-</tbody>
-</table>
-<p><strong>注：</strong>如果是报表类、批量操作等需要占用大量内存的系统，建议JVM堆调整为1024~6144，在JVM通用参数中添加参数为-Xmns256m -Xmnx1536m -Djava.net.preferIPv4Stack=true</p>
-<h1 id="欢迎关注rocklei123的技术点滴"><a href="#欢迎关注rocklei123的技术点滴" class="headerlink" title="欢迎关注rocklei123的技术点滴"></a>欢迎关注rocklei123的技术点滴</h1><p>技术博客: <a href="https://rocklei123.github.io/" target="_blank" rel="noopener">https://rocklei123.github.io/</a><br>CSDN : <a href="http://blog.csdn.net/rocklei123" target="_blank" rel="noopener">http://blog.csdn.net/rocklei123</a><br>微公众号: rocklei123的技术点滴</p>
-<p><img src="/2019/01/10/WebSphere Application Server 调优/1547101672613.png" alt="1547101672613"></p>
+          <p>本主题为通过zabbix监控中间件（基于snmp协议）。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    <div>
+    
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/01/WebSphere Application Server 调优/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rocklei123">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rocklei123 米宝窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/07/01/WebSphere Application Server 调优/" itemprop="url">WebSphere Application Server 调优</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-01T09:34:54+08:00">
+                2019-07-01
+              </time>
+            
+
+            
+
+            
+          </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/WebSphere/" itemprop="url" rel="index">
+                    <span itemprop="name">WebSphere</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2019/07/01/WebSphere Application Server 调优/#SOHUCS" itemprop="discussionUrl">
+                  <span id="url::http://yoursite.com/2019/07/01/WebSphere Application Server 调优/" class="cy_cmt_count" data-xid="2019/07/01/WebSphere Application Server 调优/" itemprop="commentsCount" ></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="WebSphere-Application-Server-调优（base-on-Was-8-5-5）"><a href="#WebSphere-Application-Server-调优（base-on-Was-8-5-5）" class="headerlink" title="WebSphere Application Server 调优（base on Was 8.5.5）"></a>WebSphere Application Server 调优（base on Was 8.5.5）</h1><p>作者：周磊，rocklei123.北京                                                             2019.1.10</p>
+<h1 id="WebSphere-性能优化概述"><a href="#WebSphere-性能优化概述" class="headerlink" title="WebSphere 性能优化概述"></a>WebSphere 性能优化概述</h1><h2 id="性能问题发生在-WAS-和操作系统的各个环节中"><a href="#性能问题发生在-WAS-和操作系统的各个环节中" class="headerlink" title="性能问题发生在 WAS 和操作系统的各个环节中"></a>性能问题发生在 WAS 和操作系统的各个环节中</h2><p>性能问题可能发生于系统的各个环节中，当性能问题出来后很难马上就定位性能的瓶颈在哪里，即使找到了性能瓶颈，在进行调优的时候也要考虑系统整体环境，从上下文中分析，确定调优的策略；系统中一个或者多个“短板”的存在，就能让系统无法达到设计时的目标，无法达到预期的性能提升。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/07/01/WebSphere Application Server 调优/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2522,171 +1614,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rocklei123">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="rocklei123 米宝窝">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/" itemprop="url">Spring注解驱动开发（三）-属性赋值和自动装配</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-01T21:45:44+08:00">
-                2018-12-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-comment-o"></i>
-              </span>
-              
-                <a href="/2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/#SOHUCS" itemprop="discussionUrl">
-                  <span id="url::http://yoursite.com/2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/" class="cy_cmt_count" data-xid="2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/" itemprop="commentsCount" ></span>
-                </a>
-              
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="1-属性赋值"><a href="#1-属性赋值" class="headerlink" title="1.属性赋值"></a>1.属性赋值</h1><h2 id="1-1-Value"><a href="#1-1-Value" class="headerlink" title="1.1 @Value"></a>1.1 @Value</h2><p>使用@Value注解赋值；</p>
-<ol>
-<li>基本数值</li>
-<li>可以写Spring的EL表达式; #{}</li>
-<li>可以写${}；取出配置文件【properties】中的值（在运行环境变量里面的值）</li>
-</ol>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    <div>
-    
-    </div>
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/01/Spring注解驱动开发1-Bean注入相关注解/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2861,6 +1788,171 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rocklei123">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rocklei123 米宝窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/" itemprop="url">Spring注解驱动开发（三）-属性赋值和自动装配</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-01T21:45:44+08:00">
+                2018-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/#SOHUCS" itemprop="discussionUrl">
+                  <span id="url::http://yoursite.com/2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/" class="cy_cmt_count" data-xid="2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/" itemprop="commentsCount" ></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="1-属性赋值"><a href="#1-属性赋值" class="headerlink" title="1.属性赋值"></a>1.属性赋值</h1><h2 id="1-1-Value"><a href="#1-1-Value" class="headerlink" title="1.1 @Value"></a>1.1 @Value</h2><p>使用@Value注解赋值；</p>
+<ol>
+<li>基本数值</li>
+<li>可以写Spring的EL表达式; #{}</li>
+<li>可以写${}；取出配置文件【properties】中的值（在运行环境变量里面的值）</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/12/01/Spring注解驱动开发3-属性赋值和自动装配/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    <div>
+    
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2926,7 +2018,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2937,7 +2029,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

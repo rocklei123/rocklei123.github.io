@@ -81,13 +81,13 @@
 
 
 
-<meta name="description" content="本主题为通过zabbix监控中间件。 Zabbix 基于JMX agent(zabbix-java-gateway) 获取JVM MBean 信息。 Zabbix Agent安装注意：如果您希望监控目标主机的操作系统相关指标，如CPU、内存、文件系统等信息，那么需要在目标主机安装 zabbix agent。 rpm包安装方式1rpm -ivh zabbix-agent-4.0.0-1.1rc2.e">
+<meta name="description" content="本主题为通过zabbix监控中间件。 Zabbix 基于JMX agent(zabbix-java-gateway) 获取JVM MBean 信息。">
 <meta name="keywords" content="Zabbix,JMX">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Zabbix基于JMX监控中间件">
 <meta property="og:url" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/index.html">
 <meta property="og:site_name" content="rocklei123 米宝窝">
-<meta property="og:description" content="本主题为通过zabbix监控中间件。 Zabbix 基于JMX agent(zabbix-java-gateway) 获取JVM MBean 信息。 Zabbix Agent安装注意：如果您希望监控目标主机的操作系统相关指标，如CPU、内存、文件系统等信息，那么需要在目标主机安装 zabbix agent。 rpm包安装方式1rpm -ivh zabbix-agent-4.0.0-1.1rc2.e">
+<meta property="og:description" content="本主题为通过zabbix监控中间件。 Zabbix 基于JMX agent(zabbix-java-gateway) 获取JVM MBean 信息。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/1547015840014.png">
 <meta property="og:image" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/Zabbix%E5%9F%BA%E4%BA%8EJMX%E7%9B%91%E6%8E%A7%E4%B8%AD%E9%97%B4%E4%BB%B6/1547016063506.png">
@@ -97,10 +97,10 @@
 <meta property="og:image" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/1551322730164.png">
 <meta property="og:image" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/1551773907058.png">
 <meta property="og:image" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/1551323034173.png">
-<meta property="og:updated_time" content="2019-07-02T09:41:14.475Z">
+<meta property="og:updated_time" content="2019-07-03T03:09:07.946Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zabbix基于JMX监控中间件">
-<meta name="twitter:description" content="本主题为通过zabbix监控中间件。 Zabbix 基于JMX agent(zabbix-java-gateway) 获取JVM MBean 信息。 Zabbix Agent安装注意：如果您希望监控目标主机的操作系统相关指标，如CPU、内存、文件系统等信息，那么需要在目标主机安装 zabbix agent。 rpm包安装方式1rpm -ivh zabbix-agent-4.0.0-1.1rc2.e">
+<meta name="twitter:description" content="本主题为通过zabbix监控中间件。 Zabbix 基于JMX agent(zabbix-java-gateway) 获取JVM MBean 信息。">
 <meta name="twitter:image" content="http://yoursite.com/2019/07/01/Zabbix基于JMX监控中间件/1547015840014.png">
 
 
@@ -435,6 +435,7 @@
       
         <p>本主题为通过zabbix监控中间件。</p>
 <p>Zabbix 基于JMX agent(zabbix-java-gateway) 获取JVM MBean 信息。</p>
+<a id="more"></a>
 <h1 id="Zabbix-Agent安装"><a href="#Zabbix-Agent安装" class="headerlink" title="Zabbix Agent安装"></a>Zabbix Agent安装</h1><p><strong>注意：</strong>如果您希望监控目标主机的操作系统相关指标，如CPU、内存、文件系统等信息，那么需要在目标主机安装 zabbix agent。</p>
 <h2 id="rpm包安装方式"><a href="#rpm包安装方式" class="headerlink" title="rpm包安装方式"></a>rpm包安装方式</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh zabbix-agent-4.0.0-1.1rc2.el7.x86_64</span><br></pre></td></tr></table></figure>
 <h2 id="源码包安装后打tar包介质–解压安装agent"><a href="#源码包安装后打tar包介质–解压安装agent" class="headerlink" title="源码包安装后打tar包介质–解压安装agent"></a>源码包安装后打tar包介质–解压安装agent</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local</span><br><span class="line">tar -xvf zabbix_agent.tar.gz</span><br></pre></td></tr></table></figure>
@@ -580,8 +581,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/10/WebSphere Application Server 调优/" rel="next" title="">
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/" rel="next" title="zabbix基于snmp协议监控weblogic">
+                <i class="fa fa-chevron-left"></i> zabbix基于snmp协议监控weblogic
               </a>
             
           </div>
@@ -589,10 +590,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/07/01/zabbix基于snmp协议监控weblogic安装使用手册/" rel="prev" title="zabbix基于snmp协议监控weblogic">
-                zabbix基于snmp协议监控weblogic <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -689,7 +686,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -700,7 +697,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
