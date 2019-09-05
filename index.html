@@ -319,6 +319,256 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/05/ajax跨域问题的全面解读/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rocklei123">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rocklei123 米宝窝">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/05/ajax跨域问题的全面解读/" itemprop="url">AJAX跨域问题的全面解读</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-05T22:50:20+08:00">
+                2019-09-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AJAX/" itemprop="url" rel="index">
+                    <span itemprop="name">AJAX</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2019/09/05/ajax跨域问题的全面解读/#SOHUCS" itemprop="discussionUrl">
+                  <span id="url::http://yoursite.com/2019/09/05/ajax跨域问题的全面解读/" class="cy_cmt_count" data-xid="2019/09/05/ajax跨域问题的全面解读/" itemprop="commentsCount" ></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h1><pre><code>通过本文了解是跨域问题，从系统最常见的部署结构上分析跨域解决的思路，详细讲解jsonp的工作机制，http协议如何支持跨域，以及http服务器nginx和apache的2种不同解决思路，让大家知其然并知其所以然，快速掌握问题本质和分析问题的方法。、
+</code></pre><h1 id="2-什么是跨域"><a href="#2-什么是跨域" class="headerlink" title="2.什么是跨域"></a>2.什么是跨域</h1><p>​    JavaScript出于安全方面的考虑，不允许跨域调用其他页面的对象。那什么是跨域呢，简单地理解就是因为JavaScript同源策略的限制，a.com域名下的js无法操作b.com或是c.a.com域名下的对象。<br>​    <strong>当协议、子域名、主域名、端口号中任意一个不相同时，都算作不同域</strong>。不同域之间相互请求资源，就算作“跨域”。</p>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/1567650614321.png" alt="1567650614321"></p>
+<p>​    有一点必须要注意：<strong>跨域并不是请求发不出去，请求能发出去，服务端能收到请求并正常返回结果，只是结果被浏览器拦截了</strong>。之所以会跨域，是因为受到了同源策略的限制，同源策略要求源相同才能正常进行通信，即协议、域名、端口号都完全一致。</p>
+<h1 id="2-跨域产生的原因"><a href="#2-跨域产生的原因" class="headerlink" title="2.跨域产生的原因"></a>2.跨域产生的原因</h1><ol>
+<li>浏览器限制。如果浏览器发现请求是跨域的时候，就会做校验，如果校验不通过就会报跨域的错误</li>
+<li>发送的XHR(XMLHTTPRequest)请求。如果发送的不是xhr请求，无论是否跨域，浏览器都不会报错</li>
+</ol>
+<p>只有这三种原因同时满足时，才会发生跨域</p>
+<h1 id="3-解决跨域的思路"><a href="#3-解决跨域的思路" class="headerlink" title="3.解决跨域的思路"></a>3.解决跨域的思路</h1><ol>
+<li><p><strong>浏览器角度。</strong></p>
+<p>让浏览器不做校验，浏览器的设置跨域，在浏览器的属性设置页面的目标输入框加上–disable-web-security。这样浏览器将不会去做校验了。但是每个人都需要去改动，==不建议使用。==</p>
+</li>
+<li><p><strong>发送xhr请求角度。</strong></p>
+<p>让跨域的请求不发送xhr请求，就不会再报错了。办法是使用jsonp。</p>
+<p>jsonp是非官方协议，是前后端的一种约定，前端使用ajax发送请求，dataType为jsonp，并且带一个参数（默认是callback），当后台发现这个参数之后，就知道这是一个jsonp请求，就会把原本返回json对象编程js返回，js代码是一个函数的执行，函数名是callback的参数值，函数的参数是原本的json对象。</p>
+<p><strong>jsonp缺点：</strong></p>
+<ul>
+<li>1）.只支持get方法请求；</li>
+<li>2）.==需要服务器修改代码；==JSONP需要后台配合, 要有一个参数, 默认是?callback=JQuery1234567…   JSONP返回的类型是:javascript, 而非json</li>
+<li>3）.发送的不是XHR请求(这也是它可以跨域的原因),没有回调及事件的特性</li>
+</ul>
+</li>
+<li><p>在跨域角度。</p>
+<ul>
+<li>1）.被调用方解决：在响应头增加指定字段，告诉浏览器，允许调用，这种方法的原理是从根源支持跨域的。</li>
+<li>2）.调用方解决：这种解决办法原理是隐藏跨域。使用代理，在同一个域请求不同的url地址，转发到不同的域。</li>
+</ul>
+</li>
+</ol>
+<h1 id="4-具体解决跨域问题的方法"><a href="#4-具体解决跨域问题的方法" class="headerlink" title="4.具体解决跨域问题的方法"></a>4.具体解决跨域问题的方法</h1><h2 id="4-1-跨越问题的现象"><a href="#4-1-跨越问题的现象" class="headerlink" title="4.1 跨越问题的现象"></a>4.1 跨越问题的现象</h2><p>通过浏览器访问A项目，项目中打开的页面中将通过JavaScript代码访问B项目的地址。出现跨域问题。</p>
+<p><strong>A项目Javascript代码（调用方代码）</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">&lt;head&gt;</span><br><span class="line">&lt;script src=<span class="string">"jquery-1.11.3.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line">&lt;link rel=<span class="string">"stylesheet"</span> type=<span class="string">"text/css"</span> href=<span class="string">"jasmine-2.8.0/jasmine.css"</span>&gt;</span><br><span class="line">&lt;script src=<span class="string">"jasmine-2.8.0/jasmine.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line">&lt;script src=<span class="string">"jasmine-2.8.0/jasmine-html.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line">&lt;script src=<span class="string">"jasmine-2.8.0/boot.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line">&lt;<span class="regexp">/head&gt;</span></span><br><span class="line"><span class="regexp">&lt;body&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">	&lt;script&gt;</span></span><br><span class="line"><span class="regexp">		function get1() &#123;</span></span><br><span class="line"><span class="regexp">			$.getJSON("http:/</span><span class="regexp">/localhost:8080/</span>test/get1<span class="string">").then(function(result) &#123;</span></span><br><span class="line"><span class="string">				console.log(result);</span></span><br><span class="line"><span class="string">			&#125;);</span></span><br><span class="line"><span class="string">		&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">		// 每一个测试用例的超时时间</span></span><br><span class="line"><span class="string">		jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">		// 请求的接口的前缀 // http://localhost:8080/test</span></span><br><span class="line"><span class="string">		//var base = "</span>/ajaxserverapache<span class="string">";</span></span><br><span class="line"><span class="string">		var base = "</span>http:<span class="comment">//localhost:8080/test";</span></span><br><span class="line">		<span class="comment">//测试模块</span></span><br><span class="line">		describe(<span class="string">"晓风轻-ajax跨越完全讲解"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">			<span class="comment">// 测试方法</span></span><br><span class="line">			it(<span class="string">"get1请求"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">done</span>) </span>&#123;</span><br><span class="line">				<span class="comment">// 服务器返回的结果</span></span><br><span class="line">				<span class="keyword">var</span> result;</span><br><span class="line"></span><br><span class="line">				$.getJSON(base + <span class="string">"/get1"</span>).then(<span class="function"><span class="keyword">function</span>(<span class="params">jsonObj</span>) </span>&#123;</span><br><span class="line">					result = jsonObj;</span><br><span class="line">				&#125;);</span><br><span class="line"></span><br><span class="line">				<span class="comment">// 由于是异步请求，需要使用setTimeout来校验</span></span><br><span class="line">				setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">					expect(result).toEqual(&#123;</span><br><span class="line">						<span class="string">"data"</span> : <span class="string">"get1 ok"</span></span><br><span class="line">					&#125;);</span><br><span class="line"></span><br><span class="line">					<span class="comment">// 校验完成，通知jasmine框架</span></span><br><span class="line">					done();</span><br><span class="line">				&#125;, <span class="number">100</span>);</span><br><span class="line">			&#125;);</span><br></pre></td></tr></table></figure>
+<p>正常访问，服务端返回响应码为200，但是页面会报错。</p>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/1567675851094.png" alt="1567675851094"></p>
+<p>浏览器的Console中会打印报错信息：</p>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/1567676338007.png" alt="1567676338007"></p>
+<h2 id="4-2-基于Jsonp-解决"><a href="#4-2-基于Jsonp-解决" class="headerlink" title="4.2 基于Jsonp 解决"></a>4.2 基于Jsonp 解决</h2><h3 id="4-2-1-前端代码改动"><a href="#4-2-1-前端代码改动" class="headerlink" title="4.2.1 前端代码改动"></a>4.2.1 前端代码改动</h3><p>​    在发送ajax请求的时候，设置dataType为jsonp，即告诉后台我需要返回的是script代码，而不是一个json格式的数据。同时==jsonp：“callback”（默认）==，但是可以修改为jsonp：“callback2”这个就是前后台的协议，即后台返回的script的方法的名称，然后后台将原本的json放在该方法的参数中返回给前端，故服务端代码应该也以相同名称返回。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 测试方法</span></span><br><span class="line">			it(<span class="string">"jsonp请求"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">done</span>) </span>&#123;</span><br><span class="line">				<span class="comment">// 服务器返回的结果</span></span><br><span class="line">				<span class="keyword">var</span> result;</span><br><span class="line">				$.ajax(&#123;</span><br><span class="line">					url: base +<span class="string">"/get1"</span>,</span><br><span class="line">					dataType: <span class="string">"jsonp"</span>,</span><br><span class="line">					jsonp: <span class="string">"callback2"</span>,</span><br><span class="line">					cache:<span class="literal">true</span>,</span><br><span class="line">					success: <span class="function"><span class="keyword">function</span>(<span class="params">json</span>)</span>&#123;</span><br><span class="line">						result = json;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;);</span><br></pre></td></tr></table></figure>
+<p>此时会发生两种变化：</p>
+<ul>
+<li>1请求的地址发生改变</li>
+<li>2发起请求的类型不在为xhr，而是script。返回的数据类型也为 application/javascript</li>
+</ul>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/1567676719744.png" alt="1567676719744"></p>
+<h3 id="4-2-2-服务端代码改动"><a href="#4-2-2-服务端代码改动" class="headerlink" title="4.2.2 服务端代码改动"></a>4.2.2 服务端代码改动</h3><p>服务端需要新增@ControllerAdvice 修饰的方法。默认请求的传递参数为 callback。如果客户端javascript代码中以jsonp：“callback2”访问服务端，服务端也应该以callback2 相同的字符串返回。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ControllerAdvice;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.mvc.method.annotation.AbstractJsonpResponseBodyAdvice;</span><br><span class="line"></span><br><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JsonpAdvice</span> <span class="keyword">extends</span> <span class="title">AbstractJsonpResponseBodyAdvice</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">JsonpAdvice</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(<span class="string">"callback2"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回内容为javascript内容：</p>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/1567676920098.png" alt="1567676920098"></p>
+<h3 id="4-2-3-核心原理"><a href="#4-2-3-核心原理" class="headerlink" title="4.2.3 核心原理"></a>4.2.3 核心原理</h3><p>引入jquery非压缩的js库，可以在浏览器查看JQuery实现jsonp的时候是动态创建异步javascript的代码。</p>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/1567677458922.png" alt="1567677458922"></p>
+<p>在浏览器查看jsonp请求里除了callback参数外，还有一个名为下划线“_”的参数，值为一串随机数。此参数作用是防止请求被缓存。如果你的请求可以被缓存的话，可以在请求里使用cache:true。</p>
+<h2 id="4-3-常见的JAVAEE-架构中的解决跨域问题的方案"><a href="#4-3-常见的JAVAEE-架构中的解决跨域问题的方案" class="headerlink" title="4.3 常见的JAVAEE 架构中的解决跨域问题的方案"></a>4.3 常见的JAVAEE 架构中的解决跨域问题的方案</h2><h3 id="4-3-1-跨域解决方向"><a href="#4-3-1-跨域解决方向" class="headerlink" title="4.3.1 跨域解决方向"></a>4.3.1 跨域解决方向</h3><ul>
+<li><p>被调用方解决</p>
+</li>
+<li><p>调用方解决</p>
+</li>
+</ul>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/1567677890052.png" alt="1567677890052"></p>
+<h3 id="4-3-2-被调用方解决-支持跨域"><a href="#4-3-2-被调用方解决-支持跨域" class="headerlink" title="4.3.2 被调用方解决-支持跨域"></a>4.3.2 被调用方解决-支持跨域</h3><p>根据http协议关于跨域方面的要求，增加响应头信息，告诉浏览器允许被跨域调用</p>
+<h4 id="4-3-2-1-使用filter解决"><a href="#4-3-2-1-使用filter解决" class="headerlink" title="4.3.2.1 使用filter解决"></a>4.3.2.1 使用filter解决</h4><ul>
+<li><p>res.addHeader(“Access-Control-Allow-Origin”, “<a href="http://localhost:8081&quot;)" target="_blank" rel="noopener">http://localhost:8081&quot;)</a>; </p>
+<p>//设置允许<a href="http://localhost:8081域访问，*表示所有域都能访问" target="_blank" rel="noopener">http://localhost:8081域访问，*表示所有域都能访问</a></p>
+</li>
+<li><p>res.addHeader(“Access-Control-Allow-Methods”, “GET”);//设置允许GET方法访问，*表示所有方法</p>
+</li>
+</ul>
+<h5 id="4-3-2-1-2-简单请求与与非简单请求"><a href="#4-3-2-1-2-简单请求与与非简单请求" class="headerlink" title="4.3.2.1.2 简单请求与与非简单请求"></a>4.3.2.1.2 简单请求与与非简单请求</h5><ul>
+<li><p>简单请求：先执行后判断</p>
+</li>
+<li><p>非简单请求：当浏览器要发送跨域请求时，如果请求是复杂请求，浏览器会先发送一个options预检命令即一个options请求，当该请求通过时才会再发送真正的请求。</p>
+</li>
+</ul>
+<p><strong>两种请求的区分：</strong></p>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/1567678862767.png" alt="1567678862767"></p>
+<p><strong>如下为非简单请求</strong></p>
+<p>该option请求会根据请求的信息去询问服务端支不支持该请求。比如发送的数据是json类型（通过content-type设置）的话，会携带一个请求头Access-Control-Request-Headers: content-type去询问支不支持该数据类型，如果支持，则请求就会通过，并发送真正的请求。</p>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/5b3e065600019f0213600768.jpg" alt="img"></p>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/1567679422863.png" alt="1567679422863"></p>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/1567679765075.png" alt="1567679765075"></p>
+<h5 id="4-3-2-1-3-非简单请求跨域基于Filter解决办法"><a href="#4-3-2-1-3-非简单请求跨域基于Filter解决办法" class="headerlink" title="4.3.2.1.3  非简单请求跨域基于Filter解决办法"></a>4.3.2.1.3  非简单请求跨域基于Filter解决办法</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AjaxserverApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		SpringApplication.run(AjaxserverApplication.class, args);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> FilterRegistrationBean <span class="title">registerFilter</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		FilterRegistrationBean bean = <span class="keyword">new</span> FilterRegistrationBean();</span><br><span class="line"></span><br><span class="line">		bean.addUrlPatterns(<span class="string">"/*"</span>);</span><br><span class="line">		bean.setFilter(<span class="keyword">new</span> CrosFilter());</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> bean ;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>自定义Filter（同时解决带cookie的跨域、以及自定义请求头）</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.servlet.Filter;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.FilterChain;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.FilterConfig;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletResponse;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.tomcat.util.buf.StringUtils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CrosFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain chain)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line"></span><br><span class="line">		HttpServletResponse res = (HttpServletResponse) response;</span><br><span class="line">		</span><br><span class="line">		HttpServletRequest req = (HttpServletRequest) request;</span><br><span class="line">		</span><br><span class="line">		String origin = req.getHeader(<span class="string">"Origin"</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">if</span> (!org.springframework.util.StringUtils.isEmpty(origin)) &#123;</span><br><span class="line">			<span class="comment">//带cookie的时候，origin必须是全匹配，不能使用*</span></span><br><span class="line">			res.addHeader(<span class="string">"Access-Control-Allow-Origin"</span>, origin);			</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		res.addHeader(<span class="string">"Access-Control-Allow-Methods"</span>, <span class="string">"*"</span>);</span><br><span class="line">		</span><br><span class="line">		String headers = req.getHeader(<span class="string">"Access-Control-Request-Headers"</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 支持所有自定义头</span></span><br><span class="line">		<span class="keyword">if</span> (!org.springframework.util.StringUtils.isEmpty(headers)) &#123;</span><br><span class="line">			res.addHeader(<span class="string">"Access-Control-Allow-Headers"</span>, headers);			</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		res.addHeader(<span class="string">"Access-Control-Max-Age"</span>, <span class="string">"3600"</span>);</span><br><span class="line">		<span class="comment">// enable cookie</span></span><br><span class="line">		res.addHeader(<span class="string">"Access-Control-Allow-Credentials"</span>, <span class="string">"true"</span>);</span><br><span class="line">		chain.doFilter(request, response);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-3-2-2-nginx解决方案"><a href="#4-3-2-2-nginx解决方案" class="headerlink" title="4.3.2.2 nginx解决方案"></a>4.3.2.2 nginx解决方案</h4><p>在被调用方的代理服务器nginx 上增加请求头信息</p>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/1567680090851.png" alt="1567680090851"></p>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/5c4ee1640001533813600768.jpg" alt="img"></p>
+<h4 id="4-3-2-3-APACHE解决方案、"><a href="#4-3-2-3-APACHE解决方案、" class="headerlink" title="4.3.2.3 APACHE解决方案、"></a>4.3.2.3 APACHE解决方案、</h4><p>在被调用方的代理服务器apache上增加请求头信息</p>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/5c8d06fd0001ce7013600768.jpg" alt="img"></p>
+<h4 id="4-3-2-4-Spring解决方案"><a href="#4-3-2-4-Spring解决方案" class="headerlink" title="4.3.2.4 Spring解决方案"></a>4.3.2.4 Spring解决方案</h4><p>在Controller层增加@CrossOrigin注解即可</p>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/5d6bed0000015fc013600768.jpg" alt="img"></p>
+<h3 id="4-3-3-调用方使用代理做调用解决跨域问题-隐藏跨域"><a href="#4-3-3-调用方使用代理做调用解决跨域问题-隐藏跨域" class="headerlink" title="4.3.3. 调用方使用代理做调用解决跨域问题-隐藏跨域"></a>4.3.3. 调用方使用代理做调用解决跨域问题-隐藏跨域</h3><h4 id="4-3-3-1-基于nginx使用反向代理"><a href="#4-3-3-1-基于nginx使用反向代理" class="headerlink" title="4.3.3.1 基于nginx使用反向代理"></a>4.3.3.1 基于nginx使用反向代理</h4><p>反向代理：访问同一个域名的两个url，会去到两个不同的服务器. javascript代码中的ajax请求地址也应该为相对地址</p>
+<p><img src="/2019/09/05/ajax跨域问题的全面解读/1567680395410.png" alt="1567680395410"></p>
+<h4 id="4-3-3-2-基于apache使用反向代理"><a href="#4-3-3-2-基于apache使用反向代理" class="headerlink" title="4.3.3.2 基于apache使用反向代理"></a>4.3.3.2 基于apache使用反向代理</h4><p><img src="/2019/09/05/ajax跨域问题的全面解读/5b8a99d30001395813600768.jpg" alt="img"></p>
+<h1 id="5-参考"><a href="#5-参考" class="headerlink" title="5.参考"></a>5.参考</h1><p><a href="https://www.imooc.com/learn/947" target="_blank" rel="noopener">慕课网 https://www.imooc.com/learn/947</a></p>
+<h1 id="6-欢迎关注米宝窝，持续更新中，谢谢！"><a href="#6-欢迎关注米宝窝，持续更新中，谢谢！" class="headerlink" title="6.欢迎关注米宝窝，持续更新中，谢谢！"></a>6.欢迎关注米宝窝，持续更新中，谢谢！</h1><p> [米宝窝 <a href="https://rocklei123.github.io/" target="_blank" rel="noopener">https://rocklei123.github.io/</a> ](<a href="https://rocklei123.github.io/）" target="_blank" rel="noopener">https://rocklei123.github.io/）</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    <div>
+    
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/02/SpringMVC拦截器及与过滤器对比/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1763,193 +2013,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/01/Spring注解驱动开发1-Bean注入相关注解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rocklei123">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="rocklei123 米宝窝">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/01/Spring注解驱动开发1-Bean注入相关注解/" itemprop="url">Spring注解驱动开发（一）-Bean注入相关注解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-01T21:45:44+08:00">
-                2018-12-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-comment-o"></i>
-              </span>
-              
-                <a href="/2018/12/01/Spring注解驱动开发1-Bean注入相关注解/#SOHUCS" itemprop="discussionUrl">
-                  <span id="url::http://yoursite.com/2018/12/01/Spring注解驱动开发1-Bean注入相关注解/" class="cy_cmt_count" data-xid="2018/12/01/Spring注解驱动开发1-Bean注入相关注解/" itemprop="commentsCount" ></span>
-                </a>
-              
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h1><h2 id="1-1-目标"><a href="#1-1-目标" class="headerlink" title="1.1 目标"></a>1.1 目标</h2><p>通过本系列文章能够熟悉并掌握Spring注解驱动开发。本小结将介绍通过注解给容器中注册组件；通过本小结，将了解如下注解：</p>
-<ul>
-<li>AnnotationConfigApplicationContext</li>
-<li><p>组件添加</p>
-<ul>
-<li>@ComponentScan</li>
-<li>@Bean</li>
-<li>@PostConstruct</li>
-<li>@PreDestroy</li>
-<li>BeanPostProcessor</li>
-<li>@Configuration</li>
-<li>@Component</li>
-<li>@Service</li>
-<li>@Controller</li>
-<li>@Repository</li>
-<li>@Conditional</li>
-<li>@Primary</li>
-<li>@Lazy</li>
-<li><p>@Scope</p>
-</li>
-<li><p>@Import</p>
-</li>
-<li>ImportSelector</li>
-<li>FactoryBean</li>
-</ul>
-</li>
-</ul>
-<h2 id="1-2-环境信息"><a href="#1-2-环境信息" class="headerlink" title="1.2 环境信息"></a>1.2 环境信息</h2><p>环境信息如下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-context<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.3.20.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.11<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/12/01/Spring注解驱动开发1-Bean注入相关注解/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    <div>
-    
-    </div>
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2004,7 +2067,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2015,7 +2078,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2026,7 +2089,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
